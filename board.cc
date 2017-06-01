@@ -1,5 +1,6 @@
 #include "board.h"
 #include <string>
+#include <iostream>
 
 std::string Board::getStringRep() {
   std::string stringRep;
@@ -85,4 +86,46 @@ void Board::setToStartPos() {
   WHITE_PIECES = getWhitePieces();
   BLACK_PIECES = getBlackPieces();
   OCCUPIED = getOccupied();
+  NOT_OCCUPIED = ~OCCUPIED;
+}
+
+U64 Board::getPawnMoves() {
+  U64 pawns = _whiteToMove ? WHITE_PAWNS : BLACK_PAWNS;
+
+  U64 potential_moves = pawns << 8;
+
+  U64 base = 1;
+  for(U64 i=0;i<64;i++) {
+    U64 square = base << i;
+
+    // If this is a square in front of a pawn and is occupied
+    if ((potential_moves & square) && (square & OCCUPIED)) {
+      // Unset bit
+      potential_moves ^= square;
+    }
+  }
+
+  return potential_moves;
+}
+
+U64 Board::getPawnAttacks() {
+  U64 pawns = _whiteToMove ? WHITE_PAWNS : BLACK_PAWNS;
+  U64 opponent_pieces = _whiteToMove ? BLACK_PIECES : WHITE_PIECES;
+  U64 not_opponent_pieces = ~opponent_pieces;
+
+  // Get potential attacks
+  U64 potential_attacks = ((pawns << 9) ^ FILE_8) & ((pawns << 8) ^ FILE_1);
+
+  U64 base = 1;
+  for(U64 i=0;i<64;i++) {
+    U64 square = base << i;
+
+    // If this is a square that a pawn can attack and is not occupied by an opponent
+    if ((potential_attacks & square) && (square & not_opponent_pieces)) {
+      // Unset bit
+      potential_attacks ^= square;
+    }
+  }
+
+  return potential_attacks;
 }

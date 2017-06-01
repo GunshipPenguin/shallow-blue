@@ -4,6 +4,6 @@
 int main() {
   Board board;
   board.setToStartPos();
-  
-  std::cout << board.getStringRep();
+
+  std::cout << board.getPawnAttacks();
 }

@@ -11,6 +11,8 @@ class Board {
     void setToStartPos();
 
     std::string getStringRep();
+    U64 getPawnMoves();
+    U64 getPawnAttacks();
 
 
   private:
@@ -37,6 +39,7 @@ class Board {
     U64 BLACK_PIECES;
 
     U64 OCCUPIED;
+    U64 NOT_OCCUPIED;
 
     static const U64 RANK_1 = 255ull;
     static const U64 RANK_2 = 65280ull;
@@ -56,12 +59,10 @@ class Board {
     static const U64 FILE_7 = 144680345676153346ull;
     static const U64 FILE_8 = 72340172838076673ull;
 
-
     U64 getOccupied();
     U64 getBlackPieces();
     U64 getWhitePieces();
 
-    U64 getPawnMoves();
 };
 
 #endif
