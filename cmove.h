@@ -7,7 +7,7 @@
 
 class CMove {
 public:
-  CMove(unsigned int, unsigned int, unsigned int);
+  CMove(unsigned int, unsigned int, unsigned int=0);
 
   enum FLAGS {
     CAPTURE = 1<<0,

@@ -1,6 +1,6 @@
 #include "board.h"
+#include "cmove.h"
 #include <string>
-#include <iostream>
 
 std::string Board::getStringRep() {
   std::string stringRep;
@@ -89,43 +89,62 @@ void Board::setToStartPos() {
   NOT_OCCUPIED = ~OCCUPIED;
 }
 
-U64 Board::getPawnMoves() {
-  U64 pawns = _whiteToMove ? WHITE_PAWNS : BLACK_PAWNS;
+MoveList Board::getWhitePawnMoves() {
+  MoveList potentialMoves;
 
-  U64 potential_moves = pawns << 8;
-
-  U64 base = 1;
+  // Move all pawns up 1
+  U64 movedPawns1 = WHITE_PAWNS << 8;
   for(U64 i=0;i<64;i++) {
-    U64 square = base << i;
+    U64 square = static_cast<U64>(1) << i;
 
-    // If this is a square in front of a pawn and is occupied
-    if ((potential_moves & square) && (square & OCCUPIED)) {
-      // Unset bit
-      potential_moves ^= square;
+    // If this is a square in front of a pawn and is not occupied
+    if ((movedPawns1 & square) && (square & NOT_OCCUPIED)) {
+      // Add to MoveList
+      potentialMoves.push_back(CMove(i-8, i));
     }
   }
 
-  return potential_moves;
+  // Move pawns on rank 2 up 2
+  U64 movedPawns2 = (WHITE_PAWNS & RANK_2) << 16;
+  for(U64 i=0;i<64;i++) {
+    U64 square = static_cast<U64>(1) << i;
+
+    // If this is a square in front of a pawn and is not occupied
+    if ((movedPawns2 & square) && (square & NOT_OCCUPIED)) {
+      // Add to MoveList
+      potentialMoves.push_back(CMove(i-16, i));
+    }
+  }
+
+  return potentialMoves;
 }
 
-U64 Board::getPawnAttacks() {
-  U64 pawns = _whiteToMove ? WHITE_PAWNS : BLACK_PAWNS;
-  U64 opponent_pieces = _whiteToMove ? BLACK_PIECES : WHITE_PIECES;
-  U64 not_opponent_pieces = ~opponent_pieces;
+MoveList Board::getBlackPawnMoves() {
+  MoveList potentialMoves;
 
-  // Get potential attacks
-  U64 potential_attacks = ((pawns << 9) ^ FILE_8) & ((pawns << 8) ^ FILE_1);
-
-  U64 base = 1;
+  // Move all pawns up 1
+  U64 movedPawns1 = BLACK_PAWNS >> 8;
   for(U64 i=0;i<64;i++) {
-    U64 square = base << i;
+    U64 square = static_cast<U64>(1) << i;
 
-    // If this is a square that a pawn can attack and is not occupied by an opponent
-    if ((potential_attacks & square) && (square & not_opponent_pieces)) {
-      // Unset bit
-      potential_attacks ^= square;
+    // If this is a square in front of a pawn and is not occupied
+    if ((movedPawns1 & square) && (square & NOT_OCCUPIED)) {
+      // Add to MoveList
+      potentialMoves.push_back(CMove(i+8, i));
     }
   }
 
-  return potential_attacks;
+  // Move pawns on rank 7 up 2
+  U64 movedPawns2 = (BLACK_PAWNS & RANK_7) >> 16;
+  for(U64 i=0;i<64;i++) {
+    U64 square = static_cast<U64>(1) << i;
+
+    // If this is a square in front of a pawn and is not occupied
+    if ((movedPawns2 & square) && (square & NOT_OCCUPIED)) {
+      // Add to MoveList
+      potentialMoves.push_back(CMove(i+16, i));
+    }
+  }
+
+  return potentialMoves;
 }

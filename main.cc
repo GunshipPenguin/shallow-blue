@@ -1,9 +1,18 @@
-#include "board.h"
 #include <iostream>
+#include <string>
+#include "cmove.h"
+#include "board.h"
 
 int main() {
   Board board;
   board.setToStartPos();
 
-  std::cout << board.getPawnAttacks();
+  MoveList moves = board.getBlackPawnMoves();
+  std::cout << moves.size() << std::endl;
+
+  for(MoveList::iterator it = moves.begin(); it != moves.end(); ++it) {
+    std::cout << (*it).getStringMove() << std::endl;
+  }
+
+  return 0;
 }

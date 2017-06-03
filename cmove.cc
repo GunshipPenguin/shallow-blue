@@ -60,5 +60,5 @@ std::string CMove::getStringMove() {
 }
 
 std::string CMove::indexToNotation (int index) {
-  return std::string({FILES[index/8], RANKS[index%8]});
+  return std::string({FILES[index%8], RANKS[index/8]});
 }
