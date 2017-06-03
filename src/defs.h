@@ -1,8 +1,6 @@
 #ifndef DEFS_H
 #define DEFS_H
 
-#include <vector>
-
 typedef unsigned long long U64;
 
 const U64 RANK_1 = 255ull;
