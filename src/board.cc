@@ -1,6 +1,7 @@
 #include "board.h"
 #include "cmove.h"
 #include <string>
+#include <iostream>
 
 std::string Board::getStringRep() {
   std::string stringRep;
@@ -40,6 +41,52 @@ std::string Board::getStringRep() {
   return stringRep;
 }
 
+void Board::setToFen(std::string fenString) {
+  U64 boardPos = 63;
+  int strIndex = 0;
+
+  U64 one64 = static_cast<U64>(1);
+
+  while(fenString[strIndex] != ' ') {
+    switch(fenString[strIndex]) {
+      case 'p': BLACK_PAWNS |= (one64 << boardPos--);
+        break;
+      case 'r': BLACK_ROOKS |= (one64 << boardPos--);
+        break;
+      case 'n': BLACK_KNIGHTS |= (one64 << boardPos--);
+        break;
+      case 'b': BLACK_BISHOPS |= (one64 << boardPos--);
+        break;
+      case 'q': BLACK_QUEENS |= (one64 << boardPos--);
+        break;
+      case 'k': BLACK_KING |= (one64 << boardPos--);
+        break;
+      case 'P': WHITE_PAWNS |= (one64 << boardPos--);
+        break;
+      case 'R': WHITE_ROOKS |= (one64 << boardPos--);
+        break;
+      case 'N': WHITE_KNIGHTS |= (one64 << boardPos--);
+        break;
+      case 'B': WHITE_BISHOPS |= (one64 << boardPos--);
+        break;
+      case 'Q': WHITE_QUEENS |= (one64 << boardPos--);
+        break;
+      case 'K': WHITE_KING |= (one64 << boardPos--);
+        break;
+      case '/': break;
+      default:
+        boardPos -= static_cast<U64>(fenString[strIndex] - '0');
+    }
+    strIndex++;
+  }
+
+  WHITE_PIECES = getWhitePieces();
+  BLACK_PIECES = getBlackPieces();
+
+  OCCUPIED = getOccupied();
+  NOT_OCCUPIED = ~OCCUPIED;
+}
+
 U64 Board::getOccupied() {
   return getWhitePieces() | getBlackPieces();
 }
@@ -63,30 +110,7 @@ U64 Board::getBlackPieces() {
 }
 
 void Board::setToStartPos() {
-  _whiteToMove = true;
-
-  WHITE_PAWNS = 65280ull;
-  BLACK_PAWNS = 71776119061217280ull;
-
-  WHITE_ROOKS = 129ull;
-  BLACK_ROOKS = 9295429630892703744ull;
-
-  WHITE_KNIGHTS = 66ull;
-  BLACK_KNIGHTS = 4755801206503243776ull;
-
-  WHITE_BISHOPS = 36ull;
-  BLACK_BISHOPS = 2594073385365405696ull;
-
-  WHITE_QUEENS = 16ull;
-  BLACK_QUEENS = 1152921504606846976ull;
-
-  WHITE_KING = 8ull;
-  BLACK_KING = 576460752303423488ull;
-
-  WHITE_PIECES = getWhitePieces();
-  BLACK_PIECES = getBlackPieces();
-  OCCUPIED = getOccupied();
-  NOT_OCCUPIED = ~OCCUPIED;
+  setToFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 }
 
 MoveList Board::getWhitePawnMoves() {

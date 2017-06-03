@@ -8,6 +8,7 @@
 class Board {
   public:
     void setToStartPos();
+    void setToFen(std::string);
 
     std::string getStringRep();
 
@@ -18,29 +19,29 @@ class Board {
 
   private:
     bool _whiteToMove;
-    U64 WHITE_PAWNS;
-    U64 BLACK_PAWNS;
+    U64 WHITE_PAWNS = 0;
+    U64 BLACK_PAWNS = 0;
 
-    U64 WHITE_ROOKS;
-    U64 BLACK_ROOKS;
+    U64 WHITE_ROOKS = 0;
+    U64 BLACK_ROOKS = 0;
 
-    U64 WHITE_KNIGHTS;
-    U64 BLACK_KNIGHTS;
+    U64 WHITE_KNIGHTS = 0;
+    U64 BLACK_KNIGHTS = 0;
 
-    U64 WHITE_BISHOPS;
-    U64 BLACK_BISHOPS;
+    U64 WHITE_BISHOPS = 0;
+    U64 BLACK_BISHOPS = 0;
 
-    U64 WHITE_QUEENS;
-    U64 BLACK_QUEENS;
+    U64 WHITE_QUEENS = 0;
+    U64 BLACK_QUEENS = 0;
 
-    U64 WHITE_KING;
-    U64 BLACK_KING;
+    U64 WHITE_KING = 0;
+    U64 BLACK_KING = 0;
 
-    U64 WHITE_PIECES;
-    U64 BLACK_PIECES;
+    U64 WHITE_PIECES = 0;
+    U64 BLACK_PIECES = 0;
 
-    U64 OCCUPIED;
-    U64 NOT_OCCUPIED;
+    U64 OCCUPIED = 0;
+    U64 NOT_OCCUPIED = 0;
 
     U64 getOccupied();
     U64 getBlackPieces();

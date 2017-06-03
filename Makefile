@@ -7,7 +7,7 @@ OBJ_FILES := $(addprefix obj/,$(notdir $(CPP_FILES:.cc=.o)))
 TEST_OBJ_FILES := $(addprefix obj/,$(notdir $(TEST_CPP_FILES:.cc=.o)))
 
 LD_FLAGS :=
-CC_FLAGS := -Wall -std=c++11
+CC_FLAGS := -Wall -std=c++11 -g
 
 OBJ_DIR := obj
 
@@ -35,5 +35,6 @@ $(OBJ_DIR):
 	mkdir $(OBJ_DIR)
 
 clean:
-	rm -r $(OBJ_DIR)
-	rm $(BIN_NAME)
+	rm -rf $(OBJ_DIR)
+	rm -f $(TEST_BIN_NAME)
+	rm -f $(BIN_NAME)
