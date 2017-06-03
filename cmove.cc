@@ -1,31 +1,34 @@
 #include "cmove.h"
 #include "defs.h"
 #include <string>
+#include <iostream>
 
 const char CMove::RANKS[] = {'1', '2', '3', '4', '5', '6', '7', '8'};
 const char CMove::FILES[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
 
 CMove::CMove(unsigned int from, unsigned int to, unsigned int flags) {
-  // Moves are stored as packed integers with the first 8 bits representing the
-  // from square, the middle 8 bits representing the to square and the last 8 bits
-  // containing flags
+  // Moves are stored as packed integers with the first 6 least signifigant bits
+  // representing the from square, the next 6 bits representing the to square and
+  // the next 8 bits representing flags
 
   // Squares are numbered 0-63 with a1 being 0 and h8 being 63
 
-  // 0x3f = 63 = 8 set bits
-  _move = ((from & 0x3f) << 16) | ((to & 0x3f) << 8) | (flags & 0x3f);
+  // 0x3f = 63 = 6 set bits
+  // 0xff = 255 = 8 set bits
+
+  _move = ((flags & 0xff) << 12) | ((to & 0x3f) << 6) | (from & 0x3f);
 }
 
 int CMove::getFrom() {
-  return ((_move >> 16) & 0x3f);
+  return _move & 0x3f;
 }
 
 int CMove::getTo() {
-  return ((_move >> 8) & 0x3f);
+  return ((_move >> 6) & 0x3f);
 }
 
 int CMove::getFlags() {
-  return _move & 0x3f;
+  return ((_move >> 12) & 0xff);
 }
 
 std::string CMove::getStringMove() {
