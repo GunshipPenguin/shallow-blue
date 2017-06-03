@@ -13,6 +13,8 @@ class Board {
 
     MoveList getWhitePawnMoves();
     MoveList getBlackPawnMoves();
+    MoveList getWhitePawnAttacks();
+    MoveList getBlackPawnAttacks();
 
   private:
     bool _whiteToMove;

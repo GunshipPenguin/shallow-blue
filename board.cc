@@ -148,3 +148,71 @@ MoveList Board::getBlackPawnMoves() {
 
   return potentialMoves;
 }
+
+MoveList Board::getWhitePawnAttacks() {
+  MoveList potentialAttacks;
+
+  U64 leftAttacks = WHITE_PAWNS << 7;
+  U64 rightAttacks = WHITE_PAWNS << 9;
+  for(U64 i=0;i<64;i++) {
+    U64 square = static_cast<U64>(1) << i;
+
+    if ((leftAttacks & square) && (square & BLACK_PIECES)) {
+      if (square & RANK_8) {
+        potentialAttacks.push_back(CMove(i-7, i, CMove::CAPTURE | CMove::QUEEN_PROMOTION));
+        potentialAttacks.push_back(CMove(i-7, i, CMove::CAPTURE | CMove::KNIGHT_PROMOTION));
+        potentialAttacks.push_back(CMove(i-7, i, CMove::CAPTURE | CMove::BISHOP_PROMOTION));
+        potentialAttacks.push_back(CMove(i-7, i, CMove::CAPTURE | CMove::ROOK_PROMOTION));
+      } else {
+        potentialAttacks.push_back(CMove(i-7, i, CMove::CAPTURE));
+      }
+    }
+
+    if ((rightAttacks & square) && (square & BLACK_PIECES)) {
+      if (square & RANK_8) {
+        potentialAttacks.push_back(CMove(i-9, i, CMove::CAPTURE | CMove::QUEEN_PROMOTION));
+        potentialAttacks.push_back(CMove(i-9, i, CMove::CAPTURE | CMove::KNIGHT_PROMOTION));
+        potentialAttacks.push_back(CMove(i-9, i, CMove::CAPTURE | CMove::BISHOP_PROMOTION));
+        potentialAttacks.push_back(CMove(i-9, i, CMove::CAPTURE | CMove::ROOK_PROMOTION));
+      } else {
+        potentialAttacks.push_back(CMove(i-9, i, CMove::CAPTURE));
+      }
+    }
+  }
+
+  return potentialAttacks;
+}
+
+MoveList Board::getBlackPawnAttacks() {
+  MoveList potentialAttacks;
+
+  U64 leftAttacks = BLACK_PAWNS >> 9;
+  U64 rightAttacks = BLACK_PAWNS >> 7;
+  for(U64 i=0;i<64;i++) {
+    U64 square = static_cast<U64>(1) << i;
+
+    if ((leftAttacks & square) && (square & WHITE_PIECES)) {
+      if (square & RANK_1) {
+        potentialAttacks.push_back(CMove(i-9, i, CMove::CAPTURE | CMove::QUEEN_PROMOTION));
+        potentialAttacks.push_back(CMove(i-9, i, CMove::CAPTURE | CMove::KNIGHT_PROMOTION));
+        potentialAttacks.push_back(CMove(i-9, i, CMove::CAPTURE | CMove::BISHOP_PROMOTION));
+        potentialAttacks.push_back(CMove(i-9, i, CMove::CAPTURE | CMove::ROOK_PROMOTION));
+      } else {
+        potentialAttacks.push_back(CMove(i-9, i, CMove::CAPTURE));
+      }
+    }
+
+    if ((rightAttacks & square) && (square & WHITE_PIECES)) {
+      if (square & RANK_1) {
+        potentialAttacks.push_back(CMove(i-7, i, CMove::CAPTURE | CMove::QUEEN_PROMOTION));
+        potentialAttacks.push_back(CMove(i-7, i, CMove::CAPTURE | CMove::KNIGHT_PROMOTION));
+        potentialAttacks.push_back(CMove(i-7, i, CMove::CAPTURE | CMove::BISHOP_PROMOTION));
+        potentialAttacks.push_back(CMove(i-7, i, CMove::CAPTURE | CMove::ROOK_PROMOTION));
+      } else {
+        potentialAttacks.push_back(CMove(i-7, i, CMove::CAPTURE));
+      }
+    }
+  }
+
+  return potentialAttacks;
+}
