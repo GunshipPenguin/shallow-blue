@@ -2,8 +2,8 @@
 #include "defs.h"
 #include <string>
 
-const char CMove::RANKS[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
-const char CMove::FILES[] = {'1', '2', '3', '4', '5', '6', '7', '8'};
+const char CMove::RANKS[] = {'1', '2', '3', '4', '5', '6', '7', '8'};
+const char CMove::FILES[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
 
 CMove::CMove(unsigned int from, unsigned int to, unsigned int flags) {
   // Moves are stored as packed integers with the first 8 bits representing the
@@ -60,5 +60,5 @@ std::string CMove::getStringMove() {
 }
 
 std::string CMove::indexToNotation (int index) {
-  return std::string({RANKS[index/8], FILES[index%8]});
+  return std::string({FILES[index/8], RANKS[index%8]});
 }
