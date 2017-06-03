@@ -94,24 +94,16 @@ MoveList Board::getWhitePawnMoves() {
 
   // Move all pawns up 1
   U64 movedPawns1 = WHITE_PAWNS << 8;
+  U64 movedPawns2 = (WHITE_PAWNS & RANK_2) << 16;
+
   for(U64 i=0;i<64;i++) {
     U64 square = static_cast<U64>(1) << i;
 
-    // If this is a square in front of a pawn and is not occupied
     if ((movedPawns1 & square) && (square & NOT_OCCUPIED)) {
-      // Add to MoveList
       potentialMoves.push_back(CMove(i-8, i));
     }
-  }
 
-  // Move pawns on rank 2 up 2
-  U64 movedPawns2 = (WHITE_PAWNS & RANK_2) << 16;
-  for(U64 i=0;i<64;i++) {
-    U64 square = static_cast<U64>(1) << i;
-
-    // If this is a square in front of a pawn and is not occupied
     if ((movedPawns2 & square) && (square & NOT_OCCUPIED)) {
-      // Add to MoveList
       potentialMoves.push_back(CMove(i-16, i));
     }
   }
@@ -122,26 +114,16 @@ MoveList Board::getWhitePawnMoves() {
 MoveList Board::getBlackPawnMoves() {
   MoveList potentialMoves;
 
-  // Move all pawns up 1
   U64 movedPawns1 = BLACK_PAWNS >> 8;
-  for(U64 i=0;i<64;i++) {
-    U64 square = static_cast<U64>(1) << i;
-
-    // If this is a square in front of a pawn and is not occupied
-    if ((movedPawns1 & square) && (square & NOT_OCCUPIED)) {
-      // Add to MoveList
-      potentialMoves.push_back(CMove(i+8, i));
-    }
-  }
-
-  // Move pawns on rank 7 up 2
   U64 movedPawns2 = (BLACK_PAWNS & RANK_7) >> 16;
   for(U64 i=0;i<64;i++) {
     U64 square = static_cast<U64>(1) << i;
 
-    // If this is a square in front of a pawn and is not occupied
+    if ((movedPawns1 & square) && (square & NOT_OCCUPIED)) {
+      potentialMoves.push_back(CMove(i+8, i));
+    }
+
     if ((movedPawns2 & square) && (square & NOT_OCCUPIED)) {
-      // Add to MoveList
       potentialMoves.push_back(CMove(i+16, i));
     }
   }
