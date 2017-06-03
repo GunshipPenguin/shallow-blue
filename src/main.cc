@@ -7,12 +7,11 @@ int main() {
   Board board;
   board.setToStartPos();
 
-  MoveList moves = board.getBlackPawnMoves();
-  std::cout << moves.size() << std::endl;
+  std::cout << board.getStringRep() << std::endl;
 
-  for(MoveList::iterator it = moves.begin(); it != moves.end(); ++it) {
-    std::cout << (*it).getStringMove() << std::endl;
-  }
+  // for(MoveList::iterator it = moves.begin(); it != moves.end(); ++it) {
+  //   std::cout << (*it).getStringMove() << std::endl;
+  // }
 
   return 0;
 }
