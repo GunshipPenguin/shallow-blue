@@ -134,8 +134,8 @@ MoveList Board::getBlackPawnMoves() {
 MoveList Board::getWhitePawnAttacks() {
   MoveList potentialAttacks;
 
-  U64 leftAttacks = WHITE_PAWNS << 7;
-  U64 rightAttacks = WHITE_PAWNS << 9;
+  U64 leftAttacks = (WHITE_PAWNS << 7) & (~FILE_H);
+  U64 rightAttacks = (WHITE_PAWNS << 9) & (~FILE_A);
   for(U64 i=0;i<64;i++) {
     U64 square = static_cast<U64>(1) << i;
 
@@ -168,8 +168,8 @@ MoveList Board::getWhitePawnAttacks() {
 MoveList Board::getBlackPawnAttacks() {
   MoveList potentialAttacks;
 
-  U64 leftAttacks = BLACK_PAWNS >> 9;
-  U64 rightAttacks = BLACK_PAWNS >> 7;
+  U64 leftAttacks = (BLACK_PAWNS >> 9) & (~FILE_H);
+  U64 rightAttacks = (BLACK_PAWNS >> 7) & (~FILE_A);
   for(U64 i=0;i<64;i++) {
     U64 square = static_cast<U64>(1) << i;
 
