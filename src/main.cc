@@ -7,7 +7,7 @@ int main() {
   Board board;
   board.setToStartPos();
 
-  MoveList moves = board.getWhitePawnMoves();
+  MoveList moves = board.getBlackPawnMoves();
   std::cout << moves.size() << std::endl;
 
   for(MoveList::iterator it = moves.begin(); it != moves.end(); ++it) {
