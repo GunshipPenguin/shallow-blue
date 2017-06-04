@@ -17,8 +17,6 @@ class Board {
     MoveList getWhitePawnAttacks();
     MoveList getBlackPawnAttacks();
 
-    MoveList getPawnPromotions(unsigned int, unsigned int, unsigned int=0);
-
   private:
     U64 WHITE_PAWNS = 0;
     U64 BLACK_PAWNS = 0;
@@ -44,10 +42,11 @@ class Board {
     U64 OCCUPIED = 0;
     U64 NOT_OCCUPIED = 0;
 
+    MoveList getPawnPromotions(unsigned int, unsigned int, unsigned int=0);
+
     U64 getOccupied();
     U64 getBlackPieces();
     U64 getWhitePieces();
-
 };
 
 #endif
