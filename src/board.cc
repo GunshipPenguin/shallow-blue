@@ -215,10 +215,8 @@ MoveList Board::getBlackPawnAttacks() {
 
     if ((leftAttacks & square) && (square & WHITE_PIECES)) {
       if (square & RANK_1) {
-        potentialAttacks.push_back(CMove(i-9, i, CMove::CAPTURE | CMove::QUEEN_PROMOTION));
-        potentialAttacks.push_back(CMove(i-9, i, CMove::CAPTURE | CMove::KNIGHT_PROMOTION));
-        potentialAttacks.push_back(CMove(i-9, i, CMove::CAPTURE | CMove::BISHOP_PROMOTION));
-        potentialAttacks.push_back(CMove(i-9, i, CMove::CAPTURE | CMove::ROOK_PROMOTION));
+        MoveList promotions = getPawnPromotions(i-9, i, CMove::CAPTURE);
+        potentialAttacks.insert(potentialAttacks.end(), promotions.begin(), promotions.end());
       } else {
         potentialAttacks.push_back(CMove(i-9, i, CMove::CAPTURE));
       }
@@ -226,10 +224,8 @@ MoveList Board::getBlackPawnAttacks() {
 
     if ((rightAttacks & square) && (square & WHITE_PIECES)) {
       if (square & RANK_1) {
-        potentialAttacks.push_back(CMove(i-7, i, CMove::CAPTURE | CMove::QUEEN_PROMOTION));
-        potentialAttacks.push_back(CMove(i-7, i, CMove::CAPTURE | CMove::KNIGHT_PROMOTION));
-        potentialAttacks.push_back(CMove(i-7, i, CMove::CAPTURE | CMove::BISHOP_PROMOTION));
-        potentialAttacks.push_back(CMove(i-7, i, CMove::CAPTURE | CMove::ROOK_PROMOTION));
+        MoveList promotions = getPawnPromotions(i-7, i, CMove::CAPTURE);
+        potentialAttacks.insert(potentialAttacks.end(), promotions.begin(), promotions.end());
       } else {
         potentialAttacks.push_back(CMove(i-7, i, CMove::CAPTURE));
       }
