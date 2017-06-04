@@ -20,7 +20,6 @@ class Board {
     MoveList getPawnPromotions(unsigned int, unsigned int, unsigned int=0);
 
   private:
-    bool _whiteToMove;
     U64 WHITE_PAWNS = 0;
     U64 BLACK_PAWNS = 0;
 
