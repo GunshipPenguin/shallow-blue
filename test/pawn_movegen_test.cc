@@ -27,6 +27,42 @@ TEST_CASE("Pawn move generation is correct") {
 
       REQUIRE(board.getWhitePawnMoves().size() == 15);
     }
+
+    SECTION("Black pawn moves are generated correctly after a7a5") {
+      board.setToFen("rnbqkbnr/1ppppppp/8/p7/8/8/PPPPPPPP/RNBQKBNR w KQkq -");
+
+      REQUIRE(board.getBlackPawnMoves().size() == 15);
+    }
+
+    SECTION("Black pawn moves are generated correctly after h7h5") {
+      board.setToFen("rnbqkbnr/ppppppp1/8/7p/8/8/PPPPPPPP/RNBQKBNR w KQkq -");
+
+      REQUIRE(board.getBlackPawnMoves().size() == 15);
+    }
+
+    SECTION("White pawn moves are not generated if piece is blocked") {
+      board.setToFen("8/8/8/3p4/3P4/8/8/8 w - -");
+
+      REQUIRE(board.getWhitePawnMoves().size() == 0);
+    }
+
+    SECTION("Black pawn moves are not generated if piece is blocked") {
+      board.setToFen("8/8/8/3p4/3P4/8/8/8 w - -");
+
+      REQUIRE(board.getBlackPawnMoves().size() == 0);
+    }
+
+    SECTION("White pawn promotion moves are generated upon reaching rank 8") {
+      board.setToFen("8/4P3/8/8/8/8/8/8 w - -");
+
+      REQUIRE(board.getWhitePawnMoves().size() == 4);
+    }
+
+    SECTION("Black pawn promotion moves are generated upon reaching rank 8") {
+      board.setToFen("8/8/8/8/8/8/4p3/8 w - -");
+
+      REQUIRE(board.getBlackPawnMoves().size() == 4);
+    }
 }
 
 TEST_CASE("Pawn attack generation is correct") {
@@ -91,5 +127,4 @@ TEST_CASE("Pawn attack generation is correct") {
 
     REQUIRE(board.getBlackPawnAttacks().size() == 1);
   }
-
 }
