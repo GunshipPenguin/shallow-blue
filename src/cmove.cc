@@ -32,7 +32,7 @@ int CMove::getFlags() {
   return ((_move >> 12) & 0xff);
 }
 
-std::string CMove::getStringMove() {
+std::string CMove::getNotation() {
   if (getFlags() & KSIDE_CASTLE) {
     return "O-O";
   } else if (getFlags() & QSIDE_CASTLE) {

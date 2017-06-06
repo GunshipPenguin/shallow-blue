@@ -24,7 +24,7 @@ public:
   int getFrom();
   int getTo();
 
-  std::string getStringMove();
+  std::string getNotation();
 
   static int notationToIndex(std::string);
   static std::string indexToNotation(int);
