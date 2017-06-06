@@ -26,13 +26,13 @@ public:
 
   std::string getStringMove();
 
+  static int notationToIndex(std::string);
+  static std::string indexToNotation(int);
 private:
   int _move;
 
   const static char RANKS[];
   const static char FILES[];
-
-  std::string indexToNotation(int);
 };
 
 typedef std::vector<CMove> MoveList;

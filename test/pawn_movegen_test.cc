@@ -127,4 +127,16 @@ TEST_CASE("Pawn attack generation is correct") {
 
     REQUIRE(board.getBlackPawnAttacks().size() == 1);
   }
+
+  SECTION("White pawn attacks are generated correctly for en passant") {
+    board.setToFen("8/8/1pP5/8/8/8/8/8 w - b7");
+
+    REQUIRE(board.getWhitePawnAttacks().size() == 1);
+  }
+
+  SECTION("Black pawn attacks are generated correctly for en passant") {
+    board.setToFen("8/8/8/8/5pP1/8/8/8 w - g3");
+
+    REQUIRE(board.getBlackPawnAttacks().size() == 1);
+  }
 }

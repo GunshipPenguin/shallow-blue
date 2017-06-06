@@ -39,6 +39,8 @@ class Board {
     U64 WHITE_PIECES = 0;
     U64 BLACK_PIECES = 0;
 
+    U64 EN_PASSANT = 0;
+
     U64 OCCUPIED = 0;
     U64 NOT_OCCUPIED = 0;
 

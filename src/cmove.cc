@@ -2,6 +2,7 @@
 #include "defs.h"
 #include <string>
 #include <iostream>
+#include <algorithm>
 
 const char CMove::RANKS[] = {'1', '2', '3', '4', '5', '6', '7', '8'};
 const char CMove::FILES[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
@@ -64,4 +65,11 @@ std::string CMove::getStringMove() {
 
 std::string CMove::indexToNotation (int index) {
   return std::string({FILES[index%8], RANKS[index/8]});
+}
+
+int CMove::notationToIndex (std::string notation) {
+  int file = std::find(FILES, FILES+8, notation[0]) - std::begin(FILES);
+  int rank = std::find(RANKS, RANKS+8, notation[1]) - std::begin(RANKS);
+
+  return rank * 8 + file;
 }

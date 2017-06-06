@@ -42,46 +42,74 @@ std::string Board::getStringRep() {
 }
 
 void Board::setToFen(std::string fenString) {
-  U64 boardPos = 63;
-  int strIndex = 0;
+  U64 boardPos = 56; // Fen string starts at a8 = index 56
+  unsigned int strIndex = 0;
 
   U64 one64 = static_cast<U64>(1);
 
   while(fenString[strIndex] != ' ') {
     switch(fenString[strIndex]) {
-      case 'p': BLACK_PAWNS |= (one64 << boardPos--);
+      case 'p': BLACK_PAWNS |= (one64 << boardPos++);
         break;
-      case 'r': BLACK_ROOKS |= (one64 << boardPos--);
+      case 'r': BLACK_ROOKS |= (one64 << boardPos++);
         break;
-      case 'n': BLACK_KNIGHTS |= (one64 << boardPos--);
+      case 'n': BLACK_KNIGHTS |= (one64 << boardPos++);
         break;
-      case 'b': BLACK_BISHOPS |= (one64 << boardPos--);
+      case 'b': BLACK_BISHOPS |= (one64 << boardPos++);
         break;
-      case 'q': BLACK_QUEENS |= (one64 << boardPos--);
+      case 'q': BLACK_QUEENS |= (one64 << boardPos++);
         break;
-      case 'k': BLACK_KING |= (one64 << boardPos--);
+      case 'k': BLACK_KING |= (one64 << boardPos++);
         break;
-      case 'P': WHITE_PAWNS |= (one64 << boardPos--);
+      case 'P': WHITE_PAWNS |= (one64 << boardPos++);
         break;
-      case 'R': WHITE_ROOKS |= (one64 << boardPos--);
+      case 'R': WHITE_ROOKS |= (one64 << boardPos++);
         break;
-      case 'N': WHITE_KNIGHTS |= (one64 << boardPos--);
+      case 'N': WHITE_KNIGHTS |= (one64 << boardPos++);
         break;
-      case 'B': WHITE_BISHOPS |= (one64 << boardPos--);
+      case 'B': WHITE_BISHOPS |= (one64 << boardPos++);
         break;
-      case 'Q': WHITE_QUEENS |= (one64 << boardPos--);
+      case 'Q': WHITE_QUEENS |= (one64 << boardPos++);
         break;
-      case 'K': WHITE_KING |= (one64 << boardPos--);
+      case 'K': WHITE_KING |= (one64 << boardPos++);
         break;
-      case '/': break;
+      case '/': boardPos -= 16; // Go down one rank
+        break;
       default:
-        boardPos -= static_cast<U64>(fenString[strIndex] - '0');
+        boardPos += static_cast<U64>(fenString[strIndex] - '0');
     }
     strIndex++;
   }
 
+  // Get next color to move
+  // char nextToMove = fenString[strIndex + 1]; // Currently unused
+  strIndex += 3;
+
+  // Get castling availability
+  int castleStart = strIndex;
+  while (fenString[strIndex] != ' ') {
+    strIndex ++;
+  }
+  std::string castlingAval = fenString.substr(castleStart, strIndex);
+
+  // Get en passant target square
+  int enPasStart = strIndex + 1;
+  while (strIndex != fenString.size()) {
+    strIndex ++;
+  }
+  std::string enPasSquare = fenString.substr(enPasStart, strIndex-enPasStart);
+
+  // Set bitboards
+  if (enPasSquare == "-") {
+    EN_PASSANT = 0;
+  } else {
+    int enPasIndex = CMove::notationToIndex(enPasSquare);
+    EN_PASSANT = static_cast<U64>(1) << enPasIndex;
+  }
+
   WHITE_PIECES = getWhitePieces();
   BLACK_PIECES = getBlackPieces();
+
 
   OCCUPIED = getOccupied();
   NOT_OCCUPIED = ~OCCUPIED;
@@ -180,10 +208,12 @@ MoveList Board::getWhitePawnAttacks() {
 
   U64 leftAttacks = (WHITE_PAWNS << 7) & (~FILE_H);
   U64 rightAttacks = (WHITE_PAWNS << 9) & (~FILE_A);
+  U64 attackablePieces = BLACK_PIECES | EN_PASSANT;
+
   for(U64 i=0;i<64;i++) {
     U64 square = static_cast<U64>(1) << i;
 
-    if ((leftAttacks & square) && (square & BLACK_PIECES)) {
+    if ((leftAttacks & square) && (square & attackablePieces)) {
       if (square & RANK_8) {
         MoveList promotions = getPawnPromotions(i-7, i, CMove::CAPTURE);
         potentialAttacks.insert(potentialAttacks.end(), promotions.begin(), promotions.end());
@@ -192,7 +222,7 @@ MoveList Board::getWhitePawnAttacks() {
       }
     }
 
-    if ((rightAttacks & square) && (square & BLACK_PIECES)) {
+    if ((rightAttacks & square) && (square & attackablePieces)) {
       if (square & RANK_8) {
         MoveList promotions = getPawnPromotions(i-9, i, CMove::CAPTURE);
         potentialAttacks.insert(potentialAttacks.end(), promotions.begin(), promotions.end());
@@ -210,24 +240,27 @@ MoveList Board::getBlackPawnAttacks() {
 
   U64 leftAttacks = (BLACK_PAWNS >> 9) & (~FILE_H);
   U64 rightAttacks = (BLACK_PAWNS >> 7) & (~FILE_A);
+
+  U64 attackablePieces = WHITE_PIECES | EN_PASSANT;
+
   for(U64 i=0;i<64;i++) {
     U64 square = static_cast<U64>(1) << i;
 
-    if ((leftAttacks & square) && (square & WHITE_PIECES)) {
+    if ((leftAttacks & square) && (square & attackablePieces)) {
       if (square & RANK_1) {
-        MoveList promotions = getPawnPromotions(i-9, i, CMove::CAPTURE);
+        MoveList promotions = getPawnPromotions(i+9, i, CMove::CAPTURE);
         potentialAttacks.insert(potentialAttacks.end(), promotions.begin(), promotions.end());
       } else {
-        potentialAttacks.push_back(CMove(i-9, i, CMove::CAPTURE));
+        potentialAttacks.push_back(CMove(i+9, i, CMove::CAPTURE));
       }
     }
 
-    if ((rightAttacks & square) && (square & WHITE_PIECES)) {
+    if ((rightAttacks & square) && (square & attackablePieces)) {
       if (square & RANK_1) {
-        MoveList promotions = getPawnPromotions(i-7, i, CMove::CAPTURE);
+        MoveList promotions = getPawnPromotions(i+7, i, CMove::CAPTURE);
         potentialAttacks.insert(potentialAttacks.end(), promotions.begin(), promotions.end());
       } else {
-        potentialAttacks.push_back(CMove(i-7, i, CMove::CAPTURE));
+        potentialAttacks.push_back(CMove(i+7, i, CMove::CAPTURE));
       }
     }
   }

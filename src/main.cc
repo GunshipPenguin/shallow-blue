@@ -5,13 +5,13 @@
 
 int main() {
   Board board;
-  board.setToStartPos();
 
-  std::cout << board.getStringRep() << std::endl;
+  board.setToFen("8/3p4/1pP5/8/8/8/8/8 w - b7");
 
-  // for(MoveList::iterator it = moves.begin(); it != moves.end(); ++it) {
-  //   std::cout << (*it).getStringMove() << std::endl;
-  // }
+  MoveList moves = board.getWhitePawnAttacks();
+  for(MoveList::iterator it = moves.begin(); it != moves.end(); ++it) {
+    std::cout << (*it).getStringMove() << std::endl;
+  }
 
   return 0;
 }
