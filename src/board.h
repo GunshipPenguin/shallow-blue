@@ -17,6 +17,10 @@ class Board {
     MoveList getWhitePawnAttacks();
     MoveList getBlackPawnAttacks();
 
+    MoveList getWhiteKingMoves();
+    MoveList getBlackKingMoves();
+    MoveList getKingMoves(U64, U64, U64);
+
   private:
     U64 WHITE_PAWNS = 0;
     U64 BLACK_PAWNS = 0;
@@ -38,6 +42,9 @@ class Board {
 
     U64 WHITE_PIECES = 0;
     U64 BLACK_PIECES = 0;
+
+    U64 WHITE_ATTACKABLE = 0;
+    U64 BLACK_ATTACKABLE = 0;
 
     U64 EN_PASSANT = 0;
 

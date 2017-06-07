@@ -2,6 +2,7 @@
 #include "cmove.h"
 #include <string>
 #include <iostream>
+#include <string.h>
 
 std::string Board::getStringRep() {
   std::string stringRep;
@@ -108,8 +109,10 @@ void Board::setToFen(std::string fenString) {
   }
 
   WHITE_PIECES = getWhitePieces();
-  BLACK_PIECES = getBlackPieces();
+  WHITE_ATTACKABLE = WHITE_PIECES & ~WHITE_KING;
 
+  BLACK_PIECES = getBlackPieces();
+  BLACK_ATTACKABLE = BLACK_PIECES & ~BLACK_KING;
 
   OCCUPIED = getOccupied();
   NOT_OCCUPIED = ~OCCUPIED;
@@ -266,4 +269,37 @@ MoveList Board::getBlackPawnAttacks() {
   }
 
   return potentialAttacks;
+}
+
+MoveList Board::getWhiteKingMoves() {
+  return getKingMoves(WHITE_KING, WHITE_PIECES, BLACK_ATTACKABLE);
+}
+
+MoveList Board::getBlackKingMoves() {
+  return getKingMoves(BLACK_KING, BLACK_PIECES, WHITE_ATTACKABLE);
+}
+
+MoveList Board::getKingMoves(U64 king, U64 own, U64 attackable) {
+  MoveList possibleMoves;
+
+  int kingIndex = ffsll(king) - 1;
+
+
+  U64 moves = (((king << 7) | (king >> 9) | (king >> 1)) & (~FILE_H)) |
+    (((king << 9) | (king >> 7) | (king << 1)) & (~FILE_A)) |
+    ((king >> 8) | (king << 8));
+
+  for(U64 i=0;i<64;i++) {
+    U64 square = static_cast<U64>(1) << i;
+
+    if (square & moves) {
+      if (square & attackable) {
+        possibleMoves.push_back(CMove(kingIndex, i, CMove::CAPTURE));
+      } else {
+        possibleMoves.push_back(CMove(kingIndex, i));
+      }
+    }
+  }
+
+  return possibleMoves;
 }
