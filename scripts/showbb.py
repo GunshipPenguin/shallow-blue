@@ -1,5 +1,5 @@
 '''
-Pretty prints a bitboard to the console given its hex or decimal value.
+Pretty prints a bitboard to the console given its hex or decimal value.b
 '''
 import sys, textwrap
 
@@ -16,7 +16,10 @@ else:
 # Slice off the '0b'
 bb = bb[2:]
 
+bb = bb.replace('0', '.')
+bb = bb.replace('1', '#')
+
 if len(bb) < 64:
     bb = '0' * (64-len(bb)) + bb
 
-print '\n'.join([line[::-1] for line in textwrap.wrap(bb, 8)])
+print '\n'.join([' '.join(line[::-1]) for line in textwrap.wrap(bb, 8)])
