@@ -32,7 +32,15 @@ TEST_CASE("Knight move generation is correct") {
     REQUIRE(board.getWhiteKnightMoves().size() == 2);
 
     board.setToFen("7n/8/8/8/8/8/8/8 w - -");
-    REQUIRE(board.getWhiteKnightMoves().size() == 2);
+    REQUIRE(board.getBlackKnightMoves().size() == 2);
+  }
+
+  SECTION("Knights attack opposing pieces") {
+    board.setToFen("8/8/3p1p2/2b3b1/4N3/2r3r1/3p1p2/8 w - -");
+    REQUIRE(board.getWhiteKnightMoves().size() == 8);
+
+    board.setToFen("8/8/3P1P2/2B3B1/4n3/2R3R1/3P1P2/8 w - -");
+    REQUIRE(board.getBlackKnightMoves().size() == 8);
   }
 
   SECTION("Knights do not move to squares occupied by their own pieces") {
