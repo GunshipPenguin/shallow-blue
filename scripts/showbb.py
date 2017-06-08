@@ -1,5 +1,5 @@
 '''
-Pretty prints a bitboard to the console given its hex or decimal value.b
+Pretty prints a bitboard to the console given its hex or decimal value.
 '''
 import sys, textwrap
 
