@@ -7,38 +7,45 @@
 std::string Board::getStringRep() {
   std::string stringRep;
   U64 base = 1;
+  U64 boardPos = 56; // Starts at a8, goes down rank by rank
+  int squaresProcessed = 0;
 
-  for(U64 i=0;i<64;i++) {
-    U64 square = base<<i;
+  while (squaresProcessed < 64) {
+    U64 square = base << boardPos;
     bool squareOccupied = (square & OCCUPIED) != 0;
 
-    if (i % 8 == 0) {
-      stringRep.insert(0, "\n");
-    }
-
     if (squareOccupied) {
-      if (square & WHITE_PAWNS) stringRep.insert(0, " P ");
-      else if (square & BLACK_PAWNS) stringRep.insert(0, " p ");
+      if (square & WHITE_PAWNS) stringRep += " P ";
+      else if (square & BLACK_PAWNS) stringRep += " p ";
 
-      else if (square & WHITE_ROOKS) stringRep.insert(0, " R ");
-      else if (square & BLACK_ROOKS) stringRep.insert(0, " r ");
+      else if (square & WHITE_ROOKS) stringRep += " R ";
+      else if (square & BLACK_ROOKS) stringRep += " r ";
 
-      else if (square & WHITE_KNIGHTS) stringRep.insert(0, " N ");
-      else if (square & BLACK_KNIGHTS) stringRep.insert(0, " n ");
+      else if (square & WHITE_KNIGHTS) stringRep += " N ";
+      else if (square & BLACK_KNIGHTS) stringRep += " n ";
 
-      else if (square & WHITE_BISHOPS) stringRep.insert(0, " B ");
-      else if (square & BLACK_BISHOPS) stringRep.insert(0, " b ");
+      else if (square & WHITE_BISHOPS) stringRep += " B ";
+      else if (square & BLACK_BISHOPS) stringRep += " b ";
 
-      else if (square & WHITE_QUEENS) stringRep.insert(0, " Q ");
-      else if (square & BLACK_QUEENS) stringRep.insert(0, " q ");
+      else if (square & WHITE_QUEENS) stringRep += " Q ";
+      else if (square & BLACK_QUEENS) stringRep += " q ";
 
-      else if (square & WHITE_KING) stringRep.insert(0, " K ");
-      else if (square & BLACK_KING) stringRep.insert(0, " k ");
+      else if (square & WHITE_KING) stringRep += " K ";
+      else if (square & BLACK_KING) stringRep += " k ";
     } else {
-      stringRep.insert(0, " . ");
+      stringRep += " . ";
     }
+
+    if ((squaresProcessed+1) % 8 == 0) {
+      stringRep += '\n';
+      boardPos -= 16;
+    }
+
+    boardPos ++;
+    squaresProcessed ++;
   }
 
+  stringRep.pop_back();
   return stringRep;
 }
 
