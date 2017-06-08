@@ -20,6 +20,6 @@ bb = bb.replace('0', '.')
 bb = bb.replace('1', '#')
 
 if len(bb) < 64:
-    bb = '0' * (64-len(bb)) + bb
+    bb = '.' * (64-len(bb)) + bb
 
 print '\n'.join([' '.join(line[::-1]) for line in textwrap.wrap(bb, 8)])
