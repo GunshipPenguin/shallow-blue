@@ -84,7 +84,7 @@ void Board::clearBitBoards() {
 
 void Board::setToFen(std::string fenString) {
   clearBitBoards();
-  
+
   U64 boardPos = 56; // Fen string starts at a8 = index 56
   unsigned int strIndex = 0;
 
@@ -333,13 +333,14 @@ MoveList Board::getKingMoves(U64 king, U64 own, U64 attackable) {
 
   for(U64 i=0;i<64;i++) {
     U64 square = static_cast<U64>(1) << i;
+    if ((square & moves) == 0 || (square & own) != 0) {
+      continue;
+    }
 
-    if (square & moves) {
-      if (square & attackable) {
-        possibleMoves.push_back(CMove(kingIndex, i, CMove::CAPTURE));
-      } else {
-        possibleMoves.push_back(CMove(kingIndex, i));
-      }
+    if (square & attackable) {
+      possibleMoves.push_back(CMove(kingIndex, i, CMove::CAPTURE));
+    } else {
+      possibleMoves.push_back(CMove(kingIndex, i));
     }
   }
 
