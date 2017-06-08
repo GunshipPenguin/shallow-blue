@@ -49,7 +49,42 @@ std::string Board::getStringRep() {
   return stringRep;
 }
 
+void Board::clearBitBoards() {
+  WHITE_PAWNS = 0ull;
+  BLACK_PAWNS = 0ull;
+
+  WHITE_ROOKS = 0ull;
+  BLACK_ROOKS = 0ull;
+
+  WHITE_KNIGHTS = 0ull;
+  BLACK_KNIGHTS = 0ull;
+
+  WHITE_BISHOPS = 0ull;
+  BLACK_BISHOPS = 0ull;
+
+  WHITE_QUEENS = 0ull;
+  BLACK_QUEENS = 0ull;
+
+  WHITE_KING = 0ull;
+  BLACK_KING = 0ull;
+
+  WHITE_PIECES = 0ull;
+  BLACK_PIECES = 0ull;
+
+  WHITE_ATTACKABLE = 0ull;
+  BLACK_ATTACKABLE = 0ull;
+
+  EN_PASSANT = 0ull;
+
+  OCCUPIED = 0ull;
+  NOT_OCCUPIED = 0ull;
+
+  return;
+}
+
 void Board::setToFen(std::string fenString) {
+  clearBitBoards();
+  
   U64 boardPos = 56; // Fen string starts at a8 = index 56
   unsigned int strIndex = 0;
 
@@ -329,8 +364,8 @@ MoveList Board::getKnightMoves(U64 knights, U64 own, U64 attackable) {
 
     U64 moves = (((fromSquare << 15) | (fromSquare >> 17)) & ~FILE_H) | // Left 1
       (((fromSquare >> 15) | (fromSquare << 17)) & ~FILE_A) | // Right 1
-      (((fromSquare << 6) | (fromSquare >> 10)) & ~(FILE_G | FILE_H)) |
-      (((fromSquare >> 6) | (fromSquare << 10)) & ~(FILE_A | FILE_B));
+      (((fromSquare << 6) | (fromSquare >> 10)) & ~(FILE_G | FILE_H)) | // Left 2
+      (((fromSquare >> 6) | (fromSquare << 10)) & ~(FILE_A | FILE_B)); // Right 2
 
     for(U64 to=0;to<64;to++) {
       U64 toSquare = static_cast<U64>(1) << to;
