@@ -21,6 +21,10 @@ class Board {
     MoveList getBlackKingMoves();
     MoveList getKingMoves(U64, U64, U64);
 
+    MoveList getWhiteKnightMoves();
+    MoveList getBlackKnightMoves();
+    MoveList getKnightMoves(U64, U64, U64);
+
   private:
     U64 WHITE_PAWNS = 0;
     U64 BLACK_PAWNS = 0;

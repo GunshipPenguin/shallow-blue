@@ -310,3 +310,41 @@ MoveList Board::getKingMoves(U64 king, U64 own, U64 attackable) {
 
   return possibleMoves;
 }
+
+MoveList Board::getWhiteKnightMoves() {
+  return getKnightMoves(WHITE_KNIGHTS, WHITE_PIECES, BLACK_ATTACKABLE);
+}
+
+MoveList Board::getBlackKnightMoves() {
+  return getKnightMoves(BLACK_KNIGHTS, BLACK_PIECES, WHITE_ATTACKABLE);
+}
+
+MoveList Board::getKnightMoves(U64 knights, U64 own, U64 attackable) {
+  MoveList possibleMoves;
+  for(U64 from=0;from<64;from++) {
+    U64 fromSquare = static_cast<U64>(1) << from;
+    if ((fromSquare & knights) == 0) {
+      continue;
+    }
+
+    U64 moves = (((fromSquare << 15) | (fromSquare >> 17)) & ~FILE_H) | // Left 1
+      (((fromSquare >> 15) | (fromSquare << 17)) & ~FILE_A) | // Right 1
+      (((fromSquare << 6) | (fromSquare >> 10)) & ~(FILE_G | FILE_H)) |
+      (((fromSquare >> 6) | (fromSquare << 10)) & ~(FILE_A | FILE_B));
+
+    for(U64 to=0;to<64;to++) {
+      U64 toSquare = static_cast<U64>(1) << to;
+      if ((toSquare & moves) == 0 || (toSquare & own) != 0) {
+        continue;
+      }
+
+      if (toSquare & attackable) {
+        possibleMoves.push_back(CMove(from, to, CMove::CAPTURE));
+      } else {
+        possibleMoves.push_back(CMove(from, to));
+      }
+    }
+  }
+
+  return possibleMoves;
+}
