@@ -1,5 +1,6 @@
 #include "raytable.h"
 #include "defs.h"
+#include <iostream>
 
 RayTable::RayTable() {
   calcNorth();
@@ -11,6 +12,30 @@ RayTable::RayTable() {
   calcSouthWest();
   calcWest();
   calcSouthEast();
+}
+
+U64 RayTable::getPositiveAttacks(Dir dir, int square, U64 occupied) {
+  U64 attacks = rays[dir][square];
+  U64 blocked = attacks & occupied;
+
+  if (blocked) {
+    int blockSquare = bitscanForward(blocked);
+    attacks ^= rays[dir][blockSquare];
+  }
+
+  return attacks;
+}
+
+U64 RayTable::getNegativeAttacks(Dir dir, int square, U64 occupied) {
+  U64 attacks = rays[dir][square];
+  U64 blocked = attacks & occupied;
+
+  if (blocked) {
+    int blockSquare = 64 - bitscanReverse(blocked);
+    attacks ^= rays[dir][blockSquare];
+  }
+
+  return attacks;
 }
 
 U64 RayTable::getRay(Dir direction, int square) {
@@ -91,4 +116,12 @@ U64 RayTable::eastOne(U64 bb) {
 
 U64 RayTable::westOne(U64 bb) {
   return ((bb >> 1ull) & (~FILE_H));
+}
+
+int RayTable::bitscanForward(U64 board) {
+  return __builtin_ffsll(board) - 1;
+}
+
+int RayTable::bitscanReverse(U64 board) {
+  return __builtin_clzll(board) + 1;
 }

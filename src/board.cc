@@ -1,5 +1,6 @@
 #include "board.h"
 #include "cmove.h"
+#include "raytable.h"
 #include <string>
 #include <iostream>
 #include <string.h>
@@ -375,6 +376,47 @@ MoveList Board::getKnightMoves(U64 knights, U64 own, U64 attackable) {
       }
 
       if (toSquare & attackable) {
+        possibleMoves.push_back(CMove(from, to, CMove::CAPTURE));
+      } else {
+        possibleMoves.push_back(CMove(from, to));
+      }
+    }
+  }
+
+  return possibleMoves;
+}
+
+MoveList Board::getWhiteBishopMoves() {
+  return getBishopMoves(WHITE_BISHOPS, WHITE_PIECES, BLACK_PIECES);
+}
+
+MoveList Board::getBlackBishopMoves() {
+  return getBishopMoves(BLACK_BISHOPS, BLACK_PIECES, BLACK_PIECES);
+}
+
+MoveList Board::getBishopMoves(U64 bishops, U64 own, U64 attackable) {
+  MoveList possibleMoves;
+  for(int from=0;from<64;from++) {
+    U64 fromSquare = U64(1) << from;
+    if((fromSquare & bishops) == 0) {
+      continue;
+    }
+
+    U64 moves = raytable.getPositiveAttacks(RayTable::NORTH_WEST, from, OCCUPIED) |
+      raytable.getPositiveAttacks(RayTable::NORTH_EAST, from, OCCUPIED) |
+      raytable.getNegativeAttacks(RayTable::SOUTH_WEST, from, OCCUPIED) |
+      raytable.getPositiveAttacks(RayTable::SOUTH_EAST, from, OCCUPIED);
+
+    // Remove any attacks to own pieces
+    moves &= ~own;
+
+    for(int to=0;to<64;to++) {
+      U64 toSquare = U64(1) << to;
+      if ((toSquare & moves) == 0) {
+        continue;
+      }
+
+      if(toSquare & attackable) {
         possibleMoves.push_back(CMove(from, to, CMove::CAPTURE));
       } else {
         possibleMoves.push_back(CMove(from, to));

@@ -19,6 +19,8 @@ public:
   };
 
   U64 getRay(Dir, int);
+  U64 getPositiveAttacks(Dir, int, U64);
+  U64 getNegativeAttacks(Dir, int, U64);
 
 private:
   U64 rays[8][64];
@@ -35,6 +37,9 @@ private:
 
   U64 eastOne(U64);
   U64 westOne(U64);
+
+  int bitscanForward(U64);
+  int bitscanReverse(U64);
 };
 
 #endif

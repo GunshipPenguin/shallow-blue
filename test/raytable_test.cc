@@ -1,7 +1,7 @@
 #include "catch.hpp"
 #include "raytable.h"
 
-TEST_CASE("RayTable works as expected") {
+TEST_CASE("RayTable ray generation works as expected") {
   RayTable raytable;
   int a1 = 0;
   int d4 = 27;

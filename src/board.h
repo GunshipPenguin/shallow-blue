@@ -2,6 +2,7 @@
 #define BOARD_H
 
 #include "defs.h"
+#include "raytable.h"
 #include "cmove.h"
 #include <string>
 
@@ -26,6 +27,10 @@ class Board {
     MoveList getWhiteKnightMoves();
     MoveList getBlackKnightMoves();
     MoveList getKnightMoves(U64, U64, U64);
+
+    MoveList getWhiteBishopMoves();
+    MoveList getBlackBishopMoves();
+    MoveList getBishopMoves(U64, U64, U64);
 
   private:
     U64 WHITE_PAWNS;
@@ -56,6 +61,8 @@ class Board {
 
     U64 OCCUPIED;
     U64 NOT_OCCUPIED;
+
+    RayTable raytable;
 
     MoveList getPawnPromotions(unsigned int, unsigned int, unsigned int=0);
 
