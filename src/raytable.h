@@ -7,23 +7,21 @@ class RayTable {
 public:
   RayTable();
 
+  enum Dir {
+    NORTH,
+    SOUTH,
+    EAST,
+    WEST,
+    NORTH_EAST,
+    NORTH_WEST,
+    SOUTH_EAST,
+    SOUTH_WEST
+  };
+
+  U64 getRay(Dir, int);
+
 private:
-  U64 northRays[64];
-  U64 northEastRays[64];
-  U64 eastRays[64];
-  U64 northWestRays[64];
-
-  U64 southRays[64];
-  U64 southWestRays[64];
-  U64 westRays[64];
-  U64 southEastRays[64];
-
-  U64 bishopAttacks[64];
-  U64 rookAttacks[64];
-  U64 queenAttacks[64];
-
-  U64 eastOne(U64);
-  U64 westOne(U64);
+  U64 rays[8][64];
 
   void calcNorth();
   void calcNorthEast();
@@ -35,7 +33,8 @@ private:
   void calcWest();
   void calcSouthEast();
 
-  void calcSliding();
+  U64 eastOne(U64);
+  U64 westOne(U64);
 };
 
 #endif

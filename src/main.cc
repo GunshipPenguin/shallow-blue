@@ -1,17 +1,11 @@
 #include <iostream>
-#include <string>
-#include "cmove.h"
-#include "board.h"
+#include "raytable.h"
 
 int main() {
-  Board board;
+  RayTable raytable;
 
-  board.setToFen("8/3p4/1pP5/8/8/8/8/8 w - b7");
-
-  MoveList moves = board.getWhitePawnAttacks();
-  for(MoveList::iterator it = moves.begin(); it != moves.end(); ++it) {
-    std::cout << (*it).getStringMove() << std::endl;
-  }
+  std::cout << std::hex << "0x" << raytable.getRay(RayTable::SOUTH_EAST, 27) << std::endl;
+  std::cout << std::hex << "0x" << raytable.getRay(RayTable::SOUTH_EAST, 36) << std::endl;
 
   return 0;
 }
