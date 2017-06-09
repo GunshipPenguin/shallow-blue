@@ -426,3 +426,42 @@ MoveList Board::getBishopMoves(U64 bishops, U64 own, U64 attackable) {
 
   return possibleMoves;
 }
+
+MoveList Board::getWhiteRookMoves() {
+  return getRookMoves(WHITE_ROOKS, WHITE_PIECES, BLACK_ATTACKABLE);
+}
+
+MoveList Board::getBlackRookMoves() {
+  return getRookMoves(BLACK_ROOKS, BLACK_PIECES, WHITE_ATTACKABLE);
+}
+
+MoveList Board::getRookMoves(U64 rooks, U64 own, U64 attackable) {
+  MoveList possibleMoves;
+  for(int from=0;from<64;from++) {
+    U64 fromSquare = U64(1) << from;
+    if((fromSquare & rooks) == 0) {
+      continue;
+    }
+
+    U64 moves = raytable.getPositiveAttacks(RayTable::NORTH, from, OCCUPIED) |
+      raytable.getPositiveAttacks(RayTable::EAST, from, OCCUPIED) |
+      raytable.getNegativeAttacks(RayTable::SOUTH, from, OCCUPIED) |
+      raytable.getPositiveAttacks(RayTable::WEST, from, OCCUPIED);
+
+    moves &= ~own;
+
+    for(int to=0;to<64;to++) {
+      U64 toSquare = U64(1) << to;
+      if ((toSquare & moves) == 0) {
+        continue;
+      }
+
+      if(toSquare & attackable) {
+        possibleMoves.push_back(CMove(from, to, CMove::CAPTURE));
+      } else {
+        possibleMoves.push_back(CMove(from, to));
+      }
+    }
+  }
+  return possibleMoves;
+}
