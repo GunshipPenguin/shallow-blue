@@ -93,7 +93,7 @@ void Board::setToFen(std::string fenString) {
   U64 boardPos = 56; // Fen string starts at a8 = index 56
   fenStream >> token;
 
-  U64 one64 = static_cast<U64>(1);
+  U64 one64 = U64(1);
   for (auto currChar : token) {
     switch(currChar) {
       case 'p': BLACK_PAWNS |= (one64 << boardPos++);
