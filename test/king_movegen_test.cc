@@ -1,6 +1,8 @@
 #include "board.h"
 #include "catch.hpp"
 
+#include <iostream>
+
 TEST_CASE("King move generation is correct") {
   Board board;
 
@@ -49,6 +51,37 @@ TEST_CASE("King move generation is correct") {
     REQUIRE(board.getWhiteKingMoves().size() == 7);
 
     board.setToFen("8/8/8/3kK3/8/8/8/8 w - -");
+    REQUIRE(board.getBlackKingMoves().size() == 7);
+  }
+
+  SECTION("Castles are generated when castling is possible") {
+    // White kingside only
+    board.setToFen("8/8/8/8/8/8/8/R3K2R w K -");
+    REQUIRE(board.getWhiteKingMoves().size() == 6);
+
+    // White queenside only
+    board.setToFen("8/8/8/8/8/8/8/R3K2R w Q -");
+    REQUIRE(board.getWhiteKingMoves().size() == 6);
+
+    // White king and queenside
+    board.setToFen("8/8/8/8/8/8/8/R3K2R w KQ -");
+    REQUIRE(board.getWhiteKingMoves().size() == 7);
+
+    // Black kingside only
+    board.setToFen("r3k2r/8/8/8/8/8/8/8 w k -");
+    REQUIRE(board.getBlackKingMoves().size() == 6);
+
+    // Black queenside only
+    board.setToFen("r3k2r/8/8/8/8/8/8/8 w q -");
+    REQUIRE(board.getBlackKingMoves().size() == 6);
+
+    // Black king and queenside
+    board.setToFen("r3k2r/8/8/8/8/8/8/8 w kq -");
+    REQUIRE(board.getBlackKingMoves().size() == 7);
+
+    // Both sides all available
+    board.setToFen("r3k2r/8/8/8/8/8/8/R3K2R w KQkq -");
+    REQUIRE(board.getWhiteKingMoves().size() == 7);
     REQUIRE(board.getBlackKingMoves().size() == 7);
   }
 }

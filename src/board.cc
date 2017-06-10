@@ -140,12 +140,16 @@ void Board::setToFen(std::string fenString) {
     switch(currChar) {
       case 'K':
         WHITE_CAN_CASTLE_KS = true;
+        break;
       case 'Q':
         WHITE_CAN_CASTLE_QS = true;
+        break;
       case 'k':
         BLACK_CAN_CASTLE_KS = true;
+        break;
       case 'q':
         BLACK_CAN_CASTLE_QS = true;
+        break;
     }
   }
 
@@ -326,11 +330,30 @@ MoveList Board::getBlackPawnAttacks() {
 }
 
 MoveList Board::getWhiteKingMoves() {
-  return getKingMoves(WHITE_KING, WHITE_PIECES, BLACK_ATTACKABLE);
+  MoveList moves = getKingMoves(WHITE_KING, WHITE_PIECES, BLACK_ATTACKABLE);
+
+  if (WHITE_CAN_CASTLE_KS) {
+    moves.push_back(CMove(0, 0, CMove::KSIDE_CASTLE));
+  }
+  if (WHITE_CAN_CASTLE_QS) {
+    moves.push_back(CMove(0, 0, CMove::QSIDE_CASTLE));
+  }
+
+  return moves;
 }
 
 MoveList Board::getBlackKingMoves() {
-  return getKingMoves(BLACK_KING, BLACK_PIECES, WHITE_ATTACKABLE);
+  MoveList moves = getKingMoves(BLACK_KING, BLACK_PIECES, WHITE_ATTACKABLE);
+
+  // Add castles
+  if (BLACK_CAN_CASTLE_KS) {
+    moves.push_back(CMove(0, 0, CMove::KSIDE_CASTLE));
+  }
+  if (BLACK_CAN_CASTLE_QS) {
+    moves.push_back(CMove(0, 0, CMove::QSIDE_CASTLE));
+  }
+
+  return moves;
 }
 
 MoveList Board::getKingMoves(U64 king, U64 own, U64 attackable) {
