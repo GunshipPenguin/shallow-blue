@@ -8,6 +8,7 @@
 class CMove {
 public:
   CMove(unsigned int, unsigned int, unsigned int=0);
+  CMove(std::string);
 
   enum FLAGS {
     CAPTURE = 1<<0,
@@ -21,12 +22,12 @@ public:
 
   int getFlags();
 
-  int getFrom();
-  int getTo();
+  unsigned int getFrom();
+  unsigned int getTo();
 
   std::string getNotation();
 
-  static int notationToIndex(std::string);
+  static unsigned int notationToIndex(std::string);
   static std::string indexToNotation(int);
 private:
   int _move;

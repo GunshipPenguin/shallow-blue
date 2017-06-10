@@ -20,11 +20,38 @@ CMove::CMove(unsigned int from, unsigned int to, unsigned int flags) {
   _move = ((flags & 0xff) << 12) | ((to & 0x3f) << 6) | (from & 0x3f);
 }
 
-int CMove::getFrom() {
+CMove::CMove(std::string notation) {
+  std::string fromSquare = notation.substr(0, 2);
+  std::string toSquare = notation.substr(2, 2);
+
+  unsigned int from = notationToIndex(fromSquare);
+  unsigned int to = notationToIndex(toSquare);
+  unsigned int flags = 0;
+
+  // Promotions
+  if (notation.size() == 5) {
+    char promotion = tolower(notation[4]);
+
+    switch(promotion) {
+      case 'q':
+        flags |= QUEEN_PROMOTION;
+      case 'r':
+        flags |= ROOK_PROMOTION;
+      case 'b':
+        flags |= BISHOP_PROMOTION;
+      case 'n':
+        flags |= KNIGHT_PROMOTION;
+    }
+  }
+
+  _move = ((flags & 0xff) << 12) | ((to & 0x3f) << 6) | (from & 0x3f);
+}
+
+unsigned int CMove::getFrom() {
   return _move & 0x3f;
 }
 
-int CMove::getTo() {
+unsigned int CMove::getTo() {
   return ((_move >> 6) & 0x3f);
 }
 
@@ -42,13 +69,7 @@ std::string CMove::getNotation() {
   int fromIndex = getFrom();
   int toIndex = getTo();
 
-  std::string moveNotation;
-
-  if (getFlags() & CAPTURE) {
-    moveNotation = indexToNotation(fromIndex) + 'x' + indexToNotation(toIndex);
-  } else {
-    moveNotation = indexToNotation(fromIndex) + indexToNotation(toIndex);
-  }
+  std::string moveNotation = indexToNotation(fromIndex) + indexToNotation(toIndex);
 
   if (getFlags() & QUEEN_PROMOTION) {
     moveNotation += 'Q';
@@ -67,7 +88,7 @@ std::string CMove::indexToNotation (int index) {
   return std::string({FILES[index%8], RANKS[index/8]});
 }
 
-int CMove::notationToIndex (std::string notation) {
+unsigned int CMove::notationToIndex (std::string notation) {
   int file = std::find(FILES, FILES+8, notation[0]) - std::begin(FILES);
   int rank = std::find(RANKS, RANKS+8, notation[1]) - std::begin(RANKS);
 

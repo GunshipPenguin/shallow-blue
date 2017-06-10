@@ -10,6 +10,13 @@ TEST_CASE("Move representation is correct") {
     REQUIRE(move.getFlags() == CMove::CAPTURE);
   }
 
+  SECTION("CMove constructs with a notation") {
+    CMove move("a1a2");
+
+    REQUIRE(move.getFrom() == 0);
+    REQUIRE(move.getTo() == 8);
+  }
+
   SECTION("indexToNotation works correctly") {
     // Corners
     REQUIRE(CMove::indexToNotation(0) == "a1");
@@ -49,7 +56,7 @@ TEST_CASE("CMove.getNotation works properly") {
   SECTION("getNotation works for a capture move") {
     CMove move(8, 16, CMove::CAPTURE);
 
-    REQUIRE(move.getNotation() == "a2xa3");
+    REQUIRE(move.getNotation() == "a2a3");
   }
 
   SECTION("getNotation works for all pawn promotion types") {
