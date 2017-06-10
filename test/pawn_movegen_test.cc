@@ -139,4 +139,16 @@ TEST_CASE("Pawn attack generation is correct") {
 
     REQUIRE(board.getBlackPawnAttacks().size() == 1);
   }
+
+  SECTION("White pawns do not attack the black king") {
+    board.setToFen("8/8/8/8/2k5/3P4/8/8 w - -");
+
+    REQUIRE(board.getWhitePawnAttacks().size() == 0);
+  }
+
+  SECTION("Black pawns do not attack the white king") {
+    board.setToFen("8/2p5/3K4/8/8/8/8/8 w - -");
+
+    REQUIRE(board.getBlackPawnAttacks().size() == 0);
+  }
 }
