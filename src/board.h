@@ -66,6 +66,12 @@ class Board {
 
     bool WHITE_TO_MOVE;
 
+    bool WHITE_CAN_CASTLE_KS;
+    bool WHITE_CAN_CASTLE_QS;
+
+    bool BLACK_CAN_CASTLE_KS;
+    bool BLACK_CAN_CASTLE_QS;
+
     U64 EN_PASSANT;
 
     U64 OCCUPIED;

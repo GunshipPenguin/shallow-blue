@@ -2,6 +2,7 @@
 #include "cmove.h"
 #include "raytable.h"
 #include <string>
+#include <sstream>
 #include <iostream>
 #include <string.h>
 
@@ -84,15 +85,17 @@ void Board::clearBitBoards() {
 }
 
 void Board::setToFen(std::string fenString) {
+  std::istringstream fenStream(fenString);
+  std::string token;
+
   clearBitBoards();
 
   U64 boardPos = 56; // Fen string starts at a8 = index 56
-  unsigned int strIndex = 0;
+  fenStream >> token;
 
   U64 one64 = static_cast<U64>(1);
-
-  while(fenString[strIndex] != ' ') {
-    switch(fenString[strIndex]) {
+  for (auto currChar : token) {
+    switch(currChar) {
       case 'p': BLACK_PAWNS |= (one64 << boardPos++);
         break;
       case 'r': BLACK_ROOKS |= (one64 << boardPos++);
@@ -120,28 +123,35 @@ void Board::setToFen(std::string fenString) {
       case '/': boardPos -= 16; // Go down one rank
         break;
       default:
-        boardPos += static_cast<U64>(fenString[strIndex] - '0');
+        boardPos += static_cast<U64>(currChar - '0');
     }
-    strIndex++;
   }
 
-  // Get next color to move
-  WHITE_TO_MOVE = fenString[strIndex + 1] == 'w';
-  strIndex += 3;
+  // Next to move
+  fenStream >> token;
+  WHITE_TO_MOVE = token == "w";
 
-  // Get castling availability
-  int castleStart = strIndex;
-  while (fenString[strIndex] != ' ') {
-    strIndex ++;
+  // Castling availability
+  fenStream >> token;
+
+  WHITE_CAN_CASTLE_KS = false, WHITE_CAN_CASTLE_QS = false,
+    BLACK_CAN_CASTLE_KS = false, BLACK_CAN_CASTLE_QS = false;
+  for (auto currChar : token) {
+    switch(currChar) {
+      case 'K':
+        WHITE_CAN_CASTLE_KS = true;
+      case 'Q':
+        WHITE_CAN_CASTLE_QS = true;
+      case 'k':
+        BLACK_CAN_CASTLE_KS = true;
+      case 'q':
+        BLACK_CAN_CASTLE_QS = true;
+    }
   }
-  std::string castlingAval = fenString.substr(castleStart, strIndex);
 
   // Get en passant target square
-  int enPasStart = strIndex + 1;
-  while (strIndex != fenString.size()) {
-    strIndex ++;
-  }
-  std::string enPasSquare = fenString.substr(enPasStart, strIndex-enPasStart);
+  std::string enPasSquare;
+  fenStream >> enPasSquare;
 
   // Set bitboards
   if (enPasSquare == "-") {
