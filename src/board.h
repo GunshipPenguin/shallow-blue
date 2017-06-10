@@ -13,6 +13,8 @@ class Board {
 
     void clearBitBoards();
 
+    void doMove(CMove);
+
     std::string getStringRep();
 
     MoveList getWhitePawnMoves();
@@ -80,11 +82,11 @@ class Board {
     RayTable raytable;
 
     // Methods returning attack bitboards
-    U64 getKingMovesForSquare(int);
-    U64 getKnightMovesForSquare(int);
-    U64 getBishopMovesForSquare(int);
-    U64 getRookMovesForSquare(int);
-    U64 getQueenMovesForSquare(int);
+    U64 getKingMovesForSquare(int, U64);
+    U64 getKnightMovesForSquare(int, U64);
+    U64 getBishopMovesForSquare(int, U64);
+    U64 getRookMovesForSquare(int, U64);
+    U64 getQueenMovesForSquare(int, U64);
 
     void addMoves(MoveList&, int, U64, U64);
 

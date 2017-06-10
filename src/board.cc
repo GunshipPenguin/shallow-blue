@@ -361,8 +361,7 @@ MoveList Board::getKingMoves(U64 king, U64 own, U64 attackable) {
 
   int kingIndex = ffsll(king) - 1;
 
-  U64 moves = getKingMovesForSquare(kingIndex);
-  moves &= ~own;
+  U64 moves = getKingMovesForSquare(kingIndex, own);
 
   addMoves(possibleMoves, kingIndex, moves, attackable);
 
@@ -385,8 +384,7 @@ MoveList Board::getKnightMoves(U64 knights, U64 own, U64 attackable) {
       continue;
     }
 
-    U64 moves = getKnightMovesForSquare(from);
-    moves &= ~own;
+    U64 moves = getKnightMovesForSquare(from, own);
 
     addMoves(possibleMoves, from, moves, attackable);
   }
@@ -410,8 +408,7 @@ MoveList Board::getBishopMoves(U64 bishops, U64 own, U64 attackable) {
       continue;
     }
 
-    U64 moves = getBishopMovesForSquare(from);
-    moves &= ~own;
+    U64 moves = getBishopMovesForSquare(from, own);
 
     addMoves(possibleMoves, from, moves, attackable);
   }
@@ -435,8 +432,7 @@ MoveList Board::getRookMoves(U64 rooks, U64 own, U64 attackable) {
       continue;
     }
 
-    U64 moves = getRookMovesForSquare(from);
-    moves &= ~own;
+    U64 moves = getRookMovesForSquare(from, own);
 
     addMoves(possibleMoves, from, moves, attackable);
   }
@@ -479,37 +475,45 @@ void Board::addMoves(MoveList &moveList, int from, U64 moves, U64 attackable) {
   }
 }
 
-U64 Board::getKnightMovesForSquare(int square) {
+U64 Board::getKnightMovesForSquare(int square, U64 own) {
   U64 fromSquare = U64(1) << square;
 
-  return (((fromSquare << 15) | (fromSquare >> 17)) & ~FILE_H) | // Left 1
+  U64 moves = (((fromSquare << 15) | (fromSquare >> 17)) & ~FILE_H) | // Left 1
     (((fromSquare >> 15) | (fromSquare << 17)) & ~FILE_A) | // Right 1
     (((fromSquare << 6) | (fromSquare >> 10)) & ~(FILE_G | FILE_H)) | // Left 2
     (((fromSquare >> 6) | (fromSquare << 10)) & ~(FILE_A | FILE_B)); // Right 2
+
+  return moves & (~own);
 }
 
-U64 Board::getKingMovesForSquare(int square) {
+U64 Board::getKingMovesForSquare(int square, U64 own) {
   U64 king = U64(1) << square;
 
-  return (((king << 7) | (king >> 9) | (king >> 1)) & (~FILE_H)) |
+  U64 moves = (((king << 7) | (king >> 9) | (king >> 1)) & (~FILE_H)) |
     (((king << 9) | (king >> 7) | (king << 1)) & (~FILE_A)) |
     ((king >> 8) | (king << 8));
+
+  return moves & (~own);
 }
 
-U64 Board::getBishopMovesForSquare(int square) {
-  return raytable.getPositiveAttacks(RayTable::NORTH_WEST, square, OCCUPIED) |
+U64 Board::getBishopMovesForSquare(int square, U64 own) {
+  U64 moves = raytable.getPositiveAttacks(RayTable::NORTH_WEST, square, OCCUPIED) |
     raytable.getPositiveAttacks(RayTable::NORTH_EAST, square, OCCUPIED) |
     raytable.getNegativeAttacks(RayTable::SOUTH_WEST, square, OCCUPIED) |
     raytable.getPositiveAttacks(RayTable::SOUTH_EAST, square, OCCUPIED);
+
+  return moves & (~own);
 }
 
-U64 Board::getRookMovesForSquare(int square) {
-  return raytable.getPositiveAttacks(RayTable::NORTH, square, OCCUPIED) |
+U64 Board::getRookMovesForSquare(int square, U64 own) {
+  U64 moves = raytable.getPositiveAttacks(RayTable::NORTH, square, OCCUPIED) |
     raytable.getPositiveAttacks(RayTable::EAST, square, OCCUPIED) |
     raytable.getNegativeAttacks(RayTable::SOUTH, square, OCCUPIED) |
     raytable.getPositiveAttacks(RayTable::WEST, square, OCCUPIED);
+
+  return moves & (~own);
 }
 
-U64 Board::getQueenMovesForSquare(int square) {
-  return getBishopMovesForSquare(square) | getRookMovesForSquare(square);
+U64 Board::getQueenMovesForSquare(int square, U64 own) {
+  return getBishopMovesForSquare(square, own) | getRookMovesForSquare(square, own);
 }
