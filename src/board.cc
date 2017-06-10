@@ -126,7 +126,7 @@ void Board::setToFen(std::string fenString) {
   }
 
   // Get next color to move
-  // char nextToMove = fenString[strIndex + 1]; // Currently unused
+  WHITE_TO_MOVE = fenString[strIndex + 1] == 'w';
   strIndex += 3;
 
   // Get castling availability
@@ -254,7 +254,7 @@ MoveList Board::getWhitePawnAttacks() {
 
   U64 leftAttacks = (WHITE_PAWNS << 7) & (~FILE_H);
   U64 rightAttacks = (WHITE_PAWNS << 9) & (~FILE_A);
-  
+
   U64 attackablePieces = BLACK_ATTACKABLE | EN_PASSANT;
 
   for(U64 i=0;i<64;i++) {

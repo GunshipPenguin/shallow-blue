@@ -64,6 +64,8 @@ class Board {
     U64 WHITE_ATTACKABLE;
     U64 BLACK_ATTACKABLE;
 
+    bool WHITE_TO_MOVE;
+
     U64 EN_PASSANT;
 
     U64 OCCUPIED;
