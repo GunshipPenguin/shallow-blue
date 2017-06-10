@@ -51,4 +51,12 @@ TEST_CASE("Bishop move generation is correct") {
     board.setToFen("b6b/8/8/8/8/8/8/b6b w - -");
     REQUIRE(board.getBlackBishopMoves().size() == 24);
   }
+
+  SECTION("Bishops do not capture kings") {
+    board.setToFen("8/8/8/8/8/8/1k6/B7 w - -");
+    REQUIRE(board.getWhiteBishopMoves().size() == 0);
+
+    board.setToFen("8/8/8/8/8/8/1K6/b7 w - -");
+    REQUIRE(board.getBlackBishopMoves().size() == 0);
+  }
 }

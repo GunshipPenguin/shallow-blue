@@ -59,4 +59,12 @@ TEST_CASE("Rook move generation is correct") {
     board.setToFen("r6r/8/8/8/8/8/8/r6r w - -");
     REQUIRE(board.getBlackRookMoves().size() == 48);
   }
+
+  SECTION("Rooks do not capture kings") {
+    board.setToFen("8/8/8/8/8/8/8/RK6 w - -");
+    REQUIRE(board.getWhiteRookMoves().size() == 7);
+
+    board.setToFen("8/8/8/8/8/8/8/rK6 w - -");
+    REQUIRE(board.getBlackRookMoves().size() == 7);
+  }
 }

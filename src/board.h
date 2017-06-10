@@ -78,6 +78,8 @@ class Board {
     U64 getRookMovesForSquare(int);
     U64 getQueenMovesForSquare(int);
 
+    void addMoves(MoveList&, int, U64, U64);
+
     MoveList getPawnPromotions(unsigned int, unsigned int, unsigned int=0);
 
     U64 getOccupied();

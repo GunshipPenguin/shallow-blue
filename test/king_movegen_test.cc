@@ -43,4 +43,12 @@ TEST_CASE("King move generation is correct") {
     board.setToFen("8/8/8/4R3/3k4/8/8/8 w - -");
     REQUIRE(board.getBlackKingMoves().size() == 8);
   }
+
+  SECTION("Kings do not capture the other king") {
+    board.setToFen("8/8/8/3Kk3/8/8/8/8 w - -");
+    REQUIRE(board.getWhiteKingMoves().size() == 7);
+
+    board.setToFen("8/8/8/3kK3/8/8/8/8 w - -");
+    REQUIRE(board.getBlackKingMoves().size() == 7);
+  }
 }

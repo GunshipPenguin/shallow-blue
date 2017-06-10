@@ -328,19 +328,9 @@ MoveList Board::getKingMoves(U64 king, U64 own, U64 attackable) {
   int kingIndex = ffsll(king) - 1;
 
   U64 moves = getKingMovesForSquare(kingIndex);
+  moves &= ~own;
 
-  for(U64 i=0;i<64;i++) {
-    U64 square = static_cast<U64>(1) << i;
-    if ((square & moves) == 0 || (square & own) != 0) {
-      continue;
-    }
-
-    if (square & attackable) {
-      possibleMoves.push_back(CMove(kingIndex, i, CMove::CAPTURE));
-    } else {
-      possibleMoves.push_back(CMove(kingIndex, i));
-    }
-  }
+  addMoves(possibleMoves, kingIndex, moves, attackable);
 
   return possibleMoves;
 }
@@ -362,19 +352,9 @@ MoveList Board::getKnightMoves(U64 knights, U64 own, U64 attackable) {
     }
 
     U64 moves = getKnightMovesForSquare(from);
+    moves &= ~own;
 
-    for(U64 to=0;to<64;to++) {
-      U64 toSquare = static_cast<U64>(1) << to;
-      if ((toSquare & moves) == 0 || (toSquare & own) != 0) {
-        continue;
-      }
-
-      if (toSquare & attackable) {
-        possibleMoves.push_back(CMove(from, to, CMove::CAPTURE));
-      } else {
-        possibleMoves.push_back(CMove(from, to));
-      }
-    }
+    addMoves(possibleMoves, from, moves, attackable);
   }
 
   return possibleMoves;
@@ -397,22 +377,9 @@ MoveList Board::getBishopMoves(U64 bishops, U64 own, U64 attackable) {
     }
 
     U64 moves = getBishopMovesForSquare(from);
-
-    // Remove any attacks to own pieces
     moves &= ~own;
 
-    for(int to=0;to<64;to++) {
-      U64 toSquare = U64(1) << to;
-      if ((toSquare & moves) == 0) {
-        continue;
-      }
-
-      if(toSquare & attackable) {
-        possibleMoves.push_back(CMove(from, to, CMove::CAPTURE));
-      } else {
-        possibleMoves.push_back(CMove(from, to));
-      }
-    }
+    addMoves(possibleMoves, from, moves, attackable);
   }
 
   return possibleMoves;
@@ -435,21 +402,9 @@ MoveList Board::getRookMoves(U64 rooks, U64 own, U64 attackable) {
     }
 
     U64 moves = getRookMovesForSquare(from);
-
     moves &= ~own;
 
-    for(int to=0;to<64;to++) {
-      U64 toSquare = U64(1) << to;
-      if ((toSquare & moves) == 0) {
-        continue;
-      }
-
-      if(toSquare & attackable) {
-        possibleMoves.push_back(CMove(from, to, CMove::CAPTURE));
-      } else {
-        possibleMoves.push_back(CMove(from, to));
-      }
-    }
+    addMoves(possibleMoves, from, moves, attackable);
   }
   return possibleMoves;
 }
@@ -468,6 +423,26 @@ MoveList Board::getBlackQueenMoves() {
   queenMoves.insert(queenMoves.end(), rookMoves.begin(), rookMoves.end());
 
   return queenMoves;
+}
+
+void Board::addMoves(MoveList &moveList, int from, U64 moves, U64 attackable) {
+  for(int to=0;to<64;to++) {
+    U64 toSquare = U64(1) << to;
+    if ((toSquare & moves) == 0) {
+      continue;
+    }
+
+    // Ignore any moves to squares occupied by kings
+    if ((toSquare & (WHITE_KING | BLACK_KING))) {
+      continue;
+    }
+
+    if(toSquare & attackable) {
+      moveList.push_back(CMove(from, to, CMove::CAPTURE));
+    } else {
+      moveList.push_back(CMove(from, to));
+    }
+  }
 }
 
 U64 Board::getKnightMovesForSquare(int square) {

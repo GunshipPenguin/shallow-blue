@@ -50,4 +50,12 @@ TEST_CASE("Knight move generation is correct") {
     board.setToFen("8/8/4p3/8/3n4/8/8/8 w - -");
     REQUIRE(board.getBlackKnightMoves().size() == 7);
   }
+
+  SECTION("Knights do not capture kings") {
+    board.setToFen("8/8/8/8/8/1k6/8/N7 w - -");
+    REQUIRE(board.getWhiteKnightMoves().size() == 1);
+
+    board.setToFen("8/8/8/8/8/1K6/8/n7 w - -");
+    REQUIRE(board.getBlackKnightMoves().size() == 1);
+  }
 }

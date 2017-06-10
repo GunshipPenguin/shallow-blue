@@ -35,4 +35,12 @@ TEST_CASE("Queen move generation is corect") {
     board.setToFen("8/8/8/5q2/2q5/8/8/8 w - -");
     REQUIRE(board.getBlackQueenMoves().size() == 50);
   }
+
+  SECTION("Queens do not capture kings") {
+    board.setToFen("8/8/8/8/8/8/1k6/Q7 w - -");
+    REQUIRE(board.getWhiteQueenMoves().size() == 14);
+
+    board.setToFen("8/8/8/8/8/8/1K6/q7 w - -");
+    REQUIRE(board.getBlackQueenMoves().size() == 14);
+  }
 }
