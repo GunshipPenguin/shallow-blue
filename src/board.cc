@@ -361,7 +361,7 @@ MoveList Board::getKingMoves(U64 king, U64 own, U64 attackable) {
 
   int kingIndex = ffsll(king) - 1;
 
-  U64 moves = getKingMovesForSquare(kingIndex, own);
+  U64 moves = getKingAttacksForSquare(kingIndex, own);
 
   addMoves(possibleMoves, kingIndex, moves, attackable);
 
@@ -384,7 +384,7 @@ MoveList Board::getKnightMoves(U64 knights, U64 own, U64 attackable) {
       continue;
     }
 
-    U64 moves = getKnightMovesForSquare(from, own);
+    U64 moves = getKnightAttacksForSquare(from, own);
 
     addMoves(possibleMoves, from, moves, attackable);
   }
@@ -408,7 +408,7 @@ MoveList Board::getBishopMoves(U64 bishops, U64 own, U64 attackable) {
       continue;
     }
 
-    U64 moves = getBishopMovesForSquare(from, own);
+    U64 moves = getBishopAttacksForSquare(from, own);
 
     addMoves(possibleMoves, from, moves, attackable);
   }
@@ -432,7 +432,7 @@ MoveList Board::getRookMoves(U64 rooks, U64 own, U64 attackable) {
       continue;
     }
 
-    U64 moves = getRookMovesForSquare(from, own);
+    U64 moves = getRookAttacksForSquare(from, own);
 
     addMoves(possibleMoves, from, moves, attackable);
   }
@@ -475,7 +475,24 @@ void Board::addMoves(MoveList &moveList, int from, U64 moves, U64 attackable) {
   }
 }
 
-U64 Board::getKnightMovesForSquare(int square, U64 own) {
+U64 Board::getWhitePawnAttacksForSquare(int square) {
+  U64 fromSquare = U64(1) << square;
+
+  U64 attacks = ((fromSquare << 7) & ~FILE_H) | ((fromSquare << 9) & ~FILE_A);
+
+  return attacks;
+}
+
+U64 Board::getBlackPawnAttacksForSquare(int square) {
+  U64 fromSquare = U64(1) << square;
+
+  U64 attacks = ((fromSquare >> 7) & ~FILE_A) | ((fromSquare >> 9) & ~FILE_H);
+
+  return attacks;
+}
+
+
+U64 Board::getKnightAttacksForSquare(int square, U64 own) {
   U64 fromSquare = U64(1) << square;
 
   U64 moves = (((fromSquare << 15) | (fromSquare >> 17)) & ~FILE_H) | // Left 1
@@ -486,7 +503,7 @@ U64 Board::getKnightMovesForSquare(int square, U64 own) {
   return moves & (~own);
 }
 
-U64 Board::getKingMovesForSquare(int square, U64 own) {
+U64 Board::getKingAttacksForSquare(int square, U64 own) {
   U64 king = U64(1) << square;
 
   U64 moves = (((king << 7) | (king >> 9) | (king >> 1)) & (~FILE_H)) |
@@ -496,7 +513,7 @@ U64 Board::getKingMovesForSquare(int square, U64 own) {
   return moves & (~own);
 }
 
-U64 Board::getBishopMovesForSquare(int square, U64 own) {
+U64 Board::getBishopAttacksForSquare(int square, U64 own) {
   U64 moves = raytable.getPositiveAttacks(RayTable::NORTH_WEST, square, OCCUPIED) |
     raytable.getPositiveAttacks(RayTable::NORTH_EAST, square, OCCUPIED) |
     raytable.getNegativeAttacks(RayTable::SOUTH_WEST, square, OCCUPIED) |
@@ -505,7 +522,7 @@ U64 Board::getBishopMovesForSquare(int square, U64 own) {
   return moves & (~own);
 }
 
-U64 Board::getRookMovesForSquare(int square, U64 own) {
+U64 Board::getRookAttacksForSquare(int square, U64 own) {
   U64 moves = raytable.getPositiveAttacks(RayTable::NORTH, square, OCCUPIED) |
     raytable.getPositiveAttacks(RayTable::EAST, square, OCCUPIED) |
     raytable.getNegativeAttacks(RayTable::SOUTH, square, OCCUPIED) |
@@ -514,6 +531,48 @@ U64 Board::getRookMovesForSquare(int square, U64 own) {
   return moves & (~own);
 }
 
-U64 Board::getQueenMovesForSquare(int square, U64 own) {
-  return getBishopMovesForSquare(square, own) | getRookMovesForSquare(square, own);
+U64 Board::getQueenAttacksForSquare(int square, U64 own) {
+  return getBishopAttacksForSquare(square, own) | getRookAttacksForSquare(square, own);
+}
+
+U64 Board::getWhiteAttacks() {
+  U64 attacks = U64(0);
+
+  for(int squareIndex=0;squareIndex<64;squareIndex++) {
+    U64 square = U64(1) << squareIndex;
+    if ((square & WHITE_PIECES) == 0) {
+      continue;
+    }
+
+    if (square & WHITE_PAWNS) attacks |= getWhitePawnAttacksForSquare(squareIndex);
+    else if (square & WHITE_ROOKS) attacks |= getRookAttacksForSquare(squareIndex, WHITE_PIECES);
+    else if (square & WHITE_KNIGHTS) attacks |= getKnightAttacksForSquare(squareIndex, WHITE_PIECES);
+    else if (square & WHITE_BISHOPS) attacks |= getBishopAttacksForSquare(squareIndex, WHITE_PIECES);
+    else if (square & WHITE_KING) attacks |= getKingAttacksForSquare(squareIndex, WHITE_PIECES);
+    else if (square & WHITE_QUEENS) attacks |= getQueenAttacksForSquare(squareIndex, WHITE_PIECES);
+  }
+  attacks |= EN_PASSANT;
+
+  return attacks;
+}
+
+U64 Board::getBlackAttacks() {
+  U64 attacks = U64(0);
+
+  for(int squareIndex=0;squareIndex<64;squareIndex++) {
+    U64 square = U64(1) << squareIndex;
+    if ((square & BLACK_PIECES) == 0) {
+      continue;
+    }
+
+    if (square & BLACK_PAWNS) attacks |= getBlackPawnAttacksForSquare(squareIndex);
+    else if (square & BLACK_ROOKS) attacks |= getRookAttacksForSquare(squareIndex, BLACK_PIECES);
+    else if (square & BLACK_KNIGHTS) attacks |= getKnightAttacksForSquare(squareIndex, BLACK_PIECES);
+    else if (square & BLACK_BISHOPS) attacks |= getBishopAttacksForSquare(squareIndex, BLACK_PIECES);
+    else if (square & BLACK_KING) attacks |= getKingAttacksForSquare(squareIndex, BLACK_PIECES);
+    else if (square & BLACK_QUEENS) attacks |= getQueenAttacksForSquare(squareIndex, BLACK_PIECES);
+  }
+  attacks |= EN_PASSANT;
+
+  return attacks;
 }

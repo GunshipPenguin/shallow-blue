@@ -41,6 +41,9 @@ class Board {
     MoveList getWhiteQueenMoves();
     MoveList getBlackQueenMoves();
 
+    U64 getWhiteAttacks();
+    U64 getBlackAttacks();
+
   private:
     U64 WHITE_PAWNS;
     U64 BLACK_PAWNS;
@@ -82,11 +85,14 @@ class Board {
     RayTable raytable;
 
     // Methods returning attack bitboards
-    U64 getKingMovesForSquare(int, U64);
-    U64 getKnightMovesForSquare(int, U64);
-    U64 getBishopMovesForSquare(int, U64);
-    U64 getRookMovesForSquare(int, U64);
-    U64 getQueenMovesForSquare(int, U64);
+    U64 getWhitePawnAttacksForSquare(int);
+    U64 getBlackPawnAttacksForSquare(int);
+    U64 getKingAttacksForSquare(int, U64);
+    U64 getKnightAttacksForSquare(int, U64);
+    U64 getBishopAttacksForSquare(int, U64);
+    U64 getRookAttacksForSquare(int, U64);
+    U64 getQueenAttacksForSquare(int, U64);
+
 
     void addMoves(MoveList&, int, U64, U64);
 
