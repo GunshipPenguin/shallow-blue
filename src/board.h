@@ -71,6 +71,13 @@ class Board {
 
     RayTable raytable;
 
+    // Methods returning attack bitboards
+    U64 getKingMovesForSquare(int);
+    U64 getKnightMovesForSquare(int);
+    U64 getBishopMovesForSquare(int);
+    U64 getRookMovesForSquare(int);
+    U64 getQueenMovesForSquare(int);
+
     MoveList getPawnPromotions(unsigned int, unsigned int, unsigned int=0);
 
     U64 getOccupied();

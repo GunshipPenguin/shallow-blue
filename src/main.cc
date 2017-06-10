@@ -1,11 +1,17 @@
 #include <iostream>
 #include "raytable.h"
+#include "defs.h"
+#include "board.h"
 
 int main() {
-  RayTable raytable;
+  Board board;
+  board.setToFen("8/8/8/3Q4/8/8/8/8 w - -");
 
-  std::cout << std::hex << "0x" << raytable.getRay(RayTable::SOUTH_EAST, 27) << std::endl;
-  std::cout << std::hex << "0x" << raytable.getRay(RayTable::SOUTH_EAST, 36) << std::endl;
+  MoveList moves = board.getWhiteQueenMoves();
+
+  for(MoveList::iterator it = moves.begin(); it != moves.end(); ++it) {
+    std::cout << (*it).getNotation() << std::endl;
+  }
 
   return 0;
 }
