@@ -36,6 +36,9 @@ class Board {
     MoveList getBlackRookMoves();
     MoveList getRookMoves(U64, U64, U64);
 
+    MoveList getWhiteQueenMoves();
+    MoveList getBlackQueenMoves();
+
   private:
     U64 WHITE_PAWNS;
     U64 BLACK_PAWNS;

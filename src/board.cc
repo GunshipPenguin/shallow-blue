@@ -465,3 +465,19 @@ MoveList Board::getRookMoves(U64 rooks, U64 own, U64 attackable) {
   }
   return possibleMoves;
 }
+
+MoveList Board::getWhiteQueenMoves() {
+  MoveList rookMoves = getRookMoves(WHITE_QUEENS, WHITE_PIECES, BLACK_ATTACKABLE);
+  MoveList queenMoves = getBishopMoves(WHITE_QUEENS, WHITE_PIECES, BLACK_ATTACKABLE);
+  queenMoves.insert(queenMoves.end(), rookMoves.begin(), rookMoves.end());
+
+  return queenMoves;
+}
+
+MoveList Board::getBlackQueenMoves() {
+  MoveList rookMoves = getRookMoves(BLACK_QUEENS, BLACK_PIECES, WHITE_ATTACKABLE);
+  MoveList queenMoves = getBishopMoves(BLACK_QUEENS, BLACK_PIECES, WHITE_ATTACKABLE);
+  queenMoves.insert(queenMoves.end(), rookMoves.begin(), rookMoves.end());
+
+  return queenMoves;
+}
