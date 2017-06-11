@@ -93,6 +93,7 @@ class Board {
     U64 getRookAttacksForSquare(int, U64);
     U64 getQueenAttacksForSquare(int, U64);
 
+    void updateBitBoards();
 
     void addMoves(MoveList&, int, U64, U64);
 
@@ -101,6 +102,9 @@ class Board {
     U64 getOccupied();
     U64 getBlackPieces();
     U64 getWhitePieces();
+
+    U64* getWhiteBitBoard(int);
+    U64* getBlackBitBoard(int);
 };
 
 #endif

@@ -165,6 +165,28 @@ void Board::setToFen(std::string fenString) {
     EN_PASSANT = static_cast<U64>(1) << enPasIndex;
   }
 
+  updateBitBoards();
+}
+
+U64 Board::getOccupied() {
+  return getWhitePieces() | getBlackPieces();
+}
+
+U64* Board::getWhiteBitBoard(int squareIndex) {
+  U64 square = U64(1) << squareIndex;
+
+  U64* pieces;
+  if (square & WHITE_PAWNS) pieces = &WHITE_PAWNS;
+  else if (square & WHITE_ROOKS) pieces = &WHITE_ROOKS;
+  else if (square & WHITE_KNIGHTS) pieces = &WHITE_KNIGHTS;
+  else if (square & WHITE_BISHOPS) pieces = &WHITE_BISHOPS;
+  else if (square & WHITE_KING) pieces = &WHITE_KING;
+  else if (square & WHITE_QUEENS) pieces = &WHITE_QUEENS;
+
+  return pieces;
+}
+
+void Board::updateBitBoards() {
   WHITE_PIECES = getWhitePieces();
   WHITE_ATTACKABLE = WHITE_PIECES & ~WHITE_KING;
 
@@ -175,8 +197,50 @@ void Board::setToFen(std::string fenString) {
   NOT_OCCUPIED = ~OCCUPIED;
 }
 
-U64 Board::getOccupied() {
-  return getWhitePieces() | getBlackPieces();
+U64* Board::getBlackBitBoard(int squareIndex) {
+  U64 square = U64(1) << squareIndex;
+
+  U64* pieces;
+  if (square & BLACK_PAWNS) pieces = &BLACK_PAWNS;
+  else if (square & BLACK_ROOKS) pieces = &BLACK_ROOKS;
+  else if (square & BLACK_KNIGHTS) pieces = &BLACK_KNIGHTS;
+  else if (square & BLACK_BISHOPS) pieces = &BLACK_BISHOPS;
+  else if (square & BLACK_KING) pieces = &BLACK_KING;
+  else if (square & BLACK_QUEENS) pieces = &BLACK_QUEENS;
+
+  return pieces;
+}
+
+void Board::doMove(CMove move) {
+  U64* pieces;
+  U64* capturePieces = 0;
+
+  if (WHITE_TO_MOVE) {
+    pieces = getWhiteBitBoard(move.getFrom());
+
+    if ((move.getFlags() | CMove::CAPTURE) == 0) {
+      capturePieces = getBlackBitBoard(move.getTo());
+    }
+  } else {
+    pieces = getBlackBitBoard(move.getFrom());
+
+    if ((move.getFlags() | CMove::CAPTURE) == 0) {
+      capturePieces = getWhiteBitBoard(move.getTo());
+    }
+  }
+
+  U64 fromSquare = U64(1) << move.getFrom();
+  U64 toSquare = U64(1) << move.getTo();
+
+  *pieces ^= fromSquare;
+  *pieces ^= toSquare;
+
+  if (capturePieces) {
+    *capturePieces ^= toSquare;
+  }
+
+  WHITE_TO_MOVE = !WHITE_TO_MOVE;
+  updateBitBoards();
 }
 
 U64 Board::getWhitePieces() {
