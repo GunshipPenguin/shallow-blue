@@ -8,6 +8,8 @@
 
 class Board {
   public:
+    Board();
+
     void setToStartPos();
     void setToFen(std::string);
 
@@ -17,34 +19,6 @@ class Board {
 
     std::string getStringRep();
 
-    MoveList getWhitePawnMoves();
-    MoveList getBlackPawnMoves();
-    MoveList getWhitePawnAttacks();
-    MoveList getBlackPawnAttacks();
-
-    MoveList getWhiteKingMoves();
-    MoveList getBlackKingMoves();
-    MoveList getKingMoves(U64, U64, U64);
-
-    MoveList getWhiteKnightMoves();
-    MoveList getBlackKnightMoves();
-    MoveList getKnightMoves(U64, U64, U64);
-
-    MoveList getWhiteBishopMoves();
-    MoveList getBlackBishopMoves();
-    MoveList getBishopMoves(U64, U64, U64);
-
-    MoveList getWhiteRookMoves();
-    MoveList getBlackRookMoves();
-    MoveList getRookMoves(U64, U64, U64);
-
-    MoveList getWhiteQueenMoves();
-    MoveList getBlackQueenMoves();
-
-    U64 getWhiteAttacks();
-    U64 getBlackAttacks();
-
-  private:
     U64 WHITE_PAWNS;
     U64 BLACK_PAWNS;
 
@@ -82,8 +56,6 @@ class Board {
     U64 OCCUPIED;
     U64 NOT_OCCUPIED;
 
-    RayTable raytable;
-
     // Methods returning attack bitboards
     U64 getWhitePawnAttacksForSquare(int);
     U64 getBlackPawnAttacksForSquare(int);
@@ -93,11 +65,13 @@ class Board {
     U64 getRookAttacksForSquare(int, U64);
     U64 getQueenAttacksForSquare(int, U64);
 
+    U64 getWhiteAttacks();
+    U64 getBlackAttacks();
+
+  private:
+    RayTable raytable;
+
     void updateBitBoards();
-
-    void addMoves(MoveList&, int, U64, U64);
-
-    MoveList getPawnPromotions(unsigned int, unsigned int, unsigned int=0);
 
     U64 getOccupied();
     U64 getBlackPieces();
