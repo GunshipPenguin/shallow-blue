@@ -65,4 +65,94 @@ TEST_CASE("King move generation is correct") {
     movegen.setBoard(board);
     REQUIRE(movegen.getMoves().size() == 7);
   }
+
+    SECTION("Castles are generated when castling is possible as specified in the fen string") {
+      // White kingside only
+      board.setToFen("8/8/8/8/8/8/8/4K2R w K -");
+      movegen.setBoard(board);
+      REQUIRE(movegen.getMoves().size() == 15);
+
+      // White queenside only
+      board.setToFen("8/8/8/8/8/8/8/R3K3 w Q -");
+      movegen.setBoard(board);
+      REQUIRE(movegen.getMoves().size() == 16);
+
+      // White king and queenside
+      board.setToFen("8/8/8/8/8/8/8/R3K2R w KQ -");
+      movegen.setBoard(board);
+      REQUIRE(movegen.getMoves().size() == 26);
+
+      // Black kingside only
+      board.setToFen("4k2r/8/8/8/8/8/8/8 b k -");
+      movegen.setBoard(board);
+      REQUIRE(movegen.getMoves().size() == 15);
+
+      // Black queenside only
+      board.setToFen("r3k3/8/8/8/8/8/8/8 b q -");
+      movegen.setBoard(board);
+      REQUIRE(movegen.getMoves().size() == 16);
+
+      // Black king and queenside
+      board.setToFen("r3k2r/8/8/8/8/8/8/8 b kq -");
+      movegen.setBoard(board);
+      REQUIRE(movegen.getMoves().size() == 26);
+    }
+
+    SECTION("Castles are not generated when the king is in check") {
+      board.setToFen("8/8/8/8/8/3n4/8/R3K2R w KQ -");
+      movegen.setBoard(board);
+      REQUIRE(movegen.getMoves().size() == 24);
+
+      board.setToFen("r3k2r/8/3N4/8/8/8/8/8 b kq -");
+      movegen.setBoard(board);
+      REQUIRE(movegen.getMoves().size() == 24);
+    }
+
+    SECTION("White ks castles are not generated when squares in between the king and rook are attacked") {
+      board.setToFen("8/8/8/8/5r2/8/8/R3K2R w KQ -");
+      movegen.setBoard(board);
+      REQUIRE(movegen.getMoves().size() == 25);
+
+      board.setToFen("8/8/8/2b5/8/8/8/R3K2R w KQ -");
+      movegen.setBoard(board);
+      REQUIRE(movegen.getMoves().size() == 25);
+    }
+
+    SECTION("White qs castles are not generated when squares in between the king and rook are attacked") {
+      board.setToFen("8/8/8/8/4b3/8/8/R3K2R w KQ -");
+      movegen.setBoard(board);
+      REQUIRE(movegen.getMoves().size() == 25);
+
+      board.setToFen("8/8/8/8/2r5/8/8/R3K2R w KQ -");
+      movegen.setBoard(board);
+      REQUIRE(movegen.getMoves().size() == 25);
+
+      board.setToFen("8/8/8/8/3r4/8/8/R3K2R w KQ -");
+      movegen.setBoard(board);
+      REQUIRE(movegen.getMoves().size() == 25);
+    }
+
+    SECTION("Black ks castles are not generated when squares in between the king and rook are attacked") {
+      board.setToFen("r3k2r/8/8/5R2/8/8/8/8 b kq -");
+      movegen.setBoard(board);
+      REQUIRE(movegen.getMoves().size() == 25);
+
+      board.setToFen("r3k2r/8/8/3B4/8/8/8/8 b kq -");
+      movegen.setBoard(board);
+      REQUIRE(movegen.getMoves().size() == 25);
+    }
+
+    SECTION("Black qs castles are not generated when squares in between the king and rook are attacked") {
+      board.setToFen("r3k2r/8/8/4B3/8/8/8/8 b kq -");
+      movegen.setBoard(board);
+      REQUIRE(movegen.getMoves().size() == 25);
+
+      board.setToFen("r3k2r/8/8/3R4/8/8/8/8 b kq -");
+      movegen.setBoard(board);
+      REQUIRE(movegen.getMoves().size() == 25);
+
+      board.setToFen("r3k2r/8/8/5B2/8/8/8/8 b kq -");
+      movegen.setBoard(board);
+      REQUIRE(movegen.getMoves().size() == 25);
+    }
 }

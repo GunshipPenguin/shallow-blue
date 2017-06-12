@@ -84,14 +84,14 @@ TEST_CASE("CMove.getNotation works properly") {
   }
 
   SECTION("getNotation works for kingside castles") {
-    CMove move(5, 7, CMove::KSIDE_CASTLE);
+    CMove move(4, 7, CMove::KSIDE_CASTLE);
 
-    REQUIRE(move.getNotation() == "O-O");
+    REQUIRE(move.getNotation() == "e1h1");
   }
 
   SECTION("getNotation works for queenside castles") {
-    CMove move(5, 7, CMove::QSIDE_CASTLE);
+    CMove move(4, 0, CMove::QSIDE_CASTLE);
 
-    REQUIRE(move.getNotation() == "O-O-O");
+    REQUIRE(move.getNotation() == "e1a1");
   }
 }

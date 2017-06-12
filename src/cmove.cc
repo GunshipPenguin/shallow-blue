@@ -60,12 +60,6 @@ int CMove::getFlags() {
 }
 
 std::string CMove::getNotation() {
-  if (getFlags() & KSIDE_CASTLE) {
-    return "O-O";
-  } else if (getFlags() & QSIDE_CASTLE) {
-    return "O-O-O";
-  }
-
   int fromIndex = getFrom();
   int toIndex = getTo();
 

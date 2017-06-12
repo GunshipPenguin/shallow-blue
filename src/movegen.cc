@@ -1,6 +1,7 @@
 #include "movegen.h"
 #include "board.h"
 #include "defs.h"
+#include <iostream>
 
 MoveGen::MoveGen(Board board) {
   setBoard(board);
@@ -45,6 +46,12 @@ void MoveGen::genBlackMoves() {
   genBlackBishopMoves();
   genBlackKingMoves();
   genBlackQueenMoves();
+}
+
+void MoveGen::printMoves() {
+  for(auto move : getMoves()) {
+    std::cout << move.getNotation() << std::endl;
+  }
 }
 
 void MoveGen::genPawnPromotions(unsigned int from, unsigned int to, unsigned int flags) {
@@ -141,10 +148,24 @@ void MoveGen::genBlackPawnMoves() {
 
 void MoveGen::genWhiteKingMoves() {
   genKingMoves(_board.WHITE_KING, _board.WHITE_PIECES, _board.BLACK_ATTACKABLE);
+
+  if (_board.whiteCanCastleKs()) {
+    _moves.push_back(CMove(e1, g1, CMove::KSIDE_CASTLE));
+  }
+  if (_board.whiteCanCastleQs()) {
+    _moves.push_back(CMove(e1, b1, CMove::QSIDE_CASTLE));
+  }
 }
 
 void MoveGen::genBlackKingMoves() {
   genKingMoves(_board.BLACK_KING, _board.BLACK_PIECES, _board.WHITE_ATTACKABLE);
+
+  if (_board.blackCanCastleKs()) {
+    _moves.push_back(CMove(e8, h8, CMove::KSIDE_CASTLE));
+  }
+  if (_board.blackCanCastleQs()) {
+    _moves.push_back(CMove(e8, c8, CMove::QSIDE_CASTLE));
+  }
 }
 
 void MoveGen::genKingMoves(U64 king, U64 own, U64 attackable) {

@@ -12,6 +12,8 @@ public:
   void setBoard(Board);
   MoveList getMoves();
 
+  void printMoves();
+
 private:
   Board _board;
   MoveList _moves;

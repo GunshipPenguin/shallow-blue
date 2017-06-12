@@ -10,6 +10,66 @@ Board::Board() {
   setToFen("8/8/8/8/8/8/8/8 w - -");
 }
 
+bool Board::whiteIsInCheck() {
+  return (bool) (getBlackAttacks() & WHITE_KING);
+}
+
+bool Board::blackIsInCheck() {
+  return (bool) (getWhiteAttacks() & BLACK_KING);
+}
+
+bool Board::whiteCanCastleKs() {
+  if (!WHITE_CAN_CASTLE_KS) {
+    return false;
+  }
+
+  U64 squaresInbetween = (ONE << f1) | (ONE << g1);
+  bool squaresOccupied = squaresInbetween & OCCUPIED;
+  bool squaresAttacked = squaresInbetween & getBlackAttacks();
+
+  return !WHITE_KING_HAS_MOVED && !WHITE_KS_ROOK_HAS_MOVED && !whiteIsInCheck() &&
+    !squaresOccupied && !squaresAttacked;
+}
+
+bool Board::whiteCanCastleQs() {
+  if (!WHITE_CAN_CASTLE_QS) {
+    return false;
+  }
+
+  U64 squaresInbetween = (ONE << b1) | (ONE << c1) | (ONE << d1);
+  bool squaresOccupied = squaresInbetween & OCCUPIED;
+  bool squaresAttacked = squaresInbetween & getBlackAttacks();
+
+  return !WHITE_KING_HAS_MOVED && !WHITE_QS_ROOK_HAS_MOVED && !whiteIsInCheck() &&
+    !squaresOccupied && !squaresAttacked;
+}
+
+bool Board::blackCanCastleKs() {
+  if (!BLACK_CAN_CASTLE_KS) {
+    return false;
+  }
+
+  U64 squaresInbetween = (ONE << f8) | (ONE << g8);
+  bool squaresOccupied = squaresInbetween & OCCUPIED;
+  bool squaresAttacked = squaresInbetween & getWhiteAttacks();
+
+  return !BLACK_KING_HAS_MOVED && !BLACK_KS_ROOK_HAS_MOVED && !blackIsInCheck() &&
+    !squaresOccupied && !squaresAttacked;
+}
+
+bool Board::blackCanCastleQs() {
+  if (!BLACK_CAN_CASTLE_QS) {
+    return false;
+  }
+
+  U64 squaresInbetween = (ONE << b8) | (ONE << c8) | (ONE << d8);
+  bool squaresOccupied = squaresInbetween & OCCUPIED;
+  bool squaresAttacked = squaresInbetween & getWhiteAttacks();
+
+  return !BLACK_KING_HAS_MOVED && !BLACK_QS_ROOK_HAS_MOVED && !blackIsInCheck() &&
+    !squaresOccupied && !squaresAttacked;
+}
+
 std::string Board::getStringRep() {
   std::string stringRep;
   U64 base = 1;
