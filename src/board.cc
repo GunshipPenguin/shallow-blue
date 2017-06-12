@@ -320,7 +320,7 @@ U64 Board::getRookAttacksForSquare(int square, U64 own) {
   U64 moves = raytable.getPositiveAttacks(RayTable::NORTH, square, OCCUPIED) |
     raytable.getPositiveAttacks(RayTable::EAST, square, OCCUPIED) |
     raytable.getNegativeAttacks(RayTable::SOUTH, square, OCCUPIED) |
-    raytable.getPositiveAttacks(RayTable::WEST, square, OCCUPIED);
+    raytable.getNegativeAttacks(RayTable::WEST, square, OCCUPIED);
 
   return moves & (~own);
 }
