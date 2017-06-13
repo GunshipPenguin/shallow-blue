@@ -282,13 +282,13 @@ void Board::doMove(CMove move) {
   if (WHITE_TO_MOVE) {
     pieces = getWhiteBitBoard(move.getFrom());
 
-    if ((move.getFlags() | CMove::CAPTURE) == 0) {
+    if (move.getFlags() & CMove::CAPTURE) {
       capturePieces = getBlackBitBoard(move.getTo());
     }
   } else {
     pieces = getBlackBitBoard(move.getFrom());
 
-    if ((move.getFlags() | CMove::CAPTURE) == 0) {
+    if (move.getFlags() & CMove::CAPTURE) {
       capturePieces = getWhiteBitBoard(move.getTo());
     }
   }
