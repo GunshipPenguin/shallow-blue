@@ -92,6 +92,8 @@ class Board {
 
     void updateBitBoards();
 
+    void doRegularMove(CMove);
+
     U64 getOccupied();
     U64 getBlackPieces();
     U64 getWhitePieces();

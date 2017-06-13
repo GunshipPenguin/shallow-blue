@@ -58,10 +58,10 @@ TEST_CASE("CMove.getNotation works properly") {
     CMove rookPromotion(55, 63, CMove::ROOK_PROMOTION);
     CMove bishopPromotion(55, 63, CMove::BISHOP_PROMOTION);
 
-    REQUIRE(queenPromotion.getNotation() == "h7h8Q");
-    REQUIRE(knightPromotion.getNotation() == "h7h8N");
-    REQUIRE(rookPromotion.getNotation() == "h7h8R");
-    REQUIRE(bishopPromotion.getNotation() == "h7h8B");
+    REQUIRE(queenPromotion.getNotation() == "h7h8q");
+    REQUIRE(knightPromotion.getNotation() == "h7h8n");
+    REQUIRE(rookPromotion.getNotation() == "h7h8r");
+    REQUIRE(bishopPromotion.getNotation() == "h7h8b");
   }
 
   SECTION("getNotation works for all pawn promotion types when making a capture") {
@@ -70,10 +70,10 @@ TEST_CASE("CMove.getNotation works properly") {
     CMove rookPromotion(54, 63, CMove::ROOK_PROMOTION);
     CMove bishopPromotion(54, 63, CMove::BISHOP_PROMOTION);
 
-    REQUIRE(queenPromotion.getNotation() == "g7h8Q");
-    REQUIRE(knightPromotion.getNotation() == "g7h8N");
-    REQUIRE(rookPromotion.getNotation() == "g7h8R");
-    REQUIRE(bishopPromotion.getNotation() == "g7h8B");
+    REQUIRE(queenPromotion.getNotation() == "g7h8q");
+    REQUIRE(knightPromotion.getNotation() == "g7h8n");
+    REQUIRE(rookPromotion.getNotation() == "g7h8r");
+    REQUIRE(bishopPromotion.getNotation() == "g7h8b");
   }
 
   SECTION("getNotation works for kingside castles") {

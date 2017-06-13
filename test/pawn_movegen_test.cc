@@ -98,7 +98,7 @@ TEST_CASE("Pawn move generation is correct") {
       REQUIRE(movegen.getMoves().size() == 2);
     }
 
-    SECTION("White pawn moves are generated correctly for en passant") {
+    SECTION("Black pawn moves are generated correctly for en passant") {
       board.setToFen("8/8/8/8/1pP5/8/8/8 b - c3");
       movegen.setBoard(board);
 

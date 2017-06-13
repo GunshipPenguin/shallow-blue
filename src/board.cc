@@ -198,6 +198,9 @@ void Board::setToFen(std::string fenString) {
   // Castling availability
   fenStream >> token;
 
+  WHITE_KING_HAS_MOVED = false, BLACK_KING_HAS_MOVED = false, WHITE_KS_ROOK_HAS_MOVED = false,
+    BLACK_KS_ROOK_HAS_MOVED = false, WHITE_QS_ROOK_HAS_MOVED = false, BLACK_QS_ROOK_HAS_MOVED = false;
+
   WHITE_CAN_CASTLE_KS = false, WHITE_CAN_CASTLE_QS = false,
     BLACK_CAN_CASTLE_KS = false, BLACK_CAN_CASTLE_QS = false;
   for (auto currChar : token) {
@@ -275,35 +278,93 @@ U64* Board::getBlackBitBoard(int squareIndex) {
   return pieces;
 }
 
-void Board::doMove(CMove move) {
-  U64* pieces;
-  U64* capturePieces = 0;
+void Board::doRegularMove(CMove move) {
+  U64* pieces = WHITE_TO_MOVE ? getWhiteBitBoard(move.getFrom()) : getBlackBitBoard(move.getFrom());
 
-  if (WHITE_TO_MOVE) {
-    pieces = getWhiteBitBoard(move.getFrom());
-
-    if (move.getFlags() & CMove::CAPTURE) {
-      capturePieces = getBlackBitBoard(move.getTo());
-    }
-  } else {
-    pieces = getBlackBitBoard(move.getFrom());
-
-    if (move.getFlags() & CMove::CAPTURE) {
-      capturePieces = getWhiteBitBoard(move.getTo());
-    }
-  }
-
-  U64 fromSquare = U64(1) << move.getFrom();
-  U64 toSquare = U64(1) << move.getTo();
+  U64 fromSquare = ONE << move.getFrom();
+  U64 toSquare = ONE << move.getTo();
 
   *pieces ^= fromSquare;
   *pieces ^= toSquare;
+}
 
-  if (capturePieces) {
-    *capturePieces ^= toSquare;
+void Board::doMove(CMove move) {
+  doRegularMove(move);
+
+  // Handle special moves
+  unsigned int flags = move.getFlags();
+  if (flags & CMove::CAPTURE) {
+    U64* capturePieces = WHITE_TO_MOVE ? getBlackBitBoard(move.getTo()) : getWhiteBitBoard(move.getTo());
+    *capturePieces ^= (ONE << move.getTo());
+  }
+  if (flags & CMove::KSIDE_CASTLE) {
+    if (WHITE_TO_MOVE) {
+      WHITE_ROOKS ^= ((ONE << h1) | (ONE << f1));
+    } else {
+      BLACK_ROOKS ^= ((ONE << h8) | (ONE << f8));
+    }
+  }
+  if (flags & CMove::QSIDE_CASTLE) {
+    // King has already been moved, kingside rook must be moved
+    if (WHITE_TO_MOVE) {
+      WHITE_ROOKS ^= ((ONE << a1) | (ONE << d1));
+    } else {
+      BLACK_ROOKS ^= ((ONE << a8) | (ONE << d8));
+    }
+  }
+  if (flags & CMove::EN_PASSANT) {
+    if (WHITE_TO_MOVE) {
+      BLACK_PAWNS ^= (EN_PASSANT >> 8);
+    } else {
+      WHITE_PAWNS ^= (EN_PASSANT << 8);
+    }
+  }
+
+  // Handle promotions
+  bool isPromotion = flags & (CMove::QUEEN_PROMOTION | CMove::ROOK_PROMOTION | CMove::BISHOP_PROMOTION | CMove::KNIGHT_PROMOTION);
+  if (isPromotion) {
+    // Add promoted piece
+    if (flags & CMove::QUEEN_PROMOTION) {
+      U64* queensToUpdate = WHITE_TO_MOVE ? &WHITE_QUEENS : &BLACK_QUEENS;
+      *queensToUpdate ^= (ONE << move.getTo());
+    } else if (flags & CMove::ROOK_PROMOTION) {
+      U64* rooksToUpdate = WHITE_TO_MOVE ? &WHITE_ROOKS : &BLACK_ROOKS;
+      *rooksToUpdate ^= (ONE << move.getTo());
+    } else if (flags & CMove::BISHOP_PROMOTION) {
+      U64* bishopsToUpdate = WHITE_TO_MOVE ? &WHITE_BISHOPS : &BLACK_BISHOPS;
+      *bishopsToUpdate ^= (ONE << move.getTo());
+    } else if (flags & CMove::KNIGHT_PROMOTION) {
+      U64* knightsToUpdate = WHITE_TO_MOVE ? &WHITE_KNIGHTS : &BLACK_KNIGHTS;
+      *knightsToUpdate ^= (ONE << move.getTo());
+    }
+
+    // Remove promoted pawn
+    if (WHITE_TO_MOVE) {
+      WHITE_PAWNS ^= ONE << move.getTo();
+    } else {
+      BLACK_PAWNS ^= ONE << move.getTo();
+    }
+  }
+
+
+  // Update castling flags if rooks or kings have moved
+  switch(move.getFrom()) {
+    case e1: WHITE_KING_HAS_MOVED = true;
+      break;
+    case e8: BLACK_KING_HAS_MOVED = true;
+      break;
+    case a1: WHITE_QS_ROOK_HAS_MOVED = true;
+      break;
+    case h1: WHITE_KS_ROOK_HAS_MOVED = true;
+      break;
+    case a8: BLACK_QS_ROOK_HAS_MOVED = true;
+      break;
+    case h8: BLACK_KS_ROOK_HAS_MOVED = true;
+      break;
   }
 
   WHITE_TO_MOVE = !WHITE_TO_MOVE;
+  EN_PASSANT = 0ull;
   updateBitBoards();
 }
 

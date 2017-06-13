@@ -39,13 +39,13 @@ std::string CMove::getNotation() {
   std::string moveNotation = indexToNotation(fromIndex) + indexToNotation(toIndex);
 
   if (getFlags() & QUEEN_PROMOTION) {
-    moveNotation += 'Q';
+    moveNotation += 'q';
   } else if (getFlags() & KNIGHT_PROMOTION) {
-    moveNotation += 'N';
+    moveNotation += 'n';
   } else if (getFlags() & BISHOP_PROMOTION) {
-    moveNotation += 'B';
+    moveNotation += 'b';
   } else if (getFlags() & ROOK_PROMOTION) {
-    moveNotation += 'R';
+    moveNotation += 'r';
   }
 
   return moveNotation;

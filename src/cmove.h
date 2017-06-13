@@ -14,10 +14,11 @@ public:
     CAPTURE = 1<<0,
     KSIDE_CASTLE = 1<<1,
     QSIDE_CASTLE = 1<<2,
-    QUEEN_PROMOTION = 1<<3,
-    KNIGHT_PROMOTION = 1<<4,
-    ROOK_PROMOTION = 1<<5,
-    BISHOP_PROMOTION = 1<<6
+    EN_PASSANT = 1<<3,
+    QUEEN_PROMOTION = 1<<4,
+    KNIGHT_PROMOTION = 1<<5,
+    ROOK_PROMOTION = 1<<6,
+    BISHOP_PROMOTION = 1<<7,
   };
 
   int getFlags();

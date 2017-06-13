@@ -89,7 +89,11 @@ void MoveGen::genWhitePawnMoves() {
       if (square & RANK_8) {
         genPawnPromotions(i-7, i, CMove::CAPTURE);
       } else {
-        _moves.push_back(CMove(i-7, i, CMove::CAPTURE));
+        if (square & _board.EN_PASSANT) {
+          _moves.push_back(CMove(i-7, i, CMove::EN_PASSANT));
+        } else {
+          _moves.push_back(CMove(i-7, i, CMove::CAPTURE));
+        }
       }
     }
 
@@ -97,7 +101,11 @@ void MoveGen::genWhitePawnMoves() {
       if (square & RANK_8) {
         genPawnPromotions(i-9, i, CMove::CAPTURE);
       } else {
-        _moves.push_back(CMove(i-9, i, CMove::CAPTURE));
+        if (square & _board.EN_PASSANT) {
+          _moves.push_back(CMove(i-9, i, CMove::EN_PASSANT));
+        } else {
+          _moves.push_back(CMove(i-9, i, CMove::CAPTURE));
+        }
       }
     }
   }
@@ -127,12 +135,15 @@ void MoveGen::genBlackPawnMoves() {
       _moves.push_back(CMove(i+16, i));
     }
 
-
     if ((leftAttacks & square) && (square & attackablePieces)) {
       if (square & RANK_1) {
         genPawnPromotions(i+9, i, CMove::CAPTURE);
       } else {
-        _moves.push_back(CMove(i+9, i, CMove::CAPTURE));
+        if (square & _board.EN_PASSANT) {
+          _moves.push_back(CMove(i+9, i, CMove::EN_PASSANT));
+        } else {
+          _moves.push_back(CMove(i+9, i, CMove::CAPTURE));
+        }
       }
     }
 
@@ -140,7 +151,11 @@ void MoveGen::genBlackPawnMoves() {
       if (square & RANK_1) {
         genPawnPromotions(i+7, i, CMove::CAPTURE);
       } else {
-        _moves.push_back(CMove(i+7, i, CMove::CAPTURE));
+        if (square & _board.EN_PASSANT) {
+          _moves.push_back(CMove(i+7, i, CMove::EN_PASSANT));
+        } else {
+          _moves.push_back(CMove(i+7, i, CMove::CAPTURE));
+        }
       }
     }
   }
@@ -161,7 +176,7 @@ void MoveGen::genBlackKingMoves() {
   genKingMoves(_board.BLACK_KING, _board.BLACK_PIECES, _board.WHITE_ATTACKABLE);
 
   if (_board.blackCanCastleKs()) {
-    _moves.push_back(CMove(e8, h8, CMove::KSIDE_CASTLE));
+    _moves.push_back(CMove(e8, g8, CMove::KSIDE_CASTLE));
   }
   if (_board.blackCanCastleQs()) {
     _moves.push_back(CMove(e8, c8, CMove::QSIDE_CASTLE));
