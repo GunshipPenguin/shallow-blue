@@ -20,33 +20,6 @@ CMove::CMove(unsigned int from, unsigned int to, unsigned int flags) {
   _move = ((flags & 0xff) << 12) | ((to & 0x3f) << 6) | (from & 0x3f);
 }
 
-CMove::CMove(std::string notation) {
-  std::string fromSquare = notation.substr(0, 2);
-  std::string toSquare = notation.substr(2, 2);
-
-  unsigned int from = notationToIndex(fromSquare);
-  unsigned int to = notationToIndex(toSquare);
-  unsigned int flags = 0;
-
-  // Promotions
-  if (notation.size() == 5) {
-    char promotion = tolower(notation[4]);
-
-    switch(promotion) {
-      case 'q':
-        flags |= QUEEN_PROMOTION;
-      case 'r':
-        flags |= ROOK_PROMOTION;
-      case 'b':
-        flags |= BISHOP_PROMOTION;
-      case 'n':
-        flags |= KNIGHT_PROMOTION;
-    }
-  }
-
-  _move = ((flags & 0xff) << 12) | ((to & 0x3f) << 6) | (from & 0x3f);
-}
-
 unsigned int CMove::getFrom() {
   return _move & 0x3f;
 }
