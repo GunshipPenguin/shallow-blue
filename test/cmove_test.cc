@@ -10,13 +10,6 @@ TEST_CASE("Move representation is correct") {
     REQUIRE(move.getFlags() == CMove::CAPTURE);
   }
 
-  SECTION("CMove constructs with a notation") {
-    CMove move("a1a2");
-
-    REQUIRE(move.getFrom() == 0);
-    REQUIRE(move.getTo() == 8);
-  }
-
   SECTION("indexToNotation works correctly") {
     // Corners
     REQUIRE(CMove::indexToNotation(0) == "a1");
