@@ -202,11 +202,11 @@ void MoveGen::genKnightMoves(U64 knights, U64 own, U64 attackable) {
 }
 
 void MoveGen::genWhiteBishopMoves() {
-  genBishopMoves(_board.WHITE_BISHOPS, _board.WHITE_PIECES, _board.BLACK_PIECES);
+  genBishopMoves(_board.WHITE_BISHOPS, _board.WHITE_PIECES, _board.BLACK_ATTACKABLE);
 }
 
 void MoveGen::genBlackBishopMoves() {
-  genBishopMoves(_board.BLACK_BISHOPS, _board.BLACK_PIECES, _board.BLACK_PIECES);
+  genBishopMoves(_board.BLACK_BISHOPS, _board.BLACK_PIECES, _board.WHITE_ATTACKABLE);
 }
 
 void MoveGen::genBishopMoves(U64 bishops, U64 own, U64 attackable) {
