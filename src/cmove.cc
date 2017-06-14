@@ -17,7 +17,7 @@ CMove::CMove(unsigned int from, unsigned int to, unsigned int flags) {
   // 0x3f = 63 = 6 set bits
   // 0xff = 255 = 8 set bits
 
-  _move = ((flags & 0xff) << 12) | ((to & 0x3f) << 6) | (from & 0x3f);
+  _move = ((flags & 0x1ff) << 12) | ((to & 0x3f) << 6) | (from & 0x3f);
 }
 
 unsigned int CMove::getFrom() {
@@ -29,7 +29,7 @@ unsigned int CMove::getTo() {
 }
 
 int CMove::getFlags() {
-  return ((_move >> 12) & 0xff);
+  return ((_move >> 12) & 0x1ff);
 }
 
 std::string CMove::getNotation() {

@@ -170,4 +170,22 @@ TEST_CASE("Board::doMove works properly") {
     REQUIRE(board.BLACK_KNIGHTS == (ONE << c1));
     REQUIRE(board.WHITE_QUEENS == 0ull);
   }
+
+  SECTION("doMove should update the en passant square after a double pawn push for white") {
+    board.setToStartPos();
+
+    CMove move(a2, a4, CMove::DOUBLE_PAWN_PUSH);
+    board.doMove(move);
+
+    REQUIRE(board.EN_PASSANT == (ONE << a3));
+  }
+
+  SECTION("doMove should update the en passant square after a double pawn push for black") {
+    board.setToFen("rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR b KQkq -");
+
+    CMove move(a7, a5, CMove::DOUBLE_PAWN_PUSH);
+    board.doMove(move);
+
+    REQUIRE(board.EN_PASSANT == (ONE << a6));
+  }
 }

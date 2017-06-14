@@ -320,6 +320,14 @@ void Board::doMove(CMove move) {
     }
   }
 
+  if (flags & CMove::DOUBLE_PAWN_PUSH) {
+    // Set square behind as EN_PASSANT
+    unsigned int enPasIndex = WHITE_TO_MOVE ? move.getTo() - 8 : move.getTo() + 8;
+    EN_PASSANT = ONE << enPasIndex;
+  } else {
+    EN_PASSANT = 0ull;
+  }
+
   // Handle promotions
   bool isPromotion = flags & (CMove::QUEEN_PROMOTION | CMove::ROOK_PROMOTION | CMove::BISHOP_PROMOTION | CMove::KNIGHT_PROMOTION);
   if (isPromotion) {
@@ -364,7 +372,6 @@ void Board::doMove(CMove move) {
   }
 
   WHITE_TO_MOVE = !WHITE_TO_MOVE;
-  EN_PASSANT = 0ull;
   updateBitBoards();
 }
 

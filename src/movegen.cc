@@ -73,7 +73,7 @@ void MoveGen::genWhitePawnMoves() {
   for(U64 i=0;i<64;i++) {
     U64 square = static_cast<U64>(1) << i;
 
-    if ((movedPawns1 & square) && (square & _board.NOT_OCCUPIED)) {
+    if (movedPawns1 & square & _board.NOT_OCCUPIED) {
       if (square & RANK_8) {
         genPawnPromotions(i-8, i);
       } else {
@@ -81,11 +81,11 @@ void MoveGen::genWhitePawnMoves() {
       }
     }
 
-    if ((movedPawns2 & square) && (square & _board.NOT_OCCUPIED) && ((square >> 8) & _board.NOT_OCCUPIED)) {
-      _moves.push_back(CMove(i-16, i));
+    if ((movedPawns2 & square & _board.NOT_OCCUPIED) && ((square >> 8) & _board.NOT_OCCUPIED)) {
+      _moves.push_back(CMove(i-16, i, CMove::DOUBLE_PAWN_PUSH));
     }
 
-    if ((leftAttacks & square) && (square & attackablePieces)) {
+    if (leftAttacks & square & attackablePieces) {
       if (square & RANK_8) {
         genPawnPromotions(i-7, i, CMove::CAPTURE);
       } else {
@@ -97,7 +97,7 @@ void MoveGen::genWhitePawnMoves() {
       }
     }
 
-    if ((rightAttacks & square) && (square & attackablePieces)) {
+    if (rightAttacks & square & attackablePieces) {
       if (square & RANK_8) {
         genPawnPromotions(i-9, i, CMove::CAPTURE);
       } else {
@@ -123,7 +123,7 @@ void MoveGen::genBlackPawnMoves() {
   for(U64 i=0;i<64;i++) {
     U64 square = static_cast<U64>(1) << i;
 
-    if ((movedPawns1 & square) && (square & _board.NOT_OCCUPIED)) {
+    if (movedPawns1 & square & _board.NOT_OCCUPIED) {
       if (square & RANK_1) {
         genPawnPromotions(i+8, i);
       } else {
@@ -131,11 +131,11 @@ void MoveGen::genBlackPawnMoves() {
       }
     }
 
-    if ((movedPawns2 & square) && (square & _board.NOT_OCCUPIED) && ((square << 8) & _board.NOT_OCCUPIED)) {
-      _moves.push_back(CMove(i+16, i));
+    if ((movedPawns2 & square & _board.NOT_OCCUPIED) && ((square << 8) & _board.NOT_OCCUPIED)) {
+      _moves.push_back(CMove(i+16, i, CMove::DOUBLE_PAWN_PUSH));
     }
 
-    if ((leftAttacks & square) && (square & attackablePieces)) {
+    if (leftAttacks & square & attackablePieces) {
       if (square & RANK_1) {
         genPawnPromotions(i+9, i, CMove::CAPTURE);
       } else {
@@ -147,7 +147,7 @@ void MoveGen::genBlackPawnMoves() {
       }
     }
 
-    if ((rightAttacks & square) && (square & attackablePieces)) {
+    if (rightAttacks & square & attackablePieces) {
       if (square & RANK_1) {
         genPawnPromotions(i+7, i, CMove::CAPTURE);
       } else {
