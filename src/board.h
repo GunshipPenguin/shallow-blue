@@ -75,7 +75,7 @@ class Board {
     U64 getBlackAttacks();
 
   private:
-    RayTable raytable;
+    static const RayTable raytable;
 
     // Used to check if castling is possible
     bool WHITE_KING_HAS_MOVED = false;
