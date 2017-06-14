@@ -1,6 +1,7 @@
 #include "catch.hpp"
 #include "movegen.h"
 #include "board.h"
+#include "defs.h"
 
 TEST_CASE("Rook move generation is correct") {
   Board board;

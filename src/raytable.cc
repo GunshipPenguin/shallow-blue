@@ -50,9 +50,8 @@ void RayTable::calcNorth() {
 }
 
 void RayTable::calcEast() {
-  const U64 one = U64(1);
   for(int square=0;square<64;square++) {
-    rays[EAST][square] = 2*((one << (square | 7)) - (one << square));
+    rays[EAST][square] = 2*((ONE << (square | 7)) - (ONE << square));
   }
 }
 
@@ -104,9 +103,8 @@ void RayTable::calcSouthWest() {
 }
 
 void RayTable::calcWest() {
-  const U64 one = 1;
   for(int square=0;square<64;square++) {
-    rays[WEST][square] = (one << square) - (one << (square&56));
+    rays[WEST][square] = (ONE << square) - (ONE << (square&56));
   }
 }
 

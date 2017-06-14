@@ -226,7 +226,7 @@ void MoveGen::genBlackBishopMoves() {
 
 void MoveGen::genBishopMoves(U64 bishops, U64 own, U64 attackable) {
   for(int from=0;from<64;from++) {
-    U64 fromSquare = U64(1) << from;
+    U64 fromSquare = ONE << from;
     if((fromSquare & bishops) == 0) {
       continue;
     }
@@ -247,7 +247,7 @@ void MoveGen::genBlackRookMoves() {
 
 void MoveGen::genRookMoves(U64 rooks, U64 own, U64 attackable) {
   for(int from=0;from<64;from++) {
-    U64 fromSquare = U64(1) << from;
+    U64 fromSquare = ONE << from;
     if((fromSquare & rooks) == 0) {
       continue;
     }
@@ -268,7 +268,7 @@ void MoveGen::genBlackQueenMoves() {
 
 void MoveGen::genQueenMoves(U64 queens, U64 own, U64 attackable) {
   for(int from=0;from<64;from++) {
-    U64 fromSquare = U64(1) << from;
+    U64 fromSquare = ONE << from;
     if((fromSquare & queens) == 0) {
       continue;
     }
@@ -281,7 +281,7 @@ void MoveGen::genQueenMoves(U64 queens, U64 own, U64 attackable) {
 
 void MoveGen::addMoves(int from, U64 moves, U64 attackable) {
   for(int to=0;to<64;to++) {
-    U64 toSquare = U64(1) << to;
+    U64 toSquare = ONE << to;
     if ((toSquare & moves) == 0) {
       continue;
     }

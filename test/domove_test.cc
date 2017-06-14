@@ -35,7 +35,7 @@ TEST_CASE("Board::doMove works properly") {
     board.doMove(move);
 
     REQUIRE( (board.WHITE_BISHOPS & (ONE << e5)) );
-    REQUIRE(board.BLACK_KNIGHTS == 0ull);
+    REQUIRE(board.BLACK_KNIGHTS ==ZERO);
   }
 
   SECTION("doMove handles en passant for black") {
@@ -46,8 +46,8 @@ TEST_CASE("Board::doMove works properly") {
     board.doMove(move);
 
     REQUIRE( (board.BLACK_PAWNS & (ONE << c3)) );
-    REQUIRE(board.WHITE_PAWNS == 0ull);
-    REQUIRE(board.EN_PASSANT == 0ull);
+    REQUIRE(board.WHITE_PAWNS ==ZERO);
+    REQUIRE(board.EN_PASSANT ==ZERO);
   }
 
   SECTION("doMove handles en passant for white") {
@@ -58,8 +58,8 @@ TEST_CASE("Board::doMove works properly") {
     board.doMove(move);
 
     REQUIRE( (board.WHITE_PAWNS & (ONE << c6)) );
-    REQUIRE(board.BLACK_PAWNS == 0ull);
-    REQUIRE(board.EN_PASSANT == 0ull);
+    REQUIRE(board.BLACK_PAWNS ==ZERO);
+    REQUIRE(board.EN_PASSANT ==ZERO);
   }
 
   SECTION("doMove handles white kingside castles") {
@@ -134,7 +134,7 @@ TEST_CASE("Board::doMove works properly") {
 
     board.doMove(move);
 
-    REQUIRE(board.WHITE_PAWNS == 0ull);
+    REQUIRE(board.WHITE_PAWNS ==ZERO);
     REQUIRE(board.WHITE_QUEENS == (ONE << d8));
   }
 
@@ -145,7 +145,7 @@ TEST_CASE("Board::doMove works properly") {
 
     board.doMove(move);
 
-    REQUIRE(board.BLACK_PAWNS == 0ull);
+    REQUIRE(board.BLACK_PAWNS ==ZERO);
     REQUIRE(board.BLACK_QUEENS == (ONE << d1));
   }
 
@@ -155,8 +155,8 @@ TEST_CASE("Board::doMove works properly") {
     CMove move(d7, c8, CMove::CAPTURE | CMove::KNIGHT_PROMOTION);
     board.doMove(move);
 
-    REQUIRE(board.WHITE_PAWNS == 0ull);
-    REQUIRE(board.BLACK_QUEENS == 0ull);
+    REQUIRE(board.WHITE_PAWNS ==ZERO);
+    REQUIRE(board.BLACK_QUEENS ==ZERO);
     REQUIRE(board.WHITE_KNIGHTS == (ONE << c8));
   }
 
@@ -166,9 +166,9 @@ TEST_CASE("Board::doMove works properly") {
     CMove move(d2, c1, CMove::CAPTURE | CMove::KNIGHT_PROMOTION);
     board.doMove(move);
 
-    REQUIRE(board.BLACK_PAWNS == 0ull);
+    REQUIRE(board.BLACK_PAWNS ==ZERO);
     REQUIRE(board.BLACK_KNIGHTS == (ONE << c1));
-    REQUIRE(board.WHITE_QUEENS == 0ull);
+    REQUIRE(board.WHITE_QUEENS ==ZERO);
   }
 
   SECTION("doMove should update the en passant square after a double pawn push for white") {

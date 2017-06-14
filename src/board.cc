@@ -1,6 +1,7 @@
 #include "board.h"
 #include "cmove.h"
 #include "raytable.h"
+#include "defs.h"
 #include <string>
 #include <sstream>
 #include <iostream>
@@ -116,34 +117,34 @@ std::string Board::getStringRep() {
 }
 
 void Board::clearBitBoards() {
-  WHITE_PAWNS = 0ull;
-  BLACK_PAWNS = 0ull;
+  WHITE_PAWNS =ZERO;
+  BLACK_PAWNS =ZERO;
 
-  WHITE_ROOKS = 0ull;
-  BLACK_ROOKS = 0ull;
+  WHITE_ROOKS =ZERO;
+  BLACK_ROOKS =ZERO;
 
-  WHITE_KNIGHTS = 0ull;
-  BLACK_KNIGHTS = 0ull;
+  WHITE_KNIGHTS =ZERO;
+  BLACK_KNIGHTS =ZERO;
 
-  WHITE_BISHOPS = 0ull;
-  BLACK_BISHOPS = 0ull;
+  WHITE_BISHOPS =ZERO;
+  BLACK_BISHOPS =ZERO;
 
-  WHITE_QUEENS = 0ull;
-  BLACK_QUEENS = 0ull;
+  WHITE_QUEENS =ZERO;
+  BLACK_QUEENS =ZERO;
 
-  WHITE_KING = 0ull;
-  BLACK_KING = 0ull;
+  WHITE_KING =ZERO;
+  BLACK_KING =ZERO;
 
-  WHITE_PIECES = 0ull;
-  BLACK_PIECES = 0ull;
+  WHITE_PIECES =ZERO;
+  BLACK_PIECES =ZERO;
 
-  WHITE_ATTACKABLE = 0ull;
-  BLACK_ATTACKABLE = 0ull;
+  WHITE_ATTACKABLE =ZERO;
+  BLACK_ATTACKABLE =ZERO;
 
-  EN_PASSANT = 0ull;
+  EN_PASSANT =ZERO;
 
-  OCCUPIED = 0ull;
-  NOT_OCCUPIED = 0ull;
+  OCCUPIED =ZERO;
+  NOT_OCCUPIED =ZERO;
 
   return;
 }
@@ -157,7 +158,7 @@ void Board::setToFen(std::string fenString) {
   U64 boardPos = 56; // Fen string starts at a8 = index 56
   fenStream >> token;
 
-  U64 one64 = U64(1);
+  U64 one64 = ONE;
   for (auto currChar : token) {
     switch(currChar) {
       case 'p': BLACK_PAWNS |= (one64 << boardPos++);
@@ -240,7 +241,7 @@ U64 Board::getOccupied() {
 }
 
 U64* Board::getWhiteBitBoard(int squareIndex) {
-  U64 square = U64(1) << squareIndex;
+  U64 square = ONE << squareIndex;
 
   U64* pieces;
   if (square & WHITE_PAWNS) pieces = &WHITE_PAWNS;
@@ -268,7 +269,7 @@ void Board::updateNonPieceBitBoards() {
 }
 
 U64* Board::getBlackBitBoard(int squareIndex) {
-  U64 square = U64(1) << squareIndex;
+  U64 square = ONE << squareIndex;
 
   U64* pieces;
   if (square & BLACK_PAWNS) pieces = &BLACK_PAWNS;
@@ -328,7 +329,7 @@ void Board::doMove(CMove move) {
     unsigned int enPasIndex = WHITE_TO_MOVE ? move.getTo() - 8 : move.getTo() + 8;
     EN_PASSANT = ONE << enPasIndex;
   } else {
-    EN_PASSANT = 0ull;
+    EN_PASSANT =ZERO;
   }
 
   // Handle promotions
@@ -401,7 +402,7 @@ void Board::setToStartPos() {
 }
 
 U64 Board::getWhitePawnAttacksForSquare(int square) {
-  U64 fromSquare = U64(1) << square;
+  U64 fromSquare = ONE << square;
 
   U64 attacks = ((fromSquare << 7) & ~FILE_H) | ((fromSquare << 9) & ~FILE_A);
 
@@ -409,7 +410,7 @@ U64 Board::getWhitePawnAttacksForSquare(int square) {
 }
 
 U64 Board::getBlackPawnAttacksForSquare(int square) {
-  U64 fromSquare = U64(1) << square;
+  U64 fromSquare = ONE << square;
 
   U64 attacks = ((fromSquare >> 7) & ~FILE_A) | ((fromSquare >> 9) & ~FILE_H);
 
@@ -418,7 +419,7 @@ U64 Board::getBlackPawnAttacksForSquare(int square) {
 
 
 U64 Board::getKnightAttacksForSquare(int square, U64 own) {
-  U64 fromSquare = U64(1) << square;
+  U64 fromSquare = ONE << square;
 
   U64 moves = (((fromSquare << 15) | (fromSquare >> 17)) & ~FILE_H) | // Left 1
     (((fromSquare >> 15) | (fromSquare << 17)) & ~FILE_A) | // Right 1
@@ -429,7 +430,7 @@ U64 Board::getKnightAttacksForSquare(int square, U64 own) {
 }
 
 U64 Board::getKingAttacksForSquare(int square, U64 own) {
-  U64 king = U64(1) << square;
+  U64 king = ONE << square;
 
   U64 moves = (((king << 7) | (king >> 9) | (king >> 1)) & (~FILE_H)) |
     (((king << 9) | (king >> 7) | (king << 1)) & (~FILE_A)) |
@@ -464,7 +465,7 @@ U64 Board::getWhiteAttacks() {
   U64 attacks = U64(0);
 
   for(int squareIndex=0;squareIndex<64;squareIndex++) {
-    U64 square = U64(1) << squareIndex;
+    U64 square = ONE << squareIndex;
     if ((square & WHITE_PIECES) == 0) {
       continue;
     }
@@ -485,7 +486,7 @@ U64 Board::getBlackAttacks() {
   U64 attacks = U64(0);
 
   for(int squareIndex=0;squareIndex<64;squareIndex++) {
-    U64 square = U64(1) << squareIndex;
+    U64 square = ONE << squareIndex;
     if ((square & BLACK_PIECES) == 0) {
       continue;
     }
