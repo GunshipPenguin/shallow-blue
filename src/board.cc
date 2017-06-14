@@ -432,7 +432,7 @@ U64 Board::getBishopAttacksForSquare(int square, U64 own) {
   U64 moves = raytable.getPositiveAttacks(RayTable::NORTH_WEST, square, OCCUPIED) |
     raytable.getPositiveAttacks(RayTable::NORTH_EAST, square, OCCUPIED) |
     raytable.getNegativeAttacks(RayTable::SOUTH_WEST, square, OCCUPIED) |
-    raytable.getPositiveAttacks(RayTable::SOUTH_EAST, square, OCCUPIED);
+    raytable.getNegativeAttacks(RayTable::SOUTH_EAST, square, OCCUPIED);
 
   return moves & (~own);
 }
