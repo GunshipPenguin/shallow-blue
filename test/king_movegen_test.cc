@@ -108,7 +108,7 @@ TEST_CASE("King move generation is correct") {
       REQUIRE(movegen.getMoves().size() == 24);
     }
 
-    SECTION("White ks castles are not generated when squares in between the king and rook are attacked") {
+    SECTION("White ks castles are not generated when squares that the king passes through are attacked") {
       board.setToFen("8/8/8/8/5r2/8/8/R3K2R w KQ -");
       movegen.setBoard(board);
       REQUIRE(movegen.getMoves().size() == 25);
@@ -118,11 +118,7 @@ TEST_CASE("King move generation is correct") {
       REQUIRE(movegen.getMoves().size() == 25);
     }
 
-    SECTION("White qs castles are not generated when squares in between the king and rook are attacked") {
-      board.setToFen("8/8/8/8/4b3/8/8/R3K2R w KQ -");
-      movegen.setBoard(board);
-      REQUIRE(movegen.getMoves().size() == 25);
-
+    SECTION("White qs castles are not generated when squares that the king passes through are attacked") {
       board.setToFen("8/8/8/8/2r5/8/8/R3K2R w KQ -");
       movegen.setBoard(board);
       REQUIRE(movegen.getMoves().size() == 25);
@@ -132,7 +128,7 @@ TEST_CASE("King move generation is correct") {
       REQUIRE(movegen.getMoves().size() == 25);
     }
 
-    SECTION("Black ks castles are not generated when squares in between the king and rook are attacked") {
+    SECTION("Black ks castles are not generated when squares that the king passes through are attacked") {
       board.setToFen("r3k2r/8/8/5R2/8/8/8/8 b kq -");
       movegen.setBoard(board);
       REQUIRE(movegen.getMoves().size() == 25);
@@ -142,11 +138,7 @@ TEST_CASE("King move generation is correct") {
       REQUIRE(movegen.getMoves().size() == 25);
     }
 
-    SECTION("Black qs castles are not generated when squares in between the king and rook are attacked") {
-      board.setToFen("r3k2r/8/8/4B3/8/8/8/8 b kq -");
-      movegen.setBoard(board);
-      REQUIRE(movegen.getMoves().size() == 25);
-
+    SECTION("Black qs castles are not generated when squares that the king passes through are attacked") {
       board.setToFen("r3k2r/8/8/3R4/8/8/8/8 b kq -");
       movegen.setBoard(board);
       REQUIRE(movegen.getMoves().size() == 25);

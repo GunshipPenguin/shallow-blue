@@ -26,9 +26,9 @@ bool Board::whiteCanCastleKs() {
     return false;
   }
 
-  U64 squaresInbetween = (ONE << f1) | (ONE << g1);
-  bool squaresOccupied = squaresInbetween & OCCUPIED;
-  bool squaresAttacked = squaresInbetween & BLACK_ATTACKS;
+  U64 passThroughSquares = (ONE << f1) | (ONE << g1);
+  bool squaresOccupied = passThroughSquares & OCCUPIED;
+  bool squaresAttacked = passThroughSquares & BLACK_ATTACKS;
 
   return !WHITE_KING_HAS_MOVED && !WHITE_KS_ROOK_HAS_MOVED && !whiteIsInCheck() &&
     !squaresOccupied && !squaresAttacked;
@@ -39,9 +39,9 @@ bool Board::whiteCanCastleQs() {
     return false;
   }
 
-  U64 squaresInbetween = (ONE << b1) | (ONE << c1) | (ONE << d1);
-  bool squaresOccupied = squaresInbetween & OCCUPIED;
-  bool squaresAttacked = squaresInbetween & BLACK_ATTACKS;
+  U64 passThroughSquares = (ONE << c1) | (ONE << d1);
+  bool squaresOccupied = passThroughSquares & OCCUPIED;
+  bool squaresAttacked = passThroughSquares & BLACK_ATTACKS;
 
   return !WHITE_KING_HAS_MOVED && !WHITE_QS_ROOK_HAS_MOVED && !whiteIsInCheck() &&
     !squaresOccupied && !squaresAttacked;
@@ -52,9 +52,9 @@ bool Board::blackCanCastleKs() {
     return false;
   }
 
-  U64 squaresInbetween = (ONE << f8) | (ONE << g8);
-  bool squaresOccupied = squaresInbetween & OCCUPIED;
-  bool squaresAttacked = squaresInbetween & WHITE_ATTACKS;
+  U64 passThroughSquares = (ONE << f8) | (ONE << g8);
+  bool squaresOccupied = passThroughSquares & OCCUPIED;
+  bool squaresAttacked = passThroughSquares & WHITE_ATTACKS;
 
   return !BLACK_KING_HAS_MOVED && !BLACK_KS_ROOK_HAS_MOVED && !blackIsInCheck() &&
     !squaresOccupied && !squaresAttacked;
@@ -65,9 +65,9 @@ bool Board::blackCanCastleQs() {
     return false;
   }
 
-  U64 squaresInbetween = (ONE << b8) | (ONE << c8) | (ONE << d8);
-  bool squaresOccupied = squaresInbetween & OCCUPIED;
-  bool squaresAttacked = squaresInbetween & WHITE_ATTACKS;
+  U64 passThroughSquares = (ONE << c8) | (ONE << d8);
+  bool squaresOccupied = passThroughSquares & OCCUPIED;
+  bool squaresAttacked = passThroughSquares & WHITE_ATTACKS;
 
   return !BLACK_KING_HAS_MOVED && !BLACK_QS_ROOK_HAS_MOVED && !blackIsInCheck() &&
     !squaresOccupied && !squaresAttacked;
