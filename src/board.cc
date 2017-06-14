@@ -11,11 +11,11 @@ Board::Board() {
 }
 
 bool Board::whiteIsInCheck() {
-  return (bool) (getBlackAttacks() & WHITE_KING);
+  return (bool) (BLACK_ATTACKS & WHITE_KING);
 }
 
 bool Board::blackIsInCheck() {
-  return (bool) (getWhiteAttacks() & BLACK_KING);
+  return (bool) (WHITE_ATTACKS & BLACK_KING);
 }
 
 bool Board::whiteCanCastleKs() {
@@ -25,7 +25,7 @@ bool Board::whiteCanCastleKs() {
 
   U64 squaresInbetween = (ONE << f1) | (ONE << g1);
   bool squaresOccupied = squaresInbetween & OCCUPIED;
-  bool squaresAttacked = squaresInbetween & getBlackAttacks();
+  bool squaresAttacked = squaresInbetween & BLACK_ATTACKS;
 
   return !WHITE_KING_HAS_MOVED && !WHITE_KS_ROOK_HAS_MOVED && !whiteIsInCheck() &&
     !squaresOccupied && !squaresAttacked;
@@ -38,7 +38,7 @@ bool Board::whiteCanCastleQs() {
 
   U64 squaresInbetween = (ONE << b1) | (ONE << c1) | (ONE << d1);
   bool squaresOccupied = squaresInbetween & OCCUPIED;
-  bool squaresAttacked = squaresInbetween & getBlackAttacks();
+  bool squaresAttacked = squaresInbetween & BLACK_ATTACKS;
 
   return !WHITE_KING_HAS_MOVED && !WHITE_QS_ROOK_HAS_MOVED && !whiteIsInCheck() &&
     !squaresOccupied && !squaresAttacked;
@@ -51,7 +51,7 @@ bool Board::blackCanCastleKs() {
 
   U64 squaresInbetween = (ONE << f8) | (ONE << g8);
   bool squaresOccupied = squaresInbetween & OCCUPIED;
-  bool squaresAttacked = squaresInbetween & getWhiteAttacks();
+  bool squaresAttacked = squaresInbetween & WHITE_ATTACKS;
 
   return !BLACK_KING_HAS_MOVED && !BLACK_KS_ROOK_HAS_MOVED && !blackIsInCheck() &&
     !squaresOccupied && !squaresAttacked;
@@ -64,7 +64,7 @@ bool Board::blackCanCastleQs() {
 
   U64 squaresInbetween = (ONE << b8) | (ONE << c8) | (ONE << d8);
   bool squaresOccupied = squaresInbetween & OCCUPIED;
-  bool squaresAttacked = squaresInbetween & getWhiteAttacks();
+  bool squaresAttacked = squaresInbetween & WHITE_ATTACKS;
 
   return !BLACK_KING_HAS_MOVED && !BLACK_QS_ROOK_HAS_MOVED && !blackIsInCheck() &&
     !squaresOccupied && !squaresAttacked;
@@ -262,6 +262,9 @@ void Board::updateBitBoards() {
 
   OCCUPIED = getOccupied();
   NOT_OCCUPIED = ~OCCUPIED;
+
+  WHITE_ATTACKS = getWhiteAttacks();
+  BLACK_ATTACKS = getBlackAttacks();
 }
 
 U64* Board::getBlackBitBoard(int squareIndex) {
