@@ -232,7 +232,7 @@ void Board::setToFen(std::string fenString) {
     EN_PASSANT = static_cast<U64>(1) << enPasIndex;
   }
 
-  updateBitBoards();
+  updateNonPieceBitBoards();
 }
 
 U64 Board::getOccupied() {
@@ -253,7 +253,7 @@ U64* Board::getWhiteBitBoard(int squareIndex) {
   return pieces;
 }
 
-void Board::updateBitBoards() {
+void Board::updateNonPieceBitBoards() {
   WHITE_PIECES = getWhitePieces();
   WHITE_ATTACKABLE = WHITE_PIECES & ~WHITE_KING;
 
@@ -375,7 +375,7 @@ void Board::doMove(CMove move) {
   }
 
   WHITE_TO_MOVE = !WHITE_TO_MOVE;
-  updateBitBoards();
+  updateNonPieceBitBoards();
 }
 
 U64 Board::getWhitePieces() {

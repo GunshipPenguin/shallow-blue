@@ -93,7 +93,7 @@ class Board {
     bool BLACK_CAN_CASTLE_KS;
     bool BLACK_CAN_CASTLE_QS;
 
-    void updateBitBoards();
+    void updateNonPieceBitBoards();
 
     void doRegularMove(CMove);
 
