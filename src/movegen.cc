@@ -168,7 +168,7 @@ void MoveGen::genWhiteKingMoves() {
     _moves.push_back(CMove(e1, g1, CMove::KSIDE_CASTLE));
   }
   if (_board.whiteCanCastleQs()) {
-    _moves.push_back(CMove(e1, b1, CMove::QSIDE_CASTLE));
+    _moves.push_back(CMove(e1, c1, CMove::QSIDE_CASTLE));
   }
 }
 
