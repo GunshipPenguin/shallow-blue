@@ -7,7 +7,7 @@
 #include <iostream>
 #include <string.h>
 
-const RayTable Board::raytable = RayTable();
+RayTable Board::raytable = RayTable();
 
 Board::Board() {
   setToFen("8/8/8/8/8/8/8/8 w - -");
