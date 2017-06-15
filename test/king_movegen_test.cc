@@ -147,4 +147,118 @@ TEST_CASE("King move generation is correct") {
       movegen.setBoard(board);
       REQUIRE(movegen.getMoves().size() == 25);
     }
+
+    SECTION("White ks castles are not generated after the ks rook has been captured") {
+      board.setToFen("8/8/8/3b4/8/8/8/4K2R b K -");
+
+      REQUIRE(board.whiteCanCastleKs() == true);
+      CMove move(d5, h1, CMove::CAPTURE);
+
+      board.doMove(move);
+
+      REQUIRE(board.whiteCanCastleKs() == false);
+    }
+
+    SECTION("White qs castles are not generated after the qs rook has been captured") {
+      board.setToFen("8/8/8/8/4b3/8/8/R3K3 b Q -");
+
+      REQUIRE(board.whiteCanCastleQs() == true);
+      CMove move(e4, a1, CMove::CAPTURE);
+
+      board.doMove(move);
+
+      REQUIRE(board.whiteCanCastleQs() == false);
+    }
+
+    SECTION("Black ks castles are not generated after the ks rook has been captured") {
+      board.setToFen("4k2r/8/8/4B3/8/8/8/8 w k -");
+
+      REQUIRE(board.blackCanCastleKs() == true);
+      CMove move(e5, h8, CMove::CAPTURE);
+
+      board.doMove(move);
+
+      REQUIRE(board.blackCanCastleKs() == false);
+    }
+
+    SECTION("Black qs castles are not generated after the qs rook has been captured") {
+      board.setToFen("r3k3/8/8/8/4B3/8/8/8 w q -");
+
+      REQUIRE(board.blackCanCastleQs() == true);
+      CMove move(e4, a8, CMove::CAPTURE);
+
+      board.doMove(move);
+
+      REQUIRE(board.blackCanCastleQs() == false);
+    }
+
+    SECTION("White ks castles are not generated after the white ks rook has moved") {
+      board.setToFen("8/8/8/8/8/8/8/4K2R w K -");
+
+      REQUIRE(board.whiteCanCastleKs() == true);
+      CMove move(h1, g1);
+
+      board.doMove(move);
+
+      REQUIRE(board.whiteCanCastleKs() == false);
+    }
+
+    SECTION("White qs castles are not generated after the white qs rook has moved") {
+      board.setToFen("8/8/8/8/8/8/8/R3K3 w Q -");
+
+      REQUIRE(board.whiteCanCastleQs() == true);
+      CMove move(a1, b1);
+
+      board.doMove(move);
+
+      REQUIRE(board.whiteCanCastleQs() == false);
+    }
+
+    SECTION("Black ks castles are not generated after the black ks rook has moved") {
+      board.setToFen("4k2r/8/8/8/8/8/8/8 b k -");
+
+      REQUIRE(board.blackCanCastleKs() == true);
+      CMove move(h8, g8);
+
+      board.doMove(move);
+
+      REQUIRE(board.blackCanCastleKs() == false);
+    }
+
+    SECTION("Black qs castles are not generated after the black qs rook has moved") {
+      board.setToFen("r3k3/8/8/8/8/8/8/8 b q -");
+
+      REQUIRE(board.blackCanCastleQs() == true);
+      CMove move(a8, b8);
+
+      board.doMove(move);
+
+      REQUIRE(board.blackCanCastleQs() == false);
+    }
+
+    SECTION("White castles are not generated after the white king has moved") {
+      board.setToFen("8/8/8/8/8/8/8/R3K2R w KQ -");
+
+      REQUIRE(board.whiteCanCastleKs() == true);
+      REQUIRE(board.whiteCanCastleQs() == true);
+
+      CMove move(e1, e2);
+      board.doMove(move);
+
+      REQUIRE(board.whiteCanCastleKs() == false);
+      REQUIRE(board.whiteCanCastleQs() == false);
+    }
+
+    SECTION("Black castles are not generated after the black king has moved") {
+      board.setToFen("r3k2r/8/8/8/8/8/8/8 b kq -");
+
+      REQUIRE(board.blackCanCastleKs() == true);
+      REQUIRE(board.blackCanCastleQs() == true);
+
+      CMove move(e8, e7);
+      board.doMove(move);
+
+      REQUIRE(board.blackCanCastleKs() == false);
+      REQUIRE(board.blackCanCastleQs() == false);
+    }
 }

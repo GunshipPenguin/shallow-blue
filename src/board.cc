@@ -30,8 +30,7 @@ bool Board::whiteCanCastleKs() {
   bool squaresOccupied = passThroughSquares & OCCUPIED;
   bool squaresAttacked = passThroughSquares & BLACK_ATTACKS;
 
-  return !WHITE_KING_HAS_MOVED && !WHITE_KS_ROOK_HAS_MOVED && !whiteIsInCheck() &&
-    !squaresOccupied && !squaresAttacked;
+  return !whiteIsInCheck() && !squaresOccupied && !squaresAttacked;
 }
 
 bool Board::whiteCanCastleQs() {
@@ -43,8 +42,7 @@ bool Board::whiteCanCastleQs() {
   bool squaresOccupied = passThroughSquares & OCCUPIED;
   bool squaresAttacked = passThroughSquares & BLACK_ATTACKS;
 
-  return !WHITE_KING_HAS_MOVED && !WHITE_QS_ROOK_HAS_MOVED && !whiteIsInCheck() &&
-    !squaresOccupied && !squaresAttacked;
+  return !whiteIsInCheck() && !squaresOccupied && !squaresAttacked;
 }
 
 bool Board::blackCanCastleKs() {
@@ -56,8 +54,7 @@ bool Board::blackCanCastleKs() {
   bool squaresOccupied = passThroughSquares & OCCUPIED;
   bool squaresAttacked = passThroughSquares & WHITE_ATTACKS;
 
-  return !BLACK_KING_HAS_MOVED && !BLACK_KS_ROOK_HAS_MOVED && !blackIsInCheck() &&
-    !squaresOccupied && !squaresAttacked;
+  return !blackIsInCheck() && !squaresOccupied && !squaresAttacked;
 }
 
 bool Board::blackCanCastleQs() {
@@ -69,8 +66,7 @@ bool Board::blackCanCastleQs() {
   bool squaresOccupied = passThroughSquares & OCCUPIED;
   bool squaresAttacked = passThroughSquares & WHITE_ATTACKS;
 
-  return !BLACK_KING_HAS_MOVED && !BLACK_QS_ROOK_HAS_MOVED && !blackIsInCheck() &&
-    !squaresOccupied && !squaresAttacked;
+  return !blackIsInCheck() && !squaresOccupied && !squaresAttacked;
 }
 
 std::string Board::getStringRep() {
@@ -201,9 +197,6 @@ void Board::setToFen(std::string fenString) {
   // Castling availability
   fenStream >> token;
 
-  WHITE_KING_HAS_MOVED = false, BLACK_KING_HAS_MOVED = false, WHITE_KS_ROOK_HAS_MOVED = false,
-    BLACK_KS_ROOK_HAS_MOVED = false, WHITE_QS_ROOK_HAS_MOVED = false, BLACK_QS_ROOK_HAS_MOVED = false;
-
   WHITE_CAN_CASTLE_KS = false, WHITE_CAN_CASTLE_QS = false,
     BLACK_CAN_CASTLE_KS = false, BLACK_CAN_CASTLE_QS = false;
   for (auto currChar : token) {
@@ -302,6 +295,17 @@ void Board::doMove(CMove move) {
   if (flags & CMove::CAPTURE) {
     U64* capturePieces = WHITE_TO_MOVE ? getBlackBitBoard(move.getTo()) : getWhiteBitBoard(move.getTo());
     *capturePieces ^= (ONE << move.getTo());
+
+    switch(move.getTo()) {
+      case a1: WHITE_CAN_CASTLE_QS = false;
+        break;
+      case h1: WHITE_CAN_CASTLE_KS = false;
+        break;
+      case a8: BLACK_CAN_CASTLE_QS = false;
+        break;
+      case h8: BLACK_CAN_CASTLE_KS = false;
+        break;
+    }
   }
   if (flags & CMove::KSIDE_CASTLE) {
     if (WHITE_TO_MOVE) {
@@ -363,17 +367,21 @@ void Board::doMove(CMove move) {
 
   // Update castling flags if rooks or kings have moved
   switch(move.getFrom()) {
-    case e1: WHITE_KING_HAS_MOVED = true;
+    case e1:
+      WHITE_CAN_CASTLE_KS = false;
+      WHITE_CAN_CASTLE_QS = false;
       break;
-    case e8: BLACK_KING_HAS_MOVED = true;
+    case e8:
+      BLACK_CAN_CASTLE_KS = false;
+      BLACK_CAN_CASTLE_QS = false;
       break;
-    case a1: WHITE_QS_ROOK_HAS_MOVED = true;
+    case a1: WHITE_CAN_CASTLE_QS = false;
       break;
-    case h1: WHITE_KS_ROOK_HAS_MOVED = true;
+    case h1: WHITE_CAN_CASTLE_KS = false;
       break;
-    case a8: BLACK_QS_ROOK_HAS_MOVED = true;
+    case a8: BLACK_CAN_CASTLE_QS = false;
       break;
-    case h8: BLACK_KS_ROOK_HAS_MOVED = true;
+    case h8: BLACK_CAN_CASTLE_KS = false;
       break;
   }
 

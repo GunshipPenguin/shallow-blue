@@ -77,15 +77,6 @@ class Board {
   private:
     static RayTable raytable;
 
-    // Used to check if castling is possible
-    bool WHITE_KING_HAS_MOVED = false;
-    bool WHITE_KS_ROOK_HAS_MOVED = false;
-    bool WHITE_QS_ROOK_HAS_MOVED = false;
-
-    bool BLACK_KING_HAS_MOVED = false;
-    bool BLACK_KS_ROOK_HAS_MOVED = false;
-    bool BLACK_QS_ROOK_HAS_MOVED = false;
-
     // From the fen string, override the above variables
     bool WHITE_CAN_CASTLE_KS;
     bool WHITE_CAN_CASTLE_QS;
