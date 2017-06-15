@@ -38,8 +38,9 @@ bool Board::whiteCanCastleQs() {
     return false;
   }
 
+  U64 inbetweenSquares = (ONE << b1) | (ONE << c1) | (ONE << d1);
   U64 passThroughSquares = (ONE << c1) | (ONE << d1);
-  bool squaresOccupied = passThroughSquares & OCCUPIED;
+  bool squaresOccupied = inbetweenSquares & OCCUPIED;
   bool squaresAttacked = passThroughSquares & BLACK_ATTACKS;
 
   return !whiteIsInCheck() && !squaresOccupied && !squaresAttacked;
@@ -62,8 +63,9 @@ bool Board::blackCanCastleQs() {
     return false;
   }
 
+  U64 inbetweenSquares = (ONE << b8) | (ONE << c8) | (ONE << d8);
   U64 passThroughSquares = (ONE << c8) | (ONE << d8);
-  bool squaresOccupied = passThroughSquares & OCCUPIED;
+  bool squaresOccupied = inbetweenSquares & OCCUPIED;
   bool squaresAttacked = passThroughSquares & WHITE_ATTACKS;
 
   return !blackIsInCheck() && !squaresOccupied && !squaresAttacked;

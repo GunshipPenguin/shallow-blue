@@ -261,4 +261,42 @@ TEST_CASE("King move generation is correct") {
       REQUIRE(board.blackCanCastleKs() == false);
       REQUIRE(board.blackCanCastleQs() == false);
     }
+
+    SECTION("White qs castles are not generated when there are pieces in between the king and rook") {
+      board.setToFen("8/8/8/8/8/8/8/RB2K3 w KQ -");
+      REQUIRE(board.whiteCanCastleQs() == false);
+
+      board.setToFen("8/8/8/8/8/8/8/R1B1K3 w KQ -");
+      REQUIRE(board.whiteCanCastleQs() == false);
+
+      board.setToFen("8/8/8/8/8/8/8/R2BK3 w KQ -");
+      REQUIRE(board.whiteCanCastleQs() == false);
+    }
+
+    SECTION("White ks castles are not generated when there are pieces in between the king and rook") {
+      board.setToFen("8/8/8/8/8/8/8/4K1BR w KQ -");
+      REQUIRE(board.whiteCanCastleKs() == false);
+
+      board.setToFen("8/8/8/8/8/8/8/4KB1R w - -");
+      REQUIRE(board.whiteCanCastleKs() == false);
+    }
+
+    SECTION("Black qs castles are not generated when there are pieces in between the king and rook") {
+      board.setToFen("rb2k3/8/8/8/8/8/8/8 b kq -");
+      REQUIRE(board.blackCanCastleQs() == false);
+
+      board.setToFen("r2bk3/8/8/8/8/8/8/8 b kq -");
+      REQUIRE(board.blackCanCastleQs() == false);
+
+      board.setToFen("r2bk3/8/8/8/8/8/8/8 b kq -");
+      REQUIRE(board.blackCanCastleQs() == false);
+    }
+
+    SECTION("Black ks castles are not generated when there are pieces in between the king and rook") {
+      board.setToFen("4k1br/8/8/8/8/8/8/8 w kq -");
+      REQUIRE(board.blackCanCastleKs() == false);
+
+      board.setToFen("4kb1r/8/8/8/8/8/8/8 w kq -");
+      REQUIRE(board.blackCanCastleKs() == false);
+    }
 }
