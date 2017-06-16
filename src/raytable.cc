@@ -3,15 +3,15 @@
 #include <iostream>
 
 RayTable::RayTable() {
-  calcNorth();
-  calcNorthEast();
-  calcEast();
-  calcNorthWest();
+  _calcNorth();
+  _calcNorthEast();
+  _calcEast();
+  _calcNorthWest();
 
-  calcSouth();
-  calcSouthWest();
-  calcWest();
-  calcSouthEast();
+  _calcSouth();
+  _calcSouthWest();
+  _calcWest();
+  _calcSouthEast();
 }
 
 U64 RayTable::getPositiveAttacks(Dir dir, int square, U64 occupied) {
@@ -19,7 +19,7 @@ U64 RayTable::getPositiveAttacks(Dir dir, int square, U64 occupied) {
   U64 blocked = attacks & occupied;
 
   if (blocked) {
-    int blockSquare = bitscanForward(blocked);
+    int blockSquare = _bitscanForward(blocked);
     attacks ^= rays[dir][blockSquare];
   }
 
@@ -31,7 +31,7 @@ U64 RayTable::getNegativeAttacks(Dir dir, int square, U64 occupied) {
   U64 blocked = attacks & occupied;
 
   if (blocked) {
-    int blockSquare = 64 - bitscanReverse(blocked);
+    int blockSquare = 64 - _bitscanReverse(blocked);
     attacks ^= rays[dir][blockSquare];
   }
 
@@ -42,22 +42,22 @@ U64 RayTable::getRay(Dir direction, int square) {
   return rays[direction][square];
 }
 
-void RayTable::calcNorth() {
+void RayTable::_calcNorth() {
   U64 north = U64(0x0101010101010100);
   for (int square=0;square<64;square++,north<<=1) {
     rays[NORTH][square] = north;
   }
 }
 
-void RayTable::calcEast() {
+void RayTable::_calcEast() {
   for(int square=0;square<64;square++) {
     rays[EAST][square] = 2*((ONE << (square | 7)) - (ONE << square));
   }
 }
 
-void RayTable::calcNorthEast() {
+void RayTable::_calcNorthEast() {
   U64 startRay = U64(0x8040201008040200);
-  for (int file=0;file<8;file++,startRay=eastOne(startRay)) {
+  for (int file=0;file<8;file++,startRay=_eastOne(startRay)) {
     U64 currRay = startRay;
     for (int rank8=0;rank8<64;rank8+=8,currRay<<=8ull) {
       rays[NORTH_EAST][rank8+file] = currRay;
@@ -65,9 +65,9 @@ void RayTable::calcNorthEast() {
   }
 }
 
-void RayTable::calcNorthWest() {
+void RayTable::_calcNorthWest() {
   U64 startRay = U64(0x102040810204000);
-  for (int file=7;file>=0;file--,startRay=westOne(startRay)) {
+  for (int file=7;file>=0;file--,startRay=_westOne(startRay)) {
     U64 currRay = startRay;
     for (int rank8=0;rank8<64;rank8+=8,currRay<<=8ull) {
       rays[NORTH_WEST][rank8+file] = currRay;
@@ -75,9 +75,9 @@ void RayTable::calcNorthWest() {
   }
 }
 
-void RayTable::calcSouthEast() {
+void RayTable::_calcSouthEast() {
   U64 startRay = U64(0x2040810204080);
-  for (int file=0;file<8;file++,startRay=eastOne(startRay)) {
+  for (int file=0;file<8;file++,startRay=_eastOne(startRay)) {
     U64 currRay = startRay;
     for (int rank8=56;rank8>=0;rank8-=8,currRay>>=8ull) {
       rays[SOUTH_EAST][rank8+file] = currRay;
@@ -85,16 +85,16 @@ void RayTable::calcSouthEast() {
   }
 }
 
-void RayTable::calcSouth() {
+void RayTable::_calcSouth() {
   U64 south = U64(0x0080808080808080);
   for (int square=63;square>=0;square--,south>>=1) {
     rays[SOUTH][square] = south;
   }
 }
 
-void RayTable::calcSouthWest() {
+void RayTable::_calcSouthWest() {
   U64 startRay = U64(0x40201008040201);
-  for (int file=7;file>=0;file--,startRay=westOne(startRay)) {
+  for (int file=7;file>=0;file--,startRay=_westOne(startRay)) {
      U64 currRay = startRay;
      for (int rank8=56;rank8>=0;rank8-=8,currRay>>=8ull) {
        rays[SOUTH_WEST][rank8+file] = currRay;
@@ -102,24 +102,24 @@ void RayTable::calcSouthWest() {
   }
 }
 
-void RayTable::calcWest() {
+void RayTable::_calcWest() {
   for(int square=0;square<64;square++) {
     rays[WEST][square] = (ONE << square) - (ONE << (square&56));
   }
 }
 
-U64 RayTable::eastOne(U64 bb) {
+U64 RayTable::_eastOne(U64 bb) {
   return ((bb << 1ull) & (~FILE_A));
 }
 
-U64 RayTable::westOne(U64 bb) {
+U64 RayTable::_westOne(U64 bb) {
   return ((bb >> 1ull) & (~FILE_H));
 }
 
-int RayTable::bitscanForward(U64 board) {
+int RayTable::_bitscanForward(U64 board) {
   return __builtin_ffsll(board) - 1;
 }
 
-int RayTable::bitscanReverse(U64 board) {
+int RayTable::_bitscanReverse(U64 board) {
   return __builtin_clzll(board) + 1;
 }

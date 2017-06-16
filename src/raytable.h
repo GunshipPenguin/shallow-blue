@@ -25,21 +25,21 @@ public:
 private:
   U64 rays[8][64];
 
-  void calcNorth();
-  void calcNorthEast();
-  void calcEast();
-  void calcNorthWest();
+  void _calcNorth();
+  void _calcNorthEast();
+  void _calcEast();
+  void _calcNorthWest();
 
-  void calcSouth();
-  void calcSouthWest();
-  void calcWest();
-  void calcSouthEast();
+  void _calcSouth();
+  void _calcSouthWest();
+  void _calcWest();
+  void _calcSouthEast();
 
-  U64 eastOne(U64);
-  U64 westOne(U64);
+  U64 _eastOne(U64);
+  U64 _westOne(U64);
 
-  int bitscanForward(U64);
-  int bitscanReverse(U64);
+  int _bitscanForward(U64);
+  int _bitscanReverse(U64);
 };
 
 #endif
