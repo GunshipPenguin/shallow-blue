@@ -37,11 +37,10 @@ public:
   static std::string indexToNotation(int);
 private:
   // Format
-  // |----5-----|---4---|---3---|-2--|-1--|
-  // 5 - Flags (9 bits)
-  // 4 - To square (6 bits)
-  // 3 - From square (6 bits)
-  // 2 - Captured piece type (if applicable) (3 bits)
+  // |----4-----|---3---|---2---|-1--|
+  // 4 - Flags (9 bits)
+  // 3 - To square (6 bits)
+  // 2 - From square (6 bits)
   // 1 - Piece type (3 bits)
   unsigned int _move;
 

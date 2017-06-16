@@ -8,27 +8,23 @@ const char CMove::RANKS[] = {'1', '2', '3', '4', '5', '6', '7', '8'};
 const char CMove::FILES[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
 
 CMove::CMove(unsigned int from, unsigned int to, PieceType piece, unsigned int flags) {
-  _move = ((flags & 0x1ff) << 18) | ((to & 0x3f) << 12) | ((from & 0x3f) << 6) | (piece & 0x7);
+  _move = ((flags & 0x1ff) << 15) | ((to & 0x3f) << 9) | ((from & 0x3f) << 3) | (piece & 0x7);
 }
 
 unsigned int CMove::getPieceType() {
   return (_move & 0x7);
 }
 
-unsigned int CMove::getCapturedPieceType() {
-  return ((_move >> 3) & 0x7);
-}
-
 unsigned int CMove::getFrom() {
-  return ((_move >> 6) & 0x3f);
+  return ((_move >> 3) & 0x3f);
 }
 
 unsigned int CMove::getTo() {
-  return ((_move >> 12) & 0x3f);
+  return ((_move >> 9) & 0x3f);
 }
 
 unsigned int CMove::getFlags() {
-  return ((_move >> 18) & 0x1ff);
+  return ((_move >> 15) & 0x1ff);
 }
 
 std::string CMove::getNotation() {
