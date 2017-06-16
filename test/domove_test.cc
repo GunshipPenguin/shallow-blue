@@ -93,7 +93,7 @@ TEST_CASE("Board::doMove works properly") {
 
   SECTION("doMove handles black queenside castles") {
     board.setToFen("r3k3/8/8/8/8/8/8/8 b - -");
-    CMove move(e8, c8, QUEEN, CMove::QSIDE_CASTLE);
+    CMove move(e8, c8, KING, CMove::QSIDE_CASTLE);
 
     board.doMove(move);
 

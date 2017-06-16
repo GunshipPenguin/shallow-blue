@@ -288,7 +288,7 @@ U64* Board::getBlackBitBoard(int squareIndex) {
 }
 
 void Board::doRegularMove(CMove move) {
-  U64* pieces = WHITE_TO_MOVE ? getWhiteBitBoard(move.getFrom()) : getBlackBitBoard(move.getFrom());
+  U64* pieces = WHITE_TO_MOVE ? &_whitePieces[move.getPieceType()] : &_blackPieces[move.getPieceType()];
 
   U64 fromSquare = ONE << move.getFrom();
   U64 toSquare = ONE << move.getTo();
