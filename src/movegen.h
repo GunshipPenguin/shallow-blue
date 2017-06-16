@@ -18,36 +18,36 @@ private:
   Board _board;
   MoveList _moves;
 
-  void genMoves();
-  void genWhiteMoves();
-  void genBlackMoves();
+  void _genMoves();
+  void _genWhiteMoves();
+  void _genBlackMoves();
 
-  void genWhitePawnMoves();
-  void genBlackPawnMoves();
-  void genPawnPromotions(unsigned int, unsigned int, unsigned int=0);
+  void _genWhitePawnMoves();
+  void _genBlackPawnMoves();
+  void _genPawnPromotions(unsigned int, unsigned int, unsigned int=0);
 
-  void genWhiteKingMoves();
-  void genBlackKingMoves();
+  void _genWhiteKingMoves();
+  void _genBlackKingMoves();
 
-  void genWhiteKnightMoves();
-  void genBlackKnightMoves();
+  void _genWhiteKnightMoves();
+  void _genBlackKnightMoves();
 
-  void genWhiteBishopMoves();
-  void genBlackBishopMoves();
+  void _genWhiteBishopMoves();
+  void _genBlackBishopMoves();
 
-  void genWhiteRookMoves();
-  void genBlackRookMoves();
+  void _genWhiteRookMoves();
+  void _genBlackRookMoves();
 
-  void genWhiteQueenMoves();
-  void genBlackQueenMoves();
+  void _genWhiteQueenMoves();
+  void _genBlackQueenMoves();
 
-  void genKingMoves(U64, U64, U64);
-  void genKnightMoves(U64, U64, U64);
-  void genBishopMoves(U64, U64, U64);
-  void genRookMoves(U64, U64, U64);
-  void genQueenMoves(U64, U64, U64);
+  void _genKingMoves(U64, U64, U64);
+  void _genKnightMoves(U64, U64, U64);
+  void _genBishopMoves(U64, U64, U64);
+  void _genRookMoves(U64, U64, U64);
+  void _genQueenMoves(U64, U64, U64);
 
-  void addMoves(int, PieceType, U64, U64);
+  void _addMoves(int, PieceType, U64, U64);
 };
 
 #endif
