@@ -13,12 +13,20 @@ Board::Board() {
   setToFen("8/8/8/8/8/8/8/8 w - -");
 }
 
+U64 Board::getWhiteBitBoard(PieceType piece) {
+  return _whitePieces[piece];
+}
+
+U64 Board::getBlackBitBoard(PieceType piece) {
+  return _blackPieces[piece];
+}
+
 bool Board::whiteIsInCheck() {
-  return (bool) (BLACK_ATTACKS & WHITE_KING);
+  return (bool) (BLACK_ATTACKS & _whitePieces[KING]);
 }
 
 bool Board::blackIsInCheck() {
-  return (bool) (WHITE_ATTACKS & BLACK_KING);
+  return (bool) (WHITE_ATTACKS & _blackPieces[KING]);
 }
 
 bool Board::whiteCanCastleKs() {
@@ -82,23 +90,23 @@ std::string Board::getStringRep() {
     bool squareOccupied = (square & OCCUPIED) != 0;
 
     if (squareOccupied) {
-      if (square & WHITE_PAWNS) stringRep += " P ";
-      else if (square & BLACK_PAWNS) stringRep += " p ";
+      if (square & _whitePieces[PAWN]) stringRep += " P ";
+      else if (square & _blackPieces[PAWN]) stringRep += " p ";
 
-      else if (square & WHITE_ROOKS) stringRep += " R ";
-      else if (square & BLACK_ROOKS) stringRep += " r ";
+      else if (square & _whitePieces[ROOK]) stringRep += " R ";
+      else if (square & _blackPieces[ROOK]) stringRep += " r ";
 
-      else if (square & WHITE_KNIGHTS) stringRep += " N ";
-      else if (square & BLACK_KNIGHTS) stringRep += " n ";
+      else if (square & _whitePieces[KNIGHT]) stringRep += " N ";
+      else if (square & _blackPieces[KNIGHT]) stringRep += " n ";
 
-      else if (square & WHITE_BISHOPS) stringRep += " B ";
-      else if (square & BLACK_BISHOPS) stringRep += " b ";
+      else if (square & _whitePieces[BISHOP]) stringRep += " B ";
+      else if (square & _blackPieces[BISHOP]) stringRep += " b ";
 
-      else if (square & WHITE_QUEENS) stringRep += " Q ";
-      else if (square & BLACK_QUEENS) stringRep += " q ";
+      else if (square & _whitePieces[QUEEN]) stringRep += " Q ";
+      else if (square & _blackPieces[QUEEN]) stringRep += " q ";
 
-      else if (square & WHITE_KING) stringRep += " K ";
-      else if (square & BLACK_KING) stringRep += " k ";
+      else if (square & _whitePieces[KING]) stringRep += " K ";
+      else if (square & _blackPieces[KING]) stringRep += " k ";
     } else {
       stringRep += " . ";
     }
@@ -117,34 +125,34 @@ std::string Board::getStringRep() {
 }
 
 void Board::clearBitBoards() {
-  WHITE_PAWNS =ZERO;
-  BLACK_PAWNS =ZERO;
+  _whitePieces[PAWN] = ZERO;
+  _blackPieces[PAWN] = ZERO;
 
-  WHITE_ROOKS =ZERO;
-  BLACK_ROOKS =ZERO;
+  _whitePieces[ROOK] = ZERO;
+  _blackPieces[ROOK] = ZERO;
 
-  WHITE_KNIGHTS =ZERO;
-  BLACK_KNIGHTS =ZERO;
+  _whitePieces[KNIGHT] = ZERO;
+  _blackPieces[KNIGHT] = ZERO;
 
-  WHITE_BISHOPS =ZERO;
-  BLACK_BISHOPS =ZERO;
+  _whitePieces[BISHOP] = ZERO;
+  _blackPieces[BISHOP] = ZERO;
 
-  WHITE_QUEENS =ZERO;
-  BLACK_QUEENS =ZERO;
+  _whitePieces[QUEEN] = ZERO;
+  _blackPieces[QUEEN] = ZERO;
 
-  WHITE_KING =ZERO;
-  BLACK_KING =ZERO;
+  _whitePieces[KING] = ZERO;
+  _blackPieces[KING] = ZERO;
 
-  WHITE_PIECES =ZERO;
-  BLACK_PIECES =ZERO;
+  WHITE_PIECES = ZERO;
+  BLACK_PIECES = ZERO;
 
-  WHITE_ATTACKABLE =ZERO;
-  BLACK_ATTACKABLE =ZERO;
+  WHITE_ATTACKABLE = ZERO;
+  BLACK_ATTACKABLE = ZERO;
 
-  EN_PASSANT =ZERO;
+  EN_PASSANT = ZERO;
 
-  OCCUPIED =ZERO;
-  NOT_OCCUPIED =ZERO;
+  OCCUPIED = ZERO;
+  NOT_OCCUPIED = ZERO;
 
   return;
 }
@@ -161,29 +169,29 @@ void Board::setToFen(std::string fenString) {
   U64 one64 = ONE;
   for (auto currChar : token) {
     switch(currChar) {
-      case 'p': BLACK_PAWNS |= (one64 << boardPos++);
+      case 'p': _blackPieces[PAWN] |= (one64 << boardPos++);
         break;
-      case 'r': BLACK_ROOKS |= (one64 << boardPos++);
+      case 'r': _blackPieces[ROOK] |= (one64 << boardPos++);
         break;
-      case 'n': BLACK_KNIGHTS |= (one64 << boardPos++);
+      case 'n': _blackPieces[KNIGHT] |= (one64 << boardPos++);
         break;
-      case 'b': BLACK_BISHOPS |= (one64 << boardPos++);
+      case 'b': _blackPieces[BISHOP] |= (one64 << boardPos++);
         break;
-      case 'q': BLACK_QUEENS |= (one64 << boardPos++);
+      case 'q': _blackPieces[QUEEN] |= (one64 << boardPos++);
         break;
-      case 'k': BLACK_KING |= (one64 << boardPos++);
+      case 'k': _blackPieces[KING] |= (one64 << boardPos++);
         break;
-      case 'P': WHITE_PAWNS |= (one64 << boardPos++);
+      case 'P': _whitePieces[PAWN] |= (one64 << boardPos++);
         break;
-      case 'R': WHITE_ROOKS |= (one64 << boardPos++);
+      case 'R': _whitePieces[ROOK] |= (one64 << boardPos++);
         break;
-      case 'N': WHITE_KNIGHTS |= (one64 << boardPos++);
+      case 'N': _whitePieces[KNIGHT] |= (one64 << boardPos++);
         break;
-      case 'B': WHITE_BISHOPS |= (one64 << boardPos++);
+      case 'B': _whitePieces[BISHOP] |= (one64 << boardPos++);
         break;
-      case 'Q': WHITE_QUEENS |= (one64 << boardPos++);
+      case 'Q': _whitePieces[QUEEN] |= (one64 << boardPos++);
         break;
-      case 'K': WHITE_KING |= (one64 << boardPos++);
+      case 'K': _whitePieces[KING] |= (one64 << boardPos++);
         break;
       case '/': boardPos -= 16; // Go down one rank
         break;
@@ -241,22 +249,22 @@ U64* Board::getWhiteBitBoard(int squareIndex) {
   U64 square = ONE << squareIndex;
 
   U64* pieces;
-  if (square & WHITE_PAWNS) pieces = &WHITE_PAWNS;
-  else if (square & WHITE_ROOKS) pieces = &WHITE_ROOKS;
-  else if (square & WHITE_KNIGHTS) pieces = &WHITE_KNIGHTS;
-  else if (square & WHITE_BISHOPS) pieces = &WHITE_BISHOPS;
-  else if (square & WHITE_KING) pieces = &WHITE_KING;
-  else if (square & WHITE_QUEENS) pieces = &WHITE_QUEENS;
+  if (square & _whitePieces[PAWN]) pieces = &_whitePieces[PAWN];
+  else if (square & _whitePieces[ROOK]) pieces = &_whitePieces[ROOK];
+  else if (square & _whitePieces[KNIGHT]) pieces = &_whitePieces[KNIGHT];
+  else if (square & _whitePieces[BISHOP]) pieces = &_whitePieces[BISHOP];
+  else if (square & _whitePieces[KING]) pieces = &_whitePieces[KING];
+  else if (square & _whitePieces[QUEEN]) pieces = &_whitePieces[QUEEN];
 
   return pieces;
 }
 
 void Board::updateNonPieceBitBoards() {
   WHITE_PIECES = getWhitePieces();
-  WHITE_ATTACKABLE = WHITE_PIECES & ~WHITE_KING;
+  WHITE_ATTACKABLE = WHITE_PIECES & ~_whitePieces[KING];
 
   BLACK_PIECES = getBlackPieces();
-  BLACK_ATTACKABLE = BLACK_PIECES & ~BLACK_KING;
+  BLACK_ATTACKABLE = BLACK_PIECES & ~_blackPieces[KING];
 
   OCCUPIED = getOccupied();
   NOT_OCCUPIED = ~OCCUPIED;
@@ -269,12 +277,12 @@ U64* Board::getBlackBitBoard(int squareIndex) {
   U64 square = ONE << squareIndex;
 
   U64* pieces;
-  if (square & BLACK_PAWNS) pieces = &BLACK_PAWNS;
-  else if (square & BLACK_ROOKS) pieces = &BLACK_ROOKS;
-  else if (square & BLACK_KNIGHTS) pieces = &BLACK_KNIGHTS;
-  else if (square & BLACK_BISHOPS) pieces = &BLACK_BISHOPS;
-  else if (square & BLACK_KING) pieces = &BLACK_KING;
-  else if (square & BLACK_QUEENS) pieces = &BLACK_QUEENS;
+  if (square & _blackPieces[PAWN]) pieces = &_blackPieces[PAWN];
+  else if (square & _blackPieces[ROOK]) pieces = &_blackPieces[ROOK];
+  else if (square & _blackPieces[KNIGHT]) pieces = &_blackPieces[KNIGHT];
+  else if (square & _blackPieces[BISHOP]) pieces = &_blackPieces[BISHOP];
+  else if (square & _blackPieces[KING]) pieces = &_blackPieces[KING];
+  else if (square & _blackPieces[QUEEN]) pieces = &_blackPieces[QUEEN];
 
   return pieces;
 }
@@ -311,24 +319,24 @@ void Board::doMove(CMove move) {
   }
   if (flags & CMove::KSIDE_CASTLE) {
     if (WHITE_TO_MOVE) {
-      WHITE_ROOKS ^= ((ONE << h1) | (ONE << f1));
+      _whitePieces[ROOK] ^= ((ONE << h1) | (ONE << f1));
     } else {
-      BLACK_ROOKS ^= ((ONE << h8) | (ONE << f8));
+      _blackPieces[ROOK] ^= ((ONE << h8) | (ONE << f8));
     }
   }
   if (flags & CMove::QSIDE_CASTLE) {
     // King has already been moved, kingside rook must be moved
     if (WHITE_TO_MOVE) {
-      WHITE_ROOKS ^= ((ONE << a1) | (ONE << d1));
+      _whitePieces[ROOK] ^= ((ONE << a1) | (ONE << d1));
     } else {
-      BLACK_ROOKS ^= ((ONE << a8) | (ONE << d8));
+      _blackPieces[ROOK] ^= ((ONE << a8) | (ONE << d8));
     }
   }
   if (flags & CMove::EN_PASSANT) {
     if (WHITE_TO_MOVE) {
-      BLACK_PAWNS ^= (EN_PASSANT >> 8);
+      _blackPieces[PAWN] ^= (EN_PASSANT >> 8);
     } else {
-      WHITE_PAWNS ^= (EN_PASSANT << 8);
+      _whitePieces[PAWN] ^= (EN_PASSANT << 8);
     }
   }
 
@@ -345,24 +353,24 @@ void Board::doMove(CMove move) {
   if (isPromotion) {
     // Add promoted piece
     if (flags & CMove::QUEEN_PROMOTION) {
-      U64* queensToUpdate = WHITE_TO_MOVE ? &WHITE_QUEENS : &BLACK_QUEENS;
+      U64* queensToUpdate = WHITE_TO_MOVE ? &_whitePieces[QUEEN] : &_blackPieces[QUEEN];
       *queensToUpdate ^= (ONE << move.getTo());
     } else if (flags & CMove::ROOK_PROMOTION) {
-      U64* rooksToUpdate = WHITE_TO_MOVE ? &WHITE_ROOKS : &BLACK_ROOKS;
+      U64* rooksToUpdate = WHITE_TO_MOVE ? &_whitePieces[ROOK] : &_blackPieces[ROOK];
       *rooksToUpdate ^= (ONE << move.getTo());
     } else if (flags & CMove::BISHOP_PROMOTION) {
-      U64* bishopsToUpdate = WHITE_TO_MOVE ? &WHITE_BISHOPS : &BLACK_BISHOPS;
+      U64* bishopsToUpdate = WHITE_TO_MOVE ? &_whitePieces[BISHOP] : &_blackPieces[BISHOP];
       *bishopsToUpdate ^= (ONE << move.getTo());
     } else if (flags & CMove::KNIGHT_PROMOTION) {
-      U64* knightsToUpdate = WHITE_TO_MOVE ? &WHITE_KNIGHTS : &BLACK_KNIGHTS;
+      U64* knightsToUpdate = WHITE_TO_MOVE ? &_whitePieces[KNIGHT] : &_blackPieces[KNIGHT];
       *knightsToUpdate ^= (ONE << move.getTo());
     }
 
     // Remove promoted pawn
     if (WHITE_TO_MOVE) {
-      WHITE_PAWNS ^= ONE << move.getTo();
+      _whitePieces[PAWN] ^= ONE << move.getTo();
     } else {
-      BLACK_PAWNS ^= ONE << move.getTo();
+      _blackPieces[PAWN] ^= ONE << move.getTo();
     }
   }
 
@@ -392,21 +400,21 @@ void Board::doMove(CMove move) {
 }
 
 U64 Board::getWhitePieces() {
-  return WHITE_PAWNS | \
-  WHITE_ROOKS | \
-  WHITE_KNIGHTS | \
-  WHITE_BISHOPS | \
-  WHITE_QUEENS | \
-  WHITE_KING;
+  return _whitePieces[PAWN] | \
+  _whitePieces[ROOK] | \
+  _whitePieces[KNIGHT] | \
+  _whitePieces[BISHOP] | \
+  _whitePieces[QUEEN] | \
+  _whitePieces[KING];
 }
 
 U64 Board::getBlackPieces() {
-  return BLACK_PAWNS | \
-  BLACK_ROOKS | \
-  BLACK_KNIGHTS | \
-  BLACK_BISHOPS | \
-  BLACK_QUEENS | \
-  BLACK_KING;
+  return _blackPieces[PAWN] | \
+  _blackPieces[ROOK] | \
+  _blackPieces[KNIGHT] | \
+  _blackPieces[BISHOP] | \
+  _blackPieces[QUEEN] | \
+  _blackPieces[KING];
 }
 
 void Board::setToStartPos() {
@@ -482,12 +490,12 @@ U64 Board::getWhiteAttacks() {
       continue;
     }
 
-    if (square & WHITE_PAWNS) attacks |= getWhitePawnAttacksForSquare(squareIndex);
-    else if (square & WHITE_ROOKS) attacks |= getRookAttacksForSquare(squareIndex, WHITE_PIECES);
-    else if (square & WHITE_KNIGHTS) attacks |= getKnightAttacksForSquare(squareIndex, WHITE_PIECES);
-    else if (square & WHITE_BISHOPS) attacks |= getBishopAttacksForSquare(squareIndex, WHITE_PIECES);
-    else if (square & WHITE_KING) attacks |= getKingAttacksForSquare(squareIndex, WHITE_PIECES);
-    else if (square & WHITE_QUEENS) attacks |= getQueenAttacksForSquare(squareIndex, WHITE_PIECES);
+    if (square & _whitePieces[PAWN]) attacks |= getWhitePawnAttacksForSquare(squareIndex);
+    else if (square & _whitePieces[ROOK]) attacks |= getRookAttacksForSquare(squareIndex, WHITE_PIECES);
+    else if (square & _whitePieces[KNIGHT]) attacks |= getKnightAttacksForSquare(squareIndex, WHITE_PIECES);
+    else if (square & _whitePieces[BISHOP]) attacks |= getBishopAttacksForSquare(squareIndex, WHITE_PIECES);
+    else if (square & _whitePieces[KING]) attacks |= getKingAttacksForSquare(squareIndex, WHITE_PIECES);
+    else if (square & _whitePieces[QUEEN]) attacks |= getQueenAttacksForSquare(squareIndex, WHITE_PIECES);
   }
   attacks |= EN_PASSANT;
 
@@ -503,12 +511,12 @@ U64 Board::getBlackAttacks() {
       continue;
     }
 
-    if (square & BLACK_PAWNS) attacks |= getBlackPawnAttacksForSquare(squareIndex);
-    else if (square & BLACK_ROOKS) attacks |= getRookAttacksForSquare(squareIndex, BLACK_PIECES);
-    else if (square & BLACK_KNIGHTS) attacks |= getKnightAttacksForSquare(squareIndex, BLACK_PIECES);
-    else if (square & BLACK_BISHOPS) attacks |= getBishopAttacksForSquare(squareIndex, BLACK_PIECES);
-    else if (square & BLACK_KING) attacks |= getKingAttacksForSquare(squareIndex, BLACK_PIECES);
-    else if (square & BLACK_QUEENS) attacks |= getQueenAttacksForSquare(squareIndex, BLACK_PIECES);
+    if (square & _blackPieces[PAWN]) attacks |= getBlackPawnAttacksForSquare(squareIndex);
+    else if (square & _blackPieces[ROOK]) attacks |= getRookAttacksForSquare(squareIndex, BLACK_PIECES);
+    else if (square & _blackPieces[KNIGHT]) attacks |= getKnightAttacksForSquare(squareIndex, BLACK_PIECES);
+    else if (square & _blackPieces[BISHOP]) attacks |= getBishopAttacksForSquare(squareIndex, BLACK_PIECES);
+    else if (square & _blackPieces[KING]) attacks |= getKingAttacksForSquare(squareIndex, BLACK_PIECES);
+    else if (square & _blackPieces[QUEEN]) attacks |= getQueenAttacksForSquare(squareIndex, BLACK_PIECES);
   }
   attacks |= EN_PASSANT;
 

@@ -26,27 +26,12 @@ class Board {
     bool whiteIsInCheck();
     bool blackIsInCheck();
 
+    U64 getWhiteBitBoard(PieceType);
+    U64 getBlackBitBoard(PieceType);
+
     void doMove(CMove);
 
     std::string getStringRep();
-
-    U64 WHITE_PAWNS;
-    U64 BLACK_PAWNS;
-
-    U64 WHITE_ROOKS;
-    U64 BLACK_ROOKS;
-
-    U64 WHITE_KNIGHTS;
-    U64 BLACK_KNIGHTS;
-
-    U64 WHITE_BISHOPS;
-    U64 BLACK_BISHOPS;
-
-    U64 WHITE_QUEENS;
-    U64 BLACK_QUEENS;
-
-    U64 WHITE_KING;
-    U64 BLACK_KING;
 
     U64 WHITE_PIECES;
     U64 BLACK_PIECES;
@@ -77,6 +62,9 @@ class Board {
     U64 getBlackAttacks();
 
   private:
+    U64 _whitePieces[6];
+    U64 _blackPieces[6];
+
     static RayTable raytable;
 
     // From the fen string, override the above variables
