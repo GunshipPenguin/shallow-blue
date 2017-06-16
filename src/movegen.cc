@@ -23,7 +23,7 @@ MoveList MoveGen::getMoves() {
 }
 
 void MoveGen::genMoves() {
-  if (_board.WHITE_TO_MOVE) {
+  if (_board.whiteToMove()) {
     genWhiteMoves();
   } else {
     genBlackMoves();
@@ -62,18 +62,18 @@ void MoveGen::genPawnPromotions(unsigned int from, unsigned int to, unsigned int
 }
 
 void MoveGen::genWhitePawnMoves() {
-  U64 movedPawns1 = _board.getWhiteBitBoard(PAWN) << 8;
-  U64 movedPawns2 = (_board.getWhiteBitBoard(PAWN) & RANK_2) << 16;
+  U64 movedPawns1 = _board.getWhitePieces(PAWN) << 8;
+  U64 movedPawns2 = (_board.getWhitePieces(PAWN) & RANK_2) << 16;
 
-  U64 leftAttacks = (_board.getWhiteBitBoard(PAWN) << 7) & (~FILE_H);
-  U64 rightAttacks = (_board.getWhiteBitBoard(PAWN) << 9) & (~FILE_A);
+  U64 leftAttacks = (_board.getWhitePieces(PAWN) << 7) & (~FILE_H);
+  U64 rightAttacks = (_board.getWhitePieces(PAWN) << 9) & (~FILE_A);
 
-  U64 attackablePieces = _board.BLACK_ATTACKABLE | _board.EN_PASSANT;
+  U64 attackablePieces = _board.getBlackAttackable() | _board.getEnPassant();
 
   for(U64 i=0;i<64;i++) {
     U64 square = static_cast<U64>(1) << i;
 
-    if (movedPawns1 & square & _board.NOT_OCCUPIED) {
+    if (movedPawns1 & square & _board.getNotOccupied()) {
       if (square & RANK_8) {
         genPawnPromotions(i-8, i);
       } else {
@@ -81,7 +81,7 @@ void MoveGen::genWhitePawnMoves() {
       }
     }
 
-    if ((movedPawns2 & square & _board.NOT_OCCUPIED) && ((square >> 8) & _board.NOT_OCCUPIED)) {
+    if ((movedPawns2 & square & _board.getNotOccupied()) && ((square >> 8) & _board.getNotOccupied())) {
       _moves.push_back(CMove(i-16, i, PAWN, CMove::DOUBLE_PAWN_PUSH));
     }
 
@@ -89,7 +89,7 @@ void MoveGen::genWhitePawnMoves() {
       if (square & RANK_8) {
         genPawnPromotions(i-7, i, CMove::CAPTURE);
       } else {
-        if (square & _board.EN_PASSANT) {
+        if (square & _board.getEnPassant()) {
           _moves.push_back(CMove(i-7, i, PAWN, CMove::EN_PASSANT));
         } else {
           _moves.push_back(CMove(i-7, i, PAWN, CMove::CAPTURE));
@@ -101,7 +101,7 @@ void MoveGen::genWhitePawnMoves() {
       if (square & RANK_8) {
         genPawnPromotions(i-9, i, CMove::CAPTURE);
       } else {
-        if (square & _board.EN_PASSANT) {
+        if (square & _board.getEnPassant()) {
           _moves.push_back(CMove(i-9, i, PAWN, CMove::EN_PASSANT));
         } else {
           _moves.push_back(CMove(i-9, i, PAWN, CMove::CAPTURE));
@@ -112,18 +112,18 @@ void MoveGen::genWhitePawnMoves() {
 }
 
 void MoveGen::genBlackPawnMoves() {
-  U64 movedPawns1 = _board.getBlackBitBoard(PAWN) >> 8;
-  U64 movedPawns2 = (_board.getBlackBitBoard(PAWN) & RANK_7) >> 16;
+  U64 movedPawns1 = _board.getBlackPieces(PAWN) >> 8;
+  U64 movedPawns2 = (_board.getBlackPieces(PAWN) & RANK_7) >> 16;
 
-  U64 leftAttacks = (_board.getBlackBitBoard(PAWN) >> 9) & (~FILE_H);
-  U64 rightAttacks = (_board.getBlackBitBoard(PAWN) >> 7) & (~FILE_A);
+  U64 leftAttacks = (_board.getBlackPieces(PAWN) >> 9) & (~FILE_H);
+  U64 rightAttacks = (_board.getBlackPieces(PAWN) >> 7) & (~FILE_A);
 
-  U64 attackablePieces = _board.WHITE_ATTACKABLE | _board.EN_PASSANT;
+  U64 attackablePieces = _board.getWhiteAttackable() | _board.getEnPassant();
 
   for(U64 i=0;i<64;i++) {
     U64 square = static_cast<U64>(1) << i;
 
-    if (movedPawns1 & square & _board.NOT_OCCUPIED) {
+    if (movedPawns1 & square & _board.getNotOccupied()) {
       if (square & RANK_1) {
         genPawnPromotions(i+8, i);
       } else {
@@ -131,7 +131,7 @@ void MoveGen::genBlackPawnMoves() {
       }
     }
 
-    if ((movedPawns2 & square & _board.NOT_OCCUPIED) && ((square << 8) & _board.NOT_OCCUPIED)) {
+    if ((movedPawns2 & square & _board.getNotOccupied()) && ((square << 8) & _board.getNotOccupied())) {
       _moves.push_back(CMove(i+16, i, PAWN, CMove::DOUBLE_PAWN_PUSH));
     }
 
@@ -139,7 +139,7 @@ void MoveGen::genBlackPawnMoves() {
       if (square & RANK_1) {
         genPawnPromotions(i+9, i, CMove::CAPTURE);
       } else {
-        if (square & _board.EN_PASSANT) {
+        if (square & _board.getEnPassant()) {
           _moves.push_back(CMove(i+9, i, PAWN, CMove::EN_PASSANT));
         } else {
           _moves.push_back(CMove(i+9, i, PAWN, CMove::CAPTURE));
@@ -151,7 +151,7 @@ void MoveGen::genBlackPawnMoves() {
       if (square & RANK_1) {
         genPawnPromotions(i+7, i, CMove::CAPTURE);
       } else {
-        if (square & _board.EN_PASSANT) {
+        if (square & _board.getEnPassant()) {
           _moves.push_back(CMove(i+7, i, PAWN, CMove::EN_PASSANT));
         } else {
           _moves.push_back(CMove(i+7, i, PAWN, CMove::CAPTURE));
@@ -162,7 +162,7 @@ void MoveGen::genBlackPawnMoves() {
 }
 
 void MoveGen::genWhiteKingMoves() {
-  genKingMoves(_board.getWhiteBitBoard(KING), _board.WHITE_PIECES, _board.BLACK_ATTACKABLE);
+  genKingMoves(_board.getWhitePieces(KING), _board.getAllWhitePieces(), _board.getBlackAttackable());
 
   if (_board.whiteCanCastleKs()) {
     _moves.push_back(CMove(e1, g1, KING, CMove::KSIDE_CASTLE));
@@ -173,7 +173,7 @@ void MoveGen::genWhiteKingMoves() {
 }
 
 void MoveGen::genBlackKingMoves() {
-  genKingMoves(_board.getBlackBitBoard(KING), _board.BLACK_PIECES, _board.WHITE_ATTACKABLE);
+  genKingMoves(_board.getBlackPieces(KING), _board.getAllBlackPieces(), _board.getWhiteAttackable());
 
   if (_board.blackCanCastleKs()) {
     _moves.push_back(CMove(e8, g8, KING, CMove::KSIDE_CASTLE));
@@ -196,11 +196,11 @@ void MoveGen::genKingMoves(U64 king, U64 own, U64 attackable) {
 }
 
 void MoveGen::genWhiteKnightMoves() {
-  genKnightMoves(_board.getWhiteBitBoard(KNIGHT), _board.WHITE_PIECES, _board.BLACK_ATTACKABLE);
+  genKnightMoves(_board.getWhitePieces(KNIGHT), _board.getAllWhitePieces(), _board.getBlackAttackable());
 }
 
 void MoveGen::genBlackKnightMoves() {
-  genKnightMoves(_board.getBlackBitBoard(KNIGHT), _board.BLACK_PIECES, _board.WHITE_ATTACKABLE);
+  genKnightMoves(_board.getBlackPieces(KNIGHT), _board.getAllBlackPieces(), _board.getWhiteAttackable());
 }
 
 void MoveGen::genKnightMoves(U64 knights, U64 own, U64 attackable) {
@@ -217,11 +217,11 @@ void MoveGen::genKnightMoves(U64 knights, U64 own, U64 attackable) {
 }
 
 void MoveGen::genWhiteBishopMoves() {
-  genBishopMoves(_board.getWhiteBitBoard(BISHOP), _board.WHITE_PIECES, _board.BLACK_ATTACKABLE);
+  genBishopMoves(_board.getWhitePieces(BISHOP), _board.getAllWhitePieces(), _board.getBlackAttackable());
 }
 
 void MoveGen::genBlackBishopMoves() {
-  genBishopMoves(_board.getBlackBitBoard(BISHOP), _board.BLACK_PIECES, _board.WHITE_ATTACKABLE);
+  genBishopMoves(_board.getBlackPieces(BISHOP), _board.getAllBlackPieces(), _board.getWhiteAttackable());
 }
 
 void MoveGen::genBishopMoves(U64 bishops, U64 own, U64 attackable) {
@@ -238,11 +238,11 @@ void MoveGen::genBishopMoves(U64 bishops, U64 own, U64 attackable) {
 }
 
 void MoveGen::genWhiteRookMoves() {
-  genRookMoves(_board.getWhiteBitBoard(ROOK), _board.WHITE_PIECES, _board.BLACK_ATTACKABLE);
+  genRookMoves(_board.getWhitePieces(ROOK), _board.getAllWhitePieces(), _board.getBlackAttackable());
 }
 
 void MoveGen::genBlackRookMoves() {
-  genRookMoves(_board.getBlackBitBoard(ROOK), _board.BLACK_PIECES, _board.WHITE_ATTACKABLE);
+  genRookMoves(_board.getBlackPieces(ROOK), _board.getAllBlackPieces(), _board.getWhiteAttackable());
 }
 
 void MoveGen::genRookMoves(U64 rooks, U64 own, U64 attackable) {
@@ -259,11 +259,11 @@ void MoveGen::genRookMoves(U64 rooks, U64 own, U64 attackable) {
 }
 
 void MoveGen::genWhiteQueenMoves() {
-  genQueenMoves(_board.getWhiteBitBoard(QUEEN), _board.WHITE_PIECES, _board.BLACK_ATTACKABLE);
+  genQueenMoves(_board.getWhitePieces(QUEEN), _board.getAllWhitePieces(), _board.getBlackAttackable());
 }
 
 void MoveGen::genBlackQueenMoves() {
-  genQueenMoves(_board.getBlackBitBoard(QUEEN), _board.BLACK_PIECES, _board.WHITE_ATTACKABLE);
+  genQueenMoves(_board.getBlackPieces(QUEEN), _board.getAllBlackPieces(), _board.getWhiteAttackable());
 }
 
 void MoveGen::genQueenMoves(U64 queens, U64 own, U64 attackable) {
@@ -287,7 +287,7 @@ void MoveGen::addMoves(int from, PieceType pieceType, U64 moves, U64 attackable)
     }
 
     // Ignore any moves to squares occupied by kings
-    if ((toSquare & (_board.getWhiteBitBoard(KING) | _board.getBlackBitBoard(KING)))) {
+    if ((toSquare & (_board.getWhitePieces(KING) | _board.getBlackPieces(KING)))) {
       continue;
     }
 

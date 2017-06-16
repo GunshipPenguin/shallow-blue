@@ -12,10 +12,12 @@ class Board {
   public:
     Board();
 
+    std::string getStringRep();
+
     void setToStartPos();
     void setToFen(std::string);
 
-    void clearBitBoards();
+    void doMove(CMove);
 
     bool whiteCanCastleKs();
     bool whiteCanCastleQs();
@@ -26,28 +28,24 @@ class Board {
     bool whiteIsInCheck();
     bool blackIsInCheck();
 
-    U64 getWhiteBitBoard(PieceType);
-    U64 getBlackBitBoard(PieceType);
+    U64 getWhitePieces(PieceType);
+    U64 getBlackPieces(PieceType);
 
-    void doMove(CMove);
+    U64 getAllWhitePieces();
+    U64 getAllBlackPieces();
 
-    std::string getStringRep();
+    U64 getWhiteAttackable();
+    U64 getBlackAttackable();
 
-    U64 WHITE_PIECES;
-    U64 BLACK_PIECES;
+    U64 getWhiteAttacks();
+    U64 getBlackAttacks();
 
-    U64 WHITE_ATTACKABLE;
-    U64 BLACK_ATTACKABLE;
+    U64 getOccupied();
+    U64 getNotOccupied();
 
-    U64 WHITE_ATTACKS;
-    U64 BLACK_ATTACKS;
+    U64 getEnPassant();
 
-    bool WHITE_TO_MOVE;
-
-    U64 EN_PASSANT;
-
-    U64 OCCUPIED;
-    U64 NOT_OCCUPIED;
+    bool whiteToMove();
 
     // Methods returning attack bitboards
     U64 getWhitePawnAttacksForSquare(int);
@@ -58,32 +56,45 @@ class Board {
     U64 getRookAttacksForSquare(int, U64);
     U64 getQueenAttacksForSquare(int, U64);
 
-    U64 getWhiteAttacks();
-    U64 getBlackAttacks();
-
   private:
     U64 _whitePieces[6];
     U64 _blackPieces[6];
 
-    static RayTable raytable;
+    U64 _allWhitePieces;
+    U64 _allBlackPieces;
 
-    // From the fen string, override the above variables
-    bool WHITE_CAN_CASTLE_KS;
-    bool WHITE_CAN_CASTLE_QS;
+    U64 _whiteAttackable;
+    U64 _blackAttackable;
 
-    bool BLACK_CAN_CASTLE_KS;
-    bool BLACK_CAN_CASTLE_QS;
+    U64 _whiteAttacks;
+    U64 _blackAttacks;
 
-    void updateNonPieceBitBoards();
+    U64 _occupied;
+    U64 _notOccupied;
 
-    void doRegularMove(CMove);
+    U64 _enPassant;
 
-    U64 getOccupied();
-    U64 getBlackPieces();
-    U64 getWhitePieces();
+    bool _whiteToMove;
 
-    U64* getWhiteBitBoard(int);
-    U64* getBlackBitBoard(int);
+    static RayTable _raytable;
+
+    bool _whiteCanCastleKs;
+    bool _whiteCanCastleQs;
+
+    bool _blackCanCastleKs;
+    bool _blackCanCastleQs;
+
+    void _updateNonPieceBitBoards();
+
+    void _doRegularMove(CMove);
+
+    void _clearBitBoards();
+
+    U64 _genWhiteAttacks();
+    U64 _genBlackAttacks();
+
+    U64* _getWhiteBitBoard(int);
+    U64* _getBlackBitBoard(int);
 };
 
 #endif

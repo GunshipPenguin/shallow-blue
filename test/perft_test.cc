@@ -14,9 +14,9 @@ int perft(int depth, Board board) {
     Board tempBoard = board;
     tempBoard.doMove(move);
 
-    if (!tempBoard.WHITE_TO_MOVE && tempBoard.whiteIsInCheck()) {
+    if (!tempBoard.whiteToMove() && tempBoard.whiteIsInCheck()) {
       continue;
-    } else if (tempBoard.WHITE_TO_MOVE && tempBoard.blackIsInCheck()) {
+    } else if (tempBoard.whiteToMove() && tempBoard.blackIsInCheck()) {
       continue;
     }
 
