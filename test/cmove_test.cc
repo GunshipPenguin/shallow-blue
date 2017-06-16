@@ -1,12 +1,14 @@
 #include "catch.hpp"
 #include "cmove.h"
+#include "defs.h"
 
 TEST_CASE("Move representation is correct") {
   SECTION("Getters in CMove work as expected") {
-    CMove move(1, 63, CMove::CAPTURE);
+    CMove move(1, 63, BISHOP, CMove::CAPTURE);
 
     REQUIRE(move.getFrom() == 1);
     REQUIRE(move.getTo() == 63);
+    REQUIRE(move.getPieceType() == BISHOP);
     REQUIRE(move.getFlags() == CMove::CAPTURE);
   }
 
@@ -41,22 +43,22 @@ TEST_CASE("Move representation is correct") {
 
 TEST_CASE("CMove.getNotation works properly") {
   SECTION("getNotation works for a non capture, non promotion move") {
-    CMove move(8, 16);
+    CMove move(8, 16, PAWN);
 
     REQUIRE(move.getNotation() == "a2a3");
   }
 
   SECTION("getNotation works for a capture move") {
-    CMove move(8, 16, CMove::CAPTURE);
+    CMove move(8, 16, PAWN, CMove::CAPTURE);
 
     REQUIRE(move.getNotation() == "a2a3");
   }
 
   SECTION("getNotation works for all pawn promotion types") {
-    CMove queenPromotion(55, 63, CMove::QUEEN_PROMOTION);
-    CMove knightPromotion(55, 63, CMove::KNIGHT_PROMOTION);
-    CMove rookPromotion(55, 63, CMove::ROOK_PROMOTION);
-    CMove bishopPromotion(55, 63, CMove::BISHOP_PROMOTION);
+    CMove queenPromotion(55, 63, PAWN, CMove::QUEEN_PROMOTION);
+    CMove knightPromotion(55, 63, PAWN, CMove::KNIGHT_PROMOTION);
+    CMove rookPromotion(55, 63, PAWN, CMove::ROOK_PROMOTION);
+    CMove bishopPromotion(55, 63, PAWN, CMove::BISHOP_PROMOTION);
 
     REQUIRE(queenPromotion.getNotation() == "h7h8q");
     REQUIRE(knightPromotion.getNotation() == "h7h8n");
@@ -65,10 +67,10 @@ TEST_CASE("CMove.getNotation works properly") {
   }
 
   SECTION("getNotation works for all pawn promotion types when making a capture") {
-    CMove queenPromotion(54, 63, CMove::QUEEN_PROMOTION);
-    CMove knightPromotion(54, 63, CMove::KNIGHT_PROMOTION);
-    CMove rookPromotion(54, 63, CMove::ROOK_PROMOTION);
-    CMove bishopPromotion(54, 63, CMove::BISHOP_PROMOTION);
+    CMove queenPromotion(54, 63, PAWN, CMove::QUEEN_PROMOTION);
+    CMove knightPromotion(54, 63, PAWN, CMove::KNIGHT_PROMOTION);
+    CMove rookPromotion(54, 63, PAWN,CMove::ROOK_PROMOTION);
+    CMove bishopPromotion(54, 63, PAWN, CMove::BISHOP_PROMOTION);
 
     REQUIRE(queenPromotion.getNotation() == "g7h8q");
     REQUIRE(knightPromotion.getNotation() == "g7h8n");
@@ -77,14 +79,14 @@ TEST_CASE("CMove.getNotation works properly") {
   }
 
   SECTION("getNotation works for kingside castles") {
-    CMove move(4, 7, CMove::KSIDE_CASTLE);
+    CMove move(4, 6, KING, CMove::KSIDE_CASTLE);
 
-    REQUIRE(move.getNotation() == "e1h1");
+    REQUIRE(move.getNotation() == "e1g1");
   }
 
   SECTION("getNotation works for queenside castles") {
-    CMove move(4, 0, CMove::QSIDE_CASTLE);
+    CMove move(4, 2, KING, CMove::QSIDE_CASTLE);
 
-    REQUIRE(move.getNotation() == "e1a1");
+    REQUIRE(move.getNotation() == "e1c1");
   }
 }

@@ -7,29 +7,28 @@
 const char CMove::RANKS[] = {'1', '2', '3', '4', '5', '6', '7', '8'};
 const char CMove::FILES[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
 
-CMove::CMove(unsigned int from, unsigned int to, unsigned int flags) {
-  // Moves are stored as packed integers with the first 6 least signifigant bits
-  // representing the from square, the next 6 bits representing the to square and
-  // the next 8 bits representing flags
+CMove::CMove(unsigned int from, unsigned int to, PieceType piece, unsigned int flags) {
+  _move = ((flags & 0x1ff) << 18) | ((to & 0x3f) << 12) | ((from & 0x3f) << 6) | (piece & 0x7);
+}
 
-  // Squares are numbered 0-63 with a1 being 0 and h8 being 63
+unsigned int CMove::getPieceType() {
+  return (_move & 0x7);
+}
 
-  // 0x3f = 63 = 6 set bits
-  // 0xff = 255 = 8 set bits
-
-  _move = ((flags & 0x1ff) << 12) | ((to & 0x3f) << 6) | (from & 0x3f);
+unsigned int CMove::getCapturedPieceType() {
+  return ((_move >> 3) & 0x7);
 }
 
 unsigned int CMove::getFrom() {
-  return _move & 0x3f;
-}
-
-unsigned int CMove::getTo() {
   return ((_move >> 6) & 0x3f);
 }
 
-int CMove::getFlags() {
-  return ((_move >> 12) & 0x1ff);
+unsigned int CMove::getTo() {
+  return ((_move >> 12) & 0x3f);
+}
+
+unsigned int CMove::getFlags() {
+  return ((_move >> 18) & 0x1ff);
 }
 
 std::string CMove::getNotation() {

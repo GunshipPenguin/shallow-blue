@@ -24,6 +24,15 @@ const U64 FILE_A = 72340172838076673ull;
 const U64 ZERO = U64(0);
 const U64 ONE = U64(1);
 
+enum PieceType {
+  PAWN,
+  ROOK,
+  KNIGHT,
+  BISHOP,
+  QUEEN,
+  KING
+};
+
 enum SquareIndex {
   a1, b1, c1, d1, e1, f1, g1, h1,
   a2, b2, c2, d2, e2, f2, g2, h2,

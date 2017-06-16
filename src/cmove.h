@@ -2,12 +2,13 @@
 #define CMOVE_H
 
 #include "defs.h"
+#include "board.h"
 #include <string>
 #include <vector>
 
 class CMove {
 public:
-  CMove(unsigned int, unsigned int, unsigned int=0);
+  CMove(unsigned int, unsigned int, PieceType, unsigned int=0);
   CMove(std::string);
 
   enum FLAGS {
@@ -22,7 +23,10 @@ public:
     BISHOP_PROMOTION = 1<<8,
   };
 
-  int getFlags();
+  unsigned int getFlags();
+
+  unsigned int getPieceType();
+  unsigned int getCapturedPieceType();
 
   unsigned int getFrom();
   unsigned int getTo();
@@ -32,7 +36,14 @@ public:
   static unsigned int notationToIndex(std::string);
   static std::string indexToNotation(int);
 private:
-  int _move;
+  // Format
+  // |----5-----|---4---|---3---|-2--|-1--|
+  // 5 - Flags (9 bits)
+  // 4 - To square (6 bits)
+  // 3 - From square (6 bits)
+  // 2 - Captured piece type (if applicable) (3 bits)
+  // 1 - Piece type (3 bits)
+  unsigned int _move;
 
   const static char RANKS[];
   const static char FILES[];

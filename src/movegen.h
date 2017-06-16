@@ -47,7 +47,7 @@ private:
   void genRookMoves(U64, U64, U64);
   void genQueenMoves(U64, U64, U64);
 
-  void addMoves(int, U64, U64);
+  void addMoves(int, PieceType, U64, U64);
 };
 
 #endif

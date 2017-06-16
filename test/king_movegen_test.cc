@@ -1,4 +1,5 @@
 #include "board.h"
+#include "defs.h"
 #include "movegen.h"
 #include "catch.hpp"
 
@@ -152,7 +153,7 @@ TEST_CASE("King move generation is correct") {
       board.setToFen("8/8/8/3b4/8/8/8/4K2R b K -");
 
       REQUIRE(board.whiteCanCastleKs() == true);
-      CMove move(d5, h1, CMove::CAPTURE);
+      CMove move(d5, h1, BISHOP, CMove::CAPTURE);
 
       board.doMove(move);
 
@@ -163,7 +164,7 @@ TEST_CASE("King move generation is correct") {
       board.setToFen("8/8/8/8/4b3/8/8/R3K3 b Q -");
 
       REQUIRE(board.whiteCanCastleQs() == true);
-      CMove move(e4, a1, CMove::CAPTURE);
+      CMove move(e4, a1, BISHOP, CMove::CAPTURE);
 
       board.doMove(move);
 
@@ -174,7 +175,7 @@ TEST_CASE("King move generation is correct") {
       board.setToFen("4k2r/8/8/4B3/8/8/8/8 w k -");
 
       REQUIRE(board.blackCanCastleKs() == true);
-      CMove move(e5, h8, CMove::CAPTURE);
+      CMove move(e5, h8, BISHOP, CMove::CAPTURE);
 
       board.doMove(move);
 
@@ -185,7 +186,7 @@ TEST_CASE("King move generation is correct") {
       board.setToFen("r3k3/8/8/8/4B3/8/8/8 w q -");
 
       REQUIRE(board.blackCanCastleQs() == true);
-      CMove move(e4, a8, CMove::CAPTURE);
+      CMove move(e4, a8, BISHOP, CMove::CAPTURE);
 
       board.doMove(move);
 
@@ -196,7 +197,7 @@ TEST_CASE("King move generation is correct") {
       board.setToFen("8/8/8/8/8/8/8/4K2R w K -");
 
       REQUIRE(board.whiteCanCastleKs() == true);
-      CMove move(h1, g1);
+      CMove move(h1, g1, ROOK);
 
       board.doMove(move);
 
@@ -207,7 +208,7 @@ TEST_CASE("King move generation is correct") {
       board.setToFen("8/8/8/8/8/8/8/R3K3 w Q -");
 
       REQUIRE(board.whiteCanCastleQs() == true);
-      CMove move(a1, b1);
+      CMove move(a1, b1, ROOK);
 
       board.doMove(move);
 
@@ -218,7 +219,7 @@ TEST_CASE("King move generation is correct") {
       board.setToFen("4k2r/8/8/8/8/8/8/8 b k -");
 
       REQUIRE(board.blackCanCastleKs() == true);
-      CMove move(h8, g8);
+      CMove move(h8, g8, ROOK);
 
       board.doMove(move);
 
@@ -229,7 +230,7 @@ TEST_CASE("King move generation is correct") {
       board.setToFen("r3k3/8/8/8/8/8/8/8 b q -");
 
       REQUIRE(board.blackCanCastleQs() == true);
-      CMove move(a8, b8);
+      CMove move(a8, b8, ROOK);
 
       board.doMove(move);
 
@@ -242,7 +243,7 @@ TEST_CASE("King move generation is correct") {
       REQUIRE(board.whiteCanCastleKs() == true);
       REQUIRE(board.whiteCanCastleQs() == true);
 
-      CMove move(e1, e2);
+      CMove move(e1, e2, KING);
       board.doMove(move);
 
       REQUIRE(board.whiteCanCastleKs() == false);
@@ -255,7 +256,7 @@ TEST_CASE("King move generation is correct") {
       REQUIRE(board.blackCanCastleKs() == true);
       REQUIRE(board.blackCanCastleQs() == true);
 
-      CMove move(e8, e7);
+      CMove move(e8, e7, KING);
       board.doMove(move);
 
       REQUIRE(board.blackCanCastleKs() == false);

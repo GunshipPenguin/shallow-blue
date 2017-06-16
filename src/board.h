@@ -6,6 +6,8 @@
 #include "cmove.h"
 #include <string>
 
+class CMove;
+
 class Board {
   public:
     Board();
