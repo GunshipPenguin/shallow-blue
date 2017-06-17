@@ -3,6 +3,7 @@
 
 #include "defs.h"
 #include "raytable.h"
+#include "zkey.h"
 #include "cmove.h"
 #include <string>
 
@@ -25,6 +26,12 @@ class Board {
     bool blackCanCastleKs();
     bool blackCanCastleQs();
 
+    bool whiteKsCastlingRight();
+    bool whiteQsCastlingRight();
+
+    bool blackKsCastlingRight();
+    bool blackQsCastlingRight();
+
     bool whiteIsInCheck();
     bool blackIsInCheck();
 
@@ -40,6 +47,8 @@ class Board {
     U64 getNotOccupied();
 
     U64 getEnPassant();
+
+    ZKey getZKey();
 
     Color getActivePlayer();
     Color getInactivePlayer();
@@ -68,6 +77,8 @@ class Board {
     U64 _enPassant;
 
     Color _activePlayer;
+
+    ZKey _zKey;
 
     static RayTable _raytable;
 

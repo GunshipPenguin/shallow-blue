@@ -7,32 +7,33 @@
 
 const unsigned int ZKey::PRNG_KEY = 0xDEADBEEF;
 
-U64 ZKey::WHITE_PIECE_KEYS[6][64];
-U64 ZKey::BLACK_PIECE_KEYS[6][64];
-U64 ZKey::EN_PASSANT_KEYS[64];
+U64 ZKey::PIECE_KEYS[2][6][64];
+U64 ZKey::EN_PASSANT_KEYS[8];
 
-U64 ZKey::WHITE_KS_CASTLE_KEY;
-U64 ZKey::WHITE_QS_CASTLE_KEY;
-U64 ZKey::BLACK_KS_CASTLE_KEY;
-U64 ZKey::BLACK_QS_CASTLE_KEY;
+U64 ZKey::KS_CASTLE_KEYS[2];
+U64 ZKey::QS_CASTLE_KEYS[2];
+
+U64 ZKey::WHITE_TO_MOVE_KEY;
 
 void ZKey::init() {
   std::mt19937_64 mt(PRNG_KEY);
   std::uniform_int_distribution<U64> dist(ZERO, ULLONG_MAX);
 
-  WHITE_KS_CASTLE_KEY = dist(mt);
-  WHITE_QS_CASTLE_KEY = dist(mt);
-  BLACK_KS_CASTLE_KEY = dist(mt);
-  BLACK_QS_CASTLE_KEY = dist(mt);
+  KS_CASTLE_KEYS[WHITE] = dist(mt);
+  QS_CASTLE_KEYS[WHITE] = dist(mt);
+  KS_CASTLE_KEYS[BLACK] = dist(mt);
+  QS_CASTLE_KEYS[BLACK] = dist(mt);
 
-  for (int square=0;square<64;square++) {
-    EN_PASSANT_KEYS[square] = dist(mt);
+  WHITE_TO_MOVE_KEY = dist(mt);
+
+  for (int file=0;file<8;file++) {
+    EN_PASSANT_KEYS[file] = dist(mt);
   }
 
   for (int pieceType=0;pieceType<=6;pieceType++) {
     for (int square=0;square<64;square++) {
-      WHITE_PIECE_KEYS[pieceType][square] = dist(mt);
-      BLACK_PIECE_KEYS[pieceType][square] = dist(mt);
+      PIECE_KEYS[WHITE][pieceType][square] = dist(mt);
+      PIECE_KEYS[BLACK][pieceType][square] = dist(mt);
     }
   }
 }
@@ -44,6 +45,10 @@ ZKey::ZKey() {
 ZKey::ZKey(Board board) {
   _key = ZERO;
 
+  if (board.getActivePlayer() == WHITE) {
+    _key ^= WHITE_TO_MOVE_KEY;
+  }
+
   PieceType pieces[6] = {PAWN, ROOK, KNIGHT, BISHOP, QUEEN, KING};
 
   // Add white/black pieces
@@ -54,35 +59,38 @@ ZKey::ZKey(Board board) {
     for (int squareIndex=0;squareIndex<64;squareIndex++) {
       U64 square = ONE << squareIndex;
       if (square & whiteBitBoard) {
-        setWhitePiece(piece, squareIndex);
+        flipPiece(WHITE, piece, squareIndex);
       } else if (square & blackBitBoard) {
-        setBlackPiece(piece, squareIndex);
+        flipPiece(BLACK, piece, squareIndex);
       }
     }
   }
 
-  // Add en passants
-  U64 enPassant = board.getEnPassant();
-  for (int squareIndex=0;squareIndex<64;squareIndex++) {
-    U64 square = ONE << squareIndex;
-    if (square & enPassant) {
-      setEnPassant(squareIndex);
-      break;
-    }
+  // Add en passant
+  if (board.getEnPassant()) {
+    _enPassantFile = (__builtin_ffsll(board.getEnPassant()) - 1) % 8;
+    _key ^= EN_PASSANT_KEYS[_enPassantFile];
+  } else {
+    _enPassantFile = -1;
   }
 
+  _whiteKs = false, _whiteQs = false, _blackKs = false, _blackQs = false;
   // Add castles
-  if (board.whiteCanCastleKs()) {
-    setWhiteCastleKs();
+  if (board.whiteKsCastlingRight()) {
+    _whiteKs = true;
+    _flipKsCastle(WHITE);
   }
-  if (board.whiteCanCastleQs()) {
-    setWhiteCastleQs();
+  if (board.whiteQsCastlingRight()) {
+    _whiteQs = true;
+    _flipQsCastle(WHITE);
   }
-  if (board.blackCanCastleKs()) {
-    setBlackCastleKs();
+  if (board.blackKsCastlingRight()) {
+    _blackKs = true;
+    _flipKsCastle(BLACK);
   }
-  if (board.blackCanCastleQs()) {
-    setBlackCastleQs();
+  if (board.blackQsCastlingRight()) {
+    _blackQs = true;
+    _flipQsCastle(BLACK);
   }
 }
 
@@ -90,30 +98,54 @@ U64 ZKey::getValue() {
   return _key;
 }
 
-void ZKey::setWhitePiece(PieceType piece, unsigned int index) {
-  _key ^= WHITE_PIECE_KEYS[piece][index];
+void ZKey::movePiece(Color color, PieceType piece, unsigned int from, unsigned int to) {
+  flipPiece(color, piece, from);
+  flipPiece(color, piece, to);
 }
 
-void ZKey::setBlackPiece(PieceType piece, unsigned int index) {
-  _key ^= BLACK_PIECE_KEYS[piece][index];
+void ZKey::flipPiece(Color color, PieceType piece, unsigned int index) {
+  _key ^= PIECE_KEYS[color][piece][index];
 }
 
-void ZKey::setEnPassant(unsigned int index) {
-  _key ^= EN_PASSANT_KEYS[index];
+void ZKey::updateCastlingRights(bool whiteKs, bool whiteQs, bool blackKs, bool blackQs) {
+  if (whiteKs != _whiteKs) {
+    _whiteKs = false;
+    _flipKsCastle(WHITE);
+  }
+  if (whiteQs != _whiteQs) {
+    _whiteQs = false;
+    _flipQsCastle(WHITE);
+  }
+  if (blackKs != _blackKs) {
+    _blackKs = false;
+    _flipKsCastle(BLACK);
+  }
+  if (whiteQs != _blackQs) {
+    _blackQs = false;
+    _flipQsCastle(BLACK);
+  }
 }
 
-void ZKey::setWhiteCastleKs() {
-  _key ^= WHITE_KS_CASTLE_KEY;
+void ZKey::clearEnPassant() {
+  if (_enPassantFile != -1) {
+    _key ^= EN_PASSANT_KEYS[_enPassantFile];
+    _enPassantFile = -1;
+  }
 }
 
-void ZKey::setWhiteCastleQs() {
-  _key ^= WHITE_QS_CASTLE_KEY;
+void ZKey::setEnPassantFile(unsigned int file) {
+  _enPassantFile = file;
+  _key ^= EN_PASSANT_KEYS[file];
 }
 
-void ZKey::setBlackCastleKs() {
-  _key ^= BLACK_KS_CASTLE_KEY;
+void ZKey::_flipKsCastle(Color color) {
+  _key ^= KS_CASTLE_KEYS[color];
 }
 
-void ZKey::setBlackCastleQs() {
-  _key ^= BLACK_QS_CASTLE_KEY;
+void ZKey::_flipQsCastle(Color color) {
+  _key ^= QS_CASTLE_KEYS[color];
+}
+
+void ZKey::flipActivePlayer() {
+  _key ^= WHITE_TO_MOVE_KEY;
 }

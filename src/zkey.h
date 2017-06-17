@@ -14,28 +14,39 @@ public:
 
   U64 getValue();
 
-  void setWhitePiece(PieceType, unsigned int);
-  void setBlackPiece(PieceType, unsigned int);
+  void movePiece(Color, PieceType, unsigned int, unsigned int);
+  void flipPiece(Color, PieceType, unsigned int);
 
-  void setEnPassant(unsigned int);
+  void flipActivePlayer();
 
-  void setWhiteCastleKs();
-  void setWhiteCastleQs();
-  void setBlackCastleKs();
-  void setBlackCastleQs();
+  void clearEnPassant();
+  void setEnPassantFile(unsigned int);
+
+  void updateCastlingRights(bool, bool, bool, bool);
+
+  void flipToMove();
 
 private:
   U64 _key;
 
-  static U64 WHITE_PIECE_KEYS[6][64];
-  static U64 BLACK_PIECE_KEYS[6][64];
+  void _flipKsCastle(Color);
+  void _flipQsCastle(Color);
 
-  static U64 EN_PASSANT_KEYS[64];
+  int _enPassantFile;
+  bool _whiteKs;
+  bool _whiteQs;
+  bool _blackKs;
+  bool _blackQs;
 
-  static U64 WHITE_KS_CASTLE_KEY;
-  static U64 WHITE_QS_CASTLE_KEY;
-  static U64 BLACK_KS_CASTLE_KEY;
-  static U64 BLACK_QS_CASTLE_KEY;
+  static U64 PIECE_KEYS[2][6][64];
+
+  // One en passant key for each file
+  static U64 EN_PASSANT_KEYS[8];
+
+  static U64 KS_CASTLE_KEYS[2];
+  static U64 QS_CASTLE_KEYS[2];
+
+  static U64 WHITE_TO_MOVE_KEY;
 
   static const unsigned int PRNG_KEY;
 };
