@@ -281,20 +281,6 @@ void Board::setToFen(std::string fenString) {
   _updateNonPieceBitBoards();
 }
 
-U64* Board::_getWhiteBitBoard(int squareIndex) {
-  U64 square = ONE << squareIndex;
-
-  U64* pieces;
-  if (square & _whitePieces[PAWN]) pieces = &_whitePieces[PAWN];
-  else if (square & _whitePieces[ROOK]) pieces = &_whitePieces[ROOK];
-  else if (square & _whitePieces[KNIGHT]) pieces = &_whitePieces[KNIGHT];
-  else if (square & _whitePieces[BISHOP]) pieces = &_whitePieces[BISHOP];
-  else if (square & _whitePieces[KING]) pieces = &_whitePieces[KING];
-  else if (square & _whitePieces[QUEEN]) pieces = &_whitePieces[QUEEN];
-
-  return pieces;
-}
-
 void Board::_updateNonPieceBitBoards() {
   _allWhitePieces = _whitePieces[PAWN] | \
     _whitePieces[ROOK] | \
@@ -319,18 +305,32 @@ void Board::_updateNonPieceBitBoards() {
   _blackAttacks = _genBlackAttacks();
 }
 
-U64* Board::_getBlackBitBoard(int squareIndex) {
+PieceType Board::_getWhitePieceAtSquare(int squareIndex) {
   U64 square = ONE << squareIndex;
 
-  U64* pieces;
-  if (square & _blackPieces[PAWN]) pieces = &_blackPieces[PAWN];
-  else if (square & _blackPieces[ROOK]) pieces = &_blackPieces[ROOK];
-  else if (square & _blackPieces[KNIGHT]) pieces = &_blackPieces[KNIGHT];
-  else if (square & _blackPieces[BISHOP]) pieces = &_blackPieces[BISHOP];
-  else if (square & _blackPieces[KING]) pieces = &_blackPieces[KING];
-  else if (square & _blackPieces[QUEEN]) pieces = &_blackPieces[QUEEN];
+  PieceType piece;
+  if (square & _whitePieces[PAWN]) piece = PAWN;
+  else if (square & _whitePieces[ROOK]) piece = ROOK;
+  else if (square & _whitePieces[KNIGHT]) piece = KNIGHT;
+  else if (square & _whitePieces[BISHOP]) piece = BISHOP;
+  else if (square & _whitePieces[KING]) piece = KING;
+  else if (square & _whitePieces[QUEEN]) piece = QUEEN;
 
-  return pieces;
+  return piece;
+}
+
+PieceType Board::_getBlackPieceAtSquare(int squareIndex) {
+  U64 square = ONE << squareIndex;
+
+  PieceType piece;
+  if (square & _blackPieces[PAWN]) piece = PAWN;
+  else if (square & _blackPieces[ROOK]) piece = ROOK;
+  else if (square & _blackPieces[KNIGHT]) piece = KNIGHT;
+  else if (square & _blackPieces[BISHOP]) piece = BISHOP;
+  else if (square & _blackPieces[KING]) piece = KING;
+  else if (square & _blackPieces[QUEEN]) piece = QUEEN;
+
+  return piece;
 }
 
 void Board::_doRegularMove(CMove move) {
@@ -349,8 +349,13 @@ void Board::doMove(CMove move) {
   // Handle special moves
   unsigned int flags = move.getFlags();
   if (flags & CMove::CAPTURE) {
-    U64* capturePieces = _whiteToMove ? _getBlackBitBoard(move.getTo()) : _getWhiteBitBoard(move.getTo());
-    *capturePieces ^= (ONE << move.getTo());
+    PieceType piece = _whiteToMove ? _getBlackPieceAtSquare(move.getTo()) : _getWhitePieceAtSquare(move.getTo());
+
+    if (_whiteToMove) {
+      _blackPieces[piece] ^= ONE << move.getTo();
+    } else {
+      _whitePieces[piece] ^= ONE << move.getTo();
+    }
 
     switch(move.getTo()) {
       case a1: _whiteCanCastleQs = false;

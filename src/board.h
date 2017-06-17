@@ -93,8 +93,8 @@ class Board {
     U64 _genWhiteAttacks();
     U64 _genBlackAttacks();
 
-    U64* _getWhiteBitBoard(int);
-    U64* _getBlackBitBoard(int);
+    PieceType _getWhitePieceAtSquare(int);
+    PieceType _getBlackPieceAtSquare(int);
 };
 
 #endif
