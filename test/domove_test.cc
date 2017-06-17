@@ -14,7 +14,7 @@ TEST_CASE("Board::doMove works properly") {
 
     board.doMove(move);
 
-    REQUIRE( (board.getWhitePieces(PAWN) & (ONE << a4)) );
+    REQUIRE( (board.getPieces(WHITE, PAWN) & (ONE << a4)) );
   }
 
   SECTION("doMove moves pawns up from the starting position for black") {
@@ -24,7 +24,7 @@ TEST_CASE("Board::doMove works properly") {
 
     board.doMove(move);
 
-    REQUIRE( (board.getBlackPieces(PAWN) & (ONE << a5)) );
+    REQUIRE( (board.getPieces(BLACK,  PAWN) & (ONE << a5)) );
   }
 
   SECTION("doMove handles captures") {
@@ -34,8 +34,8 @@ TEST_CASE("Board::doMove works properly") {
 
     board.doMove(move);
 
-    REQUIRE( (board.getWhitePieces(BISHOP) & (ONE << e5)) );
-    REQUIRE(board.getBlackPieces(KNIGHT) == ZERO);
+    REQUIRE( (board.getPieces(WHITE, BISHOP) & (ONE << e5)) );
+    REQUIRE(board.getPieces(BLACK,  KNIGHT) == ZERO);
   }
 
   SECTION("doMove handles en passant for black") {
@@ -45,8 +45,8 @@ TEST_CASE("Board::doMove works properly") {
 
     board.doMove(move);
 
-    REQUIRE( (board.getBlackPieces(PAWN) & (ONE << c3)) );
-    REQUIRE(board.getWhitePieces(PAWN) == ZERO);
+    REQUIRE( (board.getPieces(BLACK,  PAWN) & (ONE << c3)) );
+    REQUIRE(board.getPieces(WHITE, PAWN) == ZERO);
     REQUIRE(board.getEnPassant() == ZERO);
   }
 
@@ -57,8 +57,8 @@ TEST_CASE("Board::doMove works properly") {
 
     board.doMove(move);
 
-    REQUIRE( (board.getWhitePieces(PAWN) & (ONE << c6)) );
-    REQUIRE(board.getBlackPieces(PAWN) == ZERO);
+    REQUIRE( (board.getPieces(WHITE, PAWN) & (ONE << c6)) );
+    REQUIRE(board.getPieces(BLACK,  PAWN) == ZERO);
     REQUIRE(board.getEnPassant() == ZERO);
   }
 
@@ -67,8 +67,8 @@ TEST_CASE("Board::doMove works properly") {
     CMove move(e1, g1, KING, CMove::KSIDE_CASTLE);
 
     board.doMove(move);
-    REQUIRE( (board.getWhitePieces(KING) & (ONE << g1)) );
-    REQUIRE( (board.getWhitePieces(ROOK) & (ONE << f1)) );
+    REQUIRE( (board.getPieces(WHITE, KING) & (ONE << g1)) );
+    REQUIRE( (board.getPieces(WHITE, ROOK) & (ONE << f1)) );
   }
 
   SECTION("doMove handles white queenside castles") {
@@ -77,8 +77,8 @@ TEST_CASE("Board::doMove works properly") {
 
     board.doMove(move);
 
-    REQUIRE( (board.getWhitePieces(KING) & (ONE << c1)) );
-    REQUIRE( (board.getWhitePieces(ROOK) & (ONE << d1)) );
+    REQUIRE( (board.getPieces(WHITE, KING) & (ONE << c1)) );
+    REQUIRE( (board.getPieces(WHITE, ROOK) & (ONE << d1)) );
   }
 
   SECTION("doMove handles black kingside castles") {
@@ -87,8 +87,8 @@ TEST_CASE("Board::doMove works properly") {
 
     board.doMove(move);
 
-    REQUIRE( (board.getBlackPieces(KING) & (ONE << g8)) );
-    REQUIRE( (board.getBlackPieces(ROOK) & (ONE << f8)) );
+    REQUIRE( (board.getPieces(BLACK,  KING) & (ONE << g8)) );
+    REQUIRE( (board.getPieces(BLACK,  ROOK) & (ONE << f8)) );
   }
 
   SECTION("doMove handles black queenside castles") {
@@ -97,8 +97,8 @@ TEST_CASE("Board::doMove works properly") {
 
     board.doMove(move);
 
-    REQUIRE( (board.getBlackPieces(KING) & (ONE << c8)) );
-    REQUIRE( (board.getBlackPieces(ROOK) & (ONE << d8)) );
+    REQUIRE( (board.getPieces(BLACK,  KING) & (ONE << c8)) );
+    REQUIRE( (board.getPieces(BLACK,  ROOK) & (ONE << d8)) );
   }
 
   SECTION("White cannot castle after moving its king") {
@@ -134,8 +134,8 @@ TEST_CASE("Board::doMove works properly") {
 
     board.doMove(move);
 
-    REQUIRE(board.getWhitePieces(PAWN) == ZERO);
-    REQUIRE(board.getWhitePieces(QUEEN) == (ONE << d8));
+    REQUIRE(board.getPieces(WHITE, PAWN) == ZERO);
+    REQUIRE(board.getPieces(WHITE, QUEEN) == (ONE << d8));
   }
 
   SECTION("doMove works with black promotions") {
@@ -145,8 +145,8 @@ TEST_CASE("Board::doMove works properly") {
 
     board.doMove(move);
 
-    REQUIRE(board.getBlackPieces(PAWN) ==ZERO);
-    REQUIRE(board.getBlackPieces(QUEEN) == (ONE << d1));
+    REQUIRE(board.getPieces(BLACK,  PAWN) ==ZERO);
+    REQUIRE(board.getPieces(BLACK,  QUEEN) == (ONE << d1));
   }
 
   SECTION("doMove works with white capture promotions") {
@@ -155,9 +155,9 @@ TEST_CASE("Board::doMove works properly") {
     CMove move(d7, c8, PAWN, CMove::CAPTURE | CMove::KNIGHT_PROMOTION);
     board.doMove(move);
 
-    REQUIRE(board.getWhitePieces(PAWN) == ZERO);
-    REQUIRE(board.getBlackPieces(QUEEN) == ZERO);
-    REQUIRE(board.getWhitePieces(KNIGHT) == (ONE << c8));
+    REQUIRE(board.getPieces(WHITE, PAWN) == ZERO);
+    REQUIRE(board.getPieces(BLACK,  QUEEN) == ZERO);
+    REQUIRE(board.getPieces(WHITE, KNIGHT) == (ONE << c8));
   }
 
   SECTION("doMove works with black capture promotions") {
@@ -166,9 +166,9 @@ TEST_CASE("Board::doMove works properly") {
     CMove move(d2, c1, PAWN, CMove::CAPTURE | CMove::KNIGHT_PROMOTION);
     board.doMove(move);
 
-    REQUIRE(board.getBlackPieces(PAWN) == ZERO);
-    REQUIRE(board.getBlackPieces(KNIGHT) == (ONE << c1));
-    REQUIRE(board.getWhitePieces(QUEEN) == ZERO);
+    REQUIRE(board.getPieces(BLACK,  PAWN) == ZERO);
+    REQUIRE(board.getPieces(BLACK,  KNIGHT) == (ONE << c1));
+    REQUIRE(board.getPieces(WHITE, QUEEN) == ZERO);
   }
 
   SECTION("doMove should update the en passant square after a double pawn push for white") {

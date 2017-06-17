@@ -1,5 +1,6 @@
 #include "board.h"
 #include "movegen.h"
+#include "defs.h"
 #include "catch.hpp"
 
 int perft(int depth, Board board) {
@@ -14,9 +15,9 @@ int perft(int depth, Board board) {
     Board tempBoard = board;
     tempBoard.doMove(move);
 
-    if (!tempBoard.whiteToMove() && tempBoard.whiteIsInCheck()) {
+    if (!(tempBoard.getActivePlayer() == WHITE) && tempBoard.whiteIsInCheck()) {
       continue;
-    } else if (tempBoard.whiteToMove() && tempBoard.blackIsInCheck()) {
+    } else if (!(tempBoard.getActivePlayer() == BLACK) && tempBoard.blackIsInCheck()) {
       continue;
     }
 

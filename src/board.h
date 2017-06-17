@@ -28,24 +28,21 @@ class Board {
     bool whiteIsInCheck();
     bool blackIsInCheck();
 
-    U64 getWhitePieces(PieceType);
-    U64 getBlackPieces(PieceType);
+    U64 getPieces(Color, PieceType);
 
-    U64 getAllWhitePieces();
-    U64 getAllBlackPieces();
+    U64 getAllPieces(Color);
 
-    U64 getWhiteAttackable();
-    U64 getBlackAttackable();
+    U64 getAttackable(Color);
 
-    U64 getWhiteAttacks();
-    U64 getBlackAttacks();
+    U64 getAttacks(Color);
 
     U64 getOccupied();
     U64 getNotOccupied();
 
     U64 getEnPassant();
 
-    bool whiteToMove();
+    Color getActivePlayer();
+    Color getInactivePlayer();
 
     // Methods returning attack bitboards
     U64 getWhitePawnAttacksForSquare(int);
@@ -57,24 +54,20 @@ class Board {
     U64 getQueenAttacksForSquare(int, U64);
 
   private:
-    U64 _whitePieces[6];
-    U64 _blackPieces[6];
+    U64 _pieces[2][6];
 
-    U64 _allWhitePieces;
-    U64 _allBlackPieces;
+    U64 _allPieces[2];
 
-    U64 _whiteAttackable;
-    U64 _blackAttackable;
+    U64 _attackable[2];
 
-    U64 _whiteAttacks;
-    U64 _blackAttacks;
+    U64 _attacks[2];
 
     U64 _occupied;
     U64 _notOccupied;
 
     U64 _enPassant;
 
-    bool _whiteToMove;
+    Color _activePlayer;
 
     static RayTable _raytable;
 
@@ -93,8 +86,7 @@ class Board {
     U64 _genWhiteAttacks();
     U64 _genBlackAttacks();
 
-    PieceType _getWhitePieceAtSquare(int);
-    PieceType _getBlackPieceAtSquare(int);
+    PieceType _getPieceAtSquare(Color, int);
 };
 
 #endif

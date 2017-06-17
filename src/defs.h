@@ -24,6 +24,11 @@ const U64 FILE_A = 72340172838076673ull;
 const U64 ZERO = U64(0);
 const U64 ONE = U64(1);
 
+enum Color {
+  WHITE,
+  BLACK
+};
+
 enum PieceType {
   PAWN,
   ROOK,

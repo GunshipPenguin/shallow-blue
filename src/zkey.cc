@@ -48,8 +48,8 @@ ZKey::ZKey(Board board) {
 
   // Add white/black pieces
   for (auto piece : pieces) {
-    U64 whiteBitBoard = board.getWhitePieces(piece);
-    U64 blackBitBoard = board.getBlackPieces(piece);
+    U64 whiteBitBoard = board.getPieces(WHITE, piece);
+    U64 blackBitBoard = board.getPieces(BLACK,  piece);
 
     for (int squareIndex=0;squareIndex<64;squareIndex++) {
       U64 square = ONE << squareIndex;
