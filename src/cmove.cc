@@ -11,8 +11,8 @@ CMove::CMove(unsigned int from, unsigned int to, PieceType piece, unsigned int f
   _move = ((flags & 0x1ff) << 15) | ((to & 0x3f) << 9) | ((from & 0x3f) << 3) | (piece & 0x7);
 }
 
-unsigned int CMove::getPieceType() {
-  return (_move & 0x7);
+PieceType CMove::getPieceType() {
+  return static_cast<PieceType>(_move & 0x7);
 }
 
 unsigned int CMove::getFrom() {

@@ -25,7 +25,7 @@ public:
 
   unsigned int getFlags();
 
-  unsigned int getPieceType();
+  PieceType getPieceType();
   unsigned int getCapturedPieceType();
 
   unsigned int getFrom();
