@@ -17,51 +17,51 @@ U64 Board::getPieces(Color color, PieceType pieceType) const {
   return _pieces[color][pieceType];
 }
 
-U64 Board::getAllPieces(Color color) {
+U64 Board::getAllPieces(Color color) const {
   return _allPieces[color];
 }
 
-U64 Board::getAttackable(Color color) {
+U64 Board::getAttackable(Color color) const {
   return _attackable[color];
 }
 
-U64 Board::getAttacks(Color color) {
+U64 Board::getAttacks(Color color) const {
   return _attacks[color];
 }
 
-U64 Board::getOccupied() {
+U64 Board::getOccupied() const {
   return _occupied;
 }
 
-U64 Board::getNotOccupied() {
+U64 Board::getNotOccupied() const {
   return _notOccupied;
 }
 
-U64 Board::getEnPassant() {
+U64 Board::getEnPassant() const {
   return _enPassant;
 }
 
-Color Board::getActivePlayer() {
+Color Board::getActivePlayer() const {
   return _activePlayer;
 }
 
-Color Board::getInactivePlayer() {
+Color Board::getInactivePlayer() const {
   return _activePlayer == WHITE ? BLACK : WHITE;
 }
 
-ZKey Board::getZKey() {
+ZKey Board::getZKey() const {
   return _zKey;
 }
 
-bool Board::whiteIsInCheck() {
+bool Board::whiteIsInCheck() const {
   return (bool) (_attacks[BLACK] & _pieces[WHITE][KING]);
 }
 
-bool Board::blackIsInCheck() {
+bool Board::blackIsInCheck() const {
   return (bool) (_attacks[WHITE] & _pieces[BLACK][KING]);
 }
 
-bool Board::whiteCanCastleKs() {
+bool Board::whiteCanCastleKs() const {
   if (!_whiteCanCastleKs) {
     return false;
   }
@@ -73,7 +73,7 @@ bool Board::whiteCanCastleKs() {
   return !whiteIsInCheck() && !squaresOccupied && !squaresAttacked;
 }
 
-bool Board::whiteCanCastleQs() {
+bool Board::whiteCanCastleQs() const {
   if (!_whiteCanCastleQs) {
     return false;
   }
@@ -86,7 +86,7 @@ bool Board::whiteCanCastleQs() {
   return !whiteIsInCheck() && !squaresOccupied && !squaresAttacked;
 }
 
-bool Board::blackCanCastleKs() {
+bool Board::blackCanCastleKs() const {
   if (!_blackCanCastleKs) {
     return false;
   }
@@ -98,7 +98,7 @@ bool Board::blackCanCastleKs() {
   return !blackIsInCheck() && !squaresOccupied && !squaresAttacked;
 }
 
-bool Board::blackCanCastleQs() {
+bool Board::blackCanCastleQs() const {
   if (!_blackCanCastleQs) {
     return false;
   }
@@ -111,23 +111,23 @@ bool Board::blackCanCastleQs() {
   return !blackIsInCheck() && !squaresOccupied && !squaresAttacked;
 }
 
-bool Board::whiteKsCastlingRight() {
+bool Board::whiteKsCastlingRight() const {
   return _whiteCanCastleKs;
 }
 
-bool Board::whiteQsCastlingRight() {
+bool Board::whiteQsCastlingRight() const {
   return _whiteCanCastleQs;
 }
 
-bool Board::blackKsCastlingRight() {
+bool Board::blackKsCastlingRight() const {
   return _blackCanCastleKs;
 }
 
-bool Board::blackQsCastlingRight() {
+bool Board::blackQsCastlingRight() const {
   return _blackCanCastleQs;
 }
 
-std::string Board::getStringRep() {
+std::string Board::getStringRep() const {
   std::string stringRep;
   U64 base = 1;
   U64 boardPos = 56; // Starts at a8, goes down rank by rank
@@ -314,7 +314,7 @@ void Board::_updateNonPieceBitBoards() {
   _attacks[BLACK] = _genBlackAttacks();
 }
 
-PieceType Board::_getPieceAtSquare(Color color, int squareIndex) {
+PieceType Board::_getPieceAtSquare(Color color, int squareIndex) const {
   U64 square = ONE << squareIndex;
 
   PieceType piece;
@@ -459,7 +459,7 @@ void Board::setToStartPos() {
   setToFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 }
 
-U64 Board::getWhitePawnAttacksForSquare(int square) {
+U64 Board::getWhitePawnAttacksForSquare(int square) const {
   U64 fromSquare = ONE << square;
 
   U64 attacks = ((fromSquare << 7) & ~FILE_H) | ((fromSquare << 9) & ~FILE_A);
@@ -467,7 +467,7 @@ U64 Board::getWhitePawnAttacksForSquare(int square) {
   return attacks;
 }
 
-U64 Board::getBlackPawnAttacksForSquare(int square) {
+U64 Board::getBlackPawnAttacksForSquare(int square) const {
   U64 fromSquare = ONE << square;
 
   U64 attacks = ((fromSquare >> 7) & ~FILE_A) | ((fromSquare >> 9) & ~FILE_H);
@@ -476,7 +476,7 @@ U64 Board::getBlackPawnAttacksForSquare(int square) {
 }
 
 
-U64 Board::getKnightAttacksForSquare(int square, U64 own) {
+U64 Board::getKnightAttacksForSquare(int square, U64 own) const {
   U64 fromSquare = ONE << square;
 
   U64 moves = (((fromSquare << 15) | (fromSquare >> 17)) & ~FILE_H) | // Left 1
@@ -487,7 +487,7 @@ U64 Board::getKnightAttacksForSquare(int square, U64 own) {
   return moves & (~own);
 }
 
-U64 Board::getKingAttacksForSquare(int square, U64 own) {
+U64 Board::getKingAttacksForSquare(int square, U64 own) const {
   U64 king = ONE << square;
 
   U64 moves = (((king << 7) | (king >> 9) | (king >> 1)) & (~FILE_H)) |
@@ -497,7 +497,7 @@ U64 Board::getKingAttacksForSquare(int square, U64 own) {
   return moves & (~own);
 }
 
-U64 Board::getBishopAttacksForSquare(int square, U64 own) {
+U64 Board::getBishopAttacksForSquare(int square, U64 own) const {
   U64 moves = _raytable.getPositiveAttacks(RayTable::NORTH_WEST, square, _occupied) |
     _raytable.getPositiveAttacks(RayTable::NORTH_EAST, square, _occupied) |
     _raytable.getNegativeAttacks(RayTable::SOUTH_WEST, square, _occupied) |
@@ -506,7 +506,7 @@ U64 Board::getBishopAttacksForSquare(int square, U64 own) {
   return moves & (~own);
 }
 
-U64 Board::getRookAttacksForSquare(int square, U64 own) {
+U64 Board::getRookAttacksForSquare(int square, U64 own) const {
   U64 moves = _raytable.getPositiveAttacks(RayTable::NORTH, square, _occupied) |
     _raytable.getPositiveAttacks(RayTable::EAST, square, _occupied) |
     _raytable.getNegativeAttacks(RayTable::SOUTH, square, _occupied) |
@@ -515,11 +515,11 @@ U64 Board::getRookAttacksForSquare(int square, U64 own) {
   return moves & (~own);
 }
 
-U64 Board::getQueenAttacksForSquare(int square, U64 own) {
+U64 Board::getQueenAttacksForSquare(int square, U64 own) const {
   return getBishopAttacksForSquare(square, own) | getRookAttacksForSquare(square, own);
 }
 
-U64 Board::_genWhiteAttacks() {
+U64 Board::_genWhiteAttacks() const {
   U64 attacks = U64(0);
 
   for(int squareIndex=0;squareIndex<64;squareIndex++) {
@@ -540,7 +540,7 @@ U64 Board::_genWhiteAttacks() {
   return attacks;
 }
 
-U64 Board::_genBlackAttacks() {
+U64 Board::_genBlackAttacks() const {
   U64 attacks = U64(0);
 
   for(int squareIndex=0;squareIndex<64;squareIndex++) {

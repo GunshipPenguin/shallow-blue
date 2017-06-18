@@ -13,54 +13,54 @@ class Board {
   public:
     Board();
 
-    std::string getStringRep();
+    std::string getStringRep() const ;
 
     void setToStartPos();
     void setToFen(std::string);
 
     void doMove(CMove);
 
-    bool whiteCanCastleKs();
-    bool whiteCanCastleQs();
+    bool whiteCanCastleKs() const;
+    bool whiteCanCastleQs() const;
 
-    bool blackCanCastleKs();
-    bool blackCanCastleQs();
+    bool blackCanCastleKs() const;
+    bool blackCanCastleQs() const;
 
-    bool whiteKsCastlingRight();
-    bool whiteQsCastlingRight();
+    bool whiteKsCastlingRight() const;
+    bool whiteQsCastlingRight() const;
 
-    bool blackKsCastlingRight();
-    bool blackQsCastlingRight();
+    bool blackKsCastlingRight() const;
+    bool blackQsCastlingRight() const;
 
-    bool whiteIsInCheck();
-    bool blackIsInCheck();
+    bool whiteIsInCheck() const;
+    bool blackIsInCheck() const;
 
     U64 getPieces(Color, PieceType) const;
 
-    U64 getAllPieces(Color);
+    U64 getAllPieces(Color) const;
 
-    U64 getAttackable(Color);
+    U64 getAttackable(Color) const;
 
-    U64 getAttacks(Color);
+    U64 getAttacks(Color) const;
 
-    U64 getOccupied();
-    U64 getNotOccupied();
+    U64 getOccupied() const;
+    U64 getNotOccupied() const;
 
-    U64 getEnPassant();
+    U64 getEnPassant() const;
 
-    ZKey getZKey();
+    ZKey getZKey() const;
 
-    Color getActivePlayer();
-    Color getInactivePlayer();
+    Color getActivePlayer() const;
+    Color getInactivePlayer() const;
 
     // Methods returning attack bitboards
-    U64 getWhitePawnAttacksForSquare(int);
-    U64 getBlackPawnAttacksForSquare(int);
-    U64 getKingAttacksForSquare(int, U64);
-    U64 getKnightAttacksForSquare(int, U64);
-    U64 getBishopAttacksForSquare(int, U64);
-    U64 getRookAttacksForSquare(int, U64);
-    U64 getQueenAttacksForSquare(int, U64);
+    U64 getWhitePawnAttacksForSquare(int) const;
+    U64 getBlackPawnAttacksForSquare(int) const;
+    U64 getKingAttacksForSquare(int, U64) const;
+    U64 getKnightAttacksForSquare(int, U64) const;
+    U64 getBishopAttacksForSquare(int, U64) const;
+    U64 getRookAttacksForSquare(int, U64) const;
+    U64 getQueenAttacksForSquare(int, U64) const;
 
   private:
     U64 _pieces[2][6];
@@ -94,10 +94,10 @@ class Board {
 
     void _clearBitBoards();
 
-    U64 _genWhiteAttacks();
-    U64 _genBlackAttacks();
+    U64 _genWhiteAttacks() const;
+    U64 _genBlackAttacks() const;
 
-    PieceType _getPieceAtSquare(Color, int);
+    PieceType _getPieceAtSquare(Color, int) const;
 };
 
 #endif
