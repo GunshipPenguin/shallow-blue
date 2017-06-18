@@ -48,6 +48,4 @@ private:
   const static char FILES[];
 };
 
-typedef std::vector<CMove> MoveList;
-
 #endif

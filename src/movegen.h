@@ -4,6 +4,11 @@
 #include "board.h"
 #include "defs.h"
 
+typedef std::vector<CMove> MoveList;
+
+typedef std::pair<CMove, Board> MoveBoard;
+typedef std::vector<MoveBoard> MoveBoardList;
+
 class MoveGen {
 public:
   MoveGen(const Board& board);
@@ -12,14 +17,14 @@ public:
   void setBoard(const Board& board);
 
   MoveList getMoves();
-  MoveList getLegalMoves();
+  MoveBoardList getLegalMoves();
 
   void printMoves();
 
 private:
   Board _board;
   MoveList _moves;
-  MoveList _legalMoves;
+  MoveBoardList _legalMoves;
 
   void _genMoves(const Board& board);
   void _genLegalMoves(const Board& board);

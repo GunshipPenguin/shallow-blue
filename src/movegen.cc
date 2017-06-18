@@ -14,7 +14,7 @@ MoveGen::MoveGen() {
 
 void MoveGen::setBoard(const Board& board) {
   _moves = MoveList();
-  _legalMoves = MoveList();
+  _legalMoves = MoveBoardList();
   _genMoves(board);
 }
 
@@ -30,7 +30,7 @@ void MoveGen::_genLegalMoves(const Board& board) {
       continue;
     }
 
-    _legalMoves.push_back(move);
+    _legalMoves.push_back(MoveBoard(move, tempBoard));
   }
 }
 
@@ -38,7 +38,7 @@ MoveList MoveGen::getMoves() {
   return _moves;
 }
 
-MoveList MoveGen::getLegalMoves() {
+MoveBoardList MoveGen::getLegalMoves() {
   return _legalMoves;
 }
 
