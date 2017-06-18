@@ -129,5 +129,4 @@ TEST_CASE("Perft is correct") {
     // SLOW
     // REQUIRE(perft(4, board) == 26438936);
   }
-
 }
