@@ -1,5 +1,6 @@
 #include "movegen.h"
 #include "board.h"
+#include "eval.h"
 #include "defs.h"
 #include <iostream>
 
@@ -18,8 +19,28 @@ void MoveGen::setBoard(Board board) {
   _genMoves();
 }
 
+void MoveGen::_genLegalMoves() {
+  for (auto move : _moves) {
+    Board tempBoard = _board;
+    tempBoard.doMove(move);
+
+    // Skip this move if it results in moving into check
+    if (!(tempBoard.getActivePlayer() == WHITE) && tempBoard.whiteIsInCheck()) {
+      continue;
+    } else if (!(tempBoard.getActivePlayer() == BLACK) && tempBoard.blackIsInCheck()) {
+      continue;
+    }
+
+    _legalMoves.push_back(move);
+  }
+}
+
 MoveList MoveGen::getMoves() {
   return _moves;
+}
+
+MoveList MoveGen::getLegalMoves() {
+  return _legalMoves;
 }
 
 void MoveGen::_genMoves() {
@@ -29,6 +50,7 @@ void MoveGen::_genMoves() {
     case BLACK: _genBlackMoves();
       break;
   }
+  _genLegalMoves();
 }
 
 void MoveGen::_genWhiteMoves() {

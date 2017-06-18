@@ -11,15 +11,9 @@ int perft(int depth, Board board) {
   MoveGen movegen(board);
 
   int nodes = 0;
-  for (auto move : movegen.getMoves()) {
+  for (auto move : movegen.getLegalMoves()) {
     Board tempBoard = board;
     tempBoard.doMove(move);
-
-    if (!(tempBoard.getActivePlayer() == WHITE) && tempBoard.whiteIsInCheck()) {
-      continue;
-    } else if (!(tempBoard.getActivePlayer() == BLACK) && tempBoard.blackIsInCheck()) {
-      continue;
-    }
 
     nodes += perft(depth - 1, tempBoard);
   }

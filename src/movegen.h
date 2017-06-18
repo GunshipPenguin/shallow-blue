@@ -10,15 +10,20 @@ public:
   MoveGen(Board);
 
   void setBoard(Board);
+
   MoveList getMoves();
+  MoveList getLegalMoves();
 
   void printMoves();
 
 private:
   Board _board;
   MoveList _moves;
+  MoveList _legalMoves;
 
   void _genMoves();
+  void _genLegalMoves();
+
   void _genWhiteMoves();
   void _genBlackMoves();
 
