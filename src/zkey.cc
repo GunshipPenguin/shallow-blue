@@ -30,7 +30,7 @@ void ZKey::init() {
     EN_PASSANT_KEYS[file] = dist(mt);
   }
 
-  for (int pieceType=0;pieceType<=6;pieceType++) {
+  for (int pieceType=0;pieceType<6;pieceType++) {
     for (int square=0;square<64;square++) {
       PIECE_KEYS[WHITE][pieceType][square] = dist(mt);
       PIECE_KEYS[BLACK][pieceType][square] = dist(mt);
