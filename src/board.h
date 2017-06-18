@@ -35,7 +35,7 @@ class Board {
     bool whiteIsInCheck();
     bool blackIsInCheck();
 
-    U64 getPieces(Color, PieceType);
+    U64 getPieces(Color, PieceType) const;
 
     U64 getAllPieces(Color);
 

@@ -13,7 +13,7 @@ Board::Board() {
   setToFen("8/8/8/8/8/8/8/8 w - -");
 }
 
-U64 Board::getPieces(Color color, PieceType pieceType) {
+U64 Board::getPieces(Color color, PieceType pieceType) const {
   return _pieces[color][pieceType];
 }
 
