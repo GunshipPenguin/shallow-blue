@@ -7,6 +7,10 @@
 const char CMove::RANKS[] = {'1', '2', '3', '4', '5', '6', '7', '8'};
 const char CMove::FILES[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
 
+CMove::CMove() {
+  _move = ((NULL_MOVE & 0x3ff) << 15);
+}
+
 CMove::CMove(unsigned int from, unsigned int to, PieceType piece, unsigned int flags) {
   _move = ((flags & 0x1ff) << 15) | ((to & 0x3f) << 9) | ((from & 0x3f) << 3) | (piece & 0x7);
 }

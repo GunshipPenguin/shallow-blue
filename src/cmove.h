@@ -8,8 +8,8 @@
 
 class CMove {
 public:
+  CMove();
   CMove(unsigned int, unsigned int, PieceType, unsigned int=0);
-  CMove(std::string);
 
   enum FLAGS {
     CAPTURE = 1<<0,
@@ -21,6 +21,7 @@ public:
     KNIGHT_PROMOTION = 1<<6,
     ROOK_PROMOTION = 1<<7,
     BISHOP_PROMOTION = 1<<8,
+    NULL_MOVE = 1<<9
   };
 
   unsigned int getFlags();
