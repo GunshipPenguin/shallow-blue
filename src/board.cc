@@ -341,6 +341,12 @@ void Board::_doRegularMove(CMove move) {
 }
 
 void Board::doMove(CMove move) {
+  if (move.getFlags() & CMove::NULL_MOVE) {
+    _zKey.flipActivePlayer();
+    _activePlayer = _activePlayer == WHITE ? BLACK : WHITE;
+    return;
+  }
+
   _doRegularMove(move);
 
   // Handle special moves
