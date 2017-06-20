@@ -10,9 +10,9 @@ public:
   PSquareTable();
   static void init();
 
-  void addPiece(Color, PieceType, SquareIndex);
-  void removePiece(Color, PieceType, SquareIndex);
-  void movePiece(Color, PieceType, SquareIndex, SquareIndex);
+  void addPiece(Color, PieceType, unsigned int);
+  void removePiece(Color, PieceType, unsigned int);
+  void movePiece(Color, PieceType, unsigned int, unsigned int);
 
   int getScore(Color);
 

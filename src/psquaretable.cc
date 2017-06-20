@@ -92,15 +92,15 @@ PSquareTable::PSquareTable() {
   _scores[BLACK] = 0;
 }
 
-void PSquareTable::addPiece(Color color, PieceType pieceType, SquareIndex square) {
+void PSquareTable::addPiece(Color color, PieceType pieceType, unsigned int square) {
   _scores[color] += PIECE_VALUES[color][pieceType][square];
 }
 
-void PSquareTable::removePiece(Color color, PieceType pieceType, SquareIndex square) {
+void PSquareTable::removePiece(Color color, PieceType pieceType, unsigned int square) {
   _scores[color] -= PIECE_VALUES[color][pieceType][square];
 }
 
-void PSquareTable::movePiece(Color color, PieceType pieceType, SquareIndex fromSquare, SquareIndex toSquare) {
+void PSquareTable::movePiece(Color color, PieceType pieceType, unsigned int fromSquare, unsigned int toSquare) {
   removePiece(color, pieceType, fromSquare);
   addPiece(color, pieceType, toSquare);
 }
