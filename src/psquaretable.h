@@ -12,6 +12,7 @@ public:
 
   void addPiece(Color, PieceType, SquareIndex);
   void removePiece(Color, PieceType, SquareIndex);
+  void movePiece(Color, PieceType, SquareIndex, SquareIndex);
 
   int getScore(Color);
 

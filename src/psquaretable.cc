@@ -100,6 +100,11 @@ void PSquareTable::removePiece(Color color, PieceType pieceType, SquareIndex squ
   _scores[color] -= PIECE_VALUES[color][pieceType][square];
 }
 
+void PSquareTable::movePiece(Color color, PieceType pieceType, SquareIndex fromSquare, SquareIndex toSquare) {
+  removePiece(color, pieceType, fromSquare);
+  addPiece(color, pieceType, toSquare);
+}
+
 int PSquareTable::getScore(Color color) {
   return _scores[color];
 }
