@@ -19,7 +19,6 @@ void Uci::setPosition(std::istringstream& is) {
     _board.setToStartPos();
   } else {
     std::string fen;
-    fen += token;
 
     while (is >> token && token != "moves") {
       fen += token + " ";
