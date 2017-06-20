@@ -4,6 +4,7 @@
 #include "board.h"
 #include "defs.h"
 #include "cmove.h"
+#include "movegen.h"
 #include "transptable.h"
 #include <limits>
 
@@ -16,7 +17,9 @@ private:
   static const int INF = std::numeric_limits<int>::max();
   CMove rootMax(const Board&, int);
 
-  int negaMax(const Board&, Color, int, int, int);
+  MoveList getPv(const Board& board, int, int);
+
+  int negaMax(const Board&, int, int, int);
 
   TranspTable _tt;
   CMove _bestMove;

@@ -7,14 +7,17 @@
 
 class TranspTable {
 public:
-  void add(ZKey, int);
+  void set(ZKey, int, int);
+
   bool contains(ZKey);
-  int get(ZKey);
+
+  int getScore(ZKey);
+  int getDepth(ZKey);
 
   void clear();
 
 private:
-  std::unordered_map<U64, int> _table;
+  std::unordered_map<U64, std::pair<int, int> > _table;
 };
 
 #endif
