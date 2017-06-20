@@ -3,7 +3,7 @@
 #include "defs.h"
 #include "catch.hpp"
 
-int perft(int depth, Board board) {
+int perft(int depth, const Board& board) {
   if (depth == 0) {
     return 1;
   }
@@ -11,11 +11,8 @@ int perft(int depth, Board board) {
   MoveGen movegen(board);
 
   int nodes = 0;
-  for (auto move : movegen.getLegalMoves()) {
-    Board tempBoard = board;
-    tempBoard.doMove(move);
-
-    nodes += perft(depth - 1, tempBoard);
+  for (auto moveBoard : movegen.getLegalMoves()) {
+    nodes += perft(depth - 1, moveBoard.second);
   }
 
   return nodes;
