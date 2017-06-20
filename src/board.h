@@ -3,6 +3,7 @@
 
 #include "defs.h"
 #include "raytable.h"
+#include "psquaretable.h"
 #include "zkey.h"
 #include "cmove.h"
 #include <string>
@@ -50,6 +51,8 @@ class Board {
 
     ZKey getZKey() const;
 
+    PSquareTable getPSquareTable() const;
+
     Color getActivePlayer() const;
     Color getInactivePlayer() const;
 
@@ -79,6 +82,7 @@ class Board {
     Color _activePlayer;
 
     ZKey _zKey;
+    PSquareTable _pst;
 
     static RayTable _raytable;
 

@@ -53,6 +53,10 @@ ZKey Board::getZKey() const {
   return _zKey;
 }
 
+PSquareTable Board::getPSquareTable() const {
+  return _pst;
+}
+
 bool Board::whiteIsInCheck() const {
   return (bool) (_attacks[BLACK] & _pieces[WHITE][KING]);
 }
@@ -338,6 +342,7 @@ void Board::_doRegularMove(CMove move) {
   *pieces ^= toSquare;
 
   _zKey.movePiece(_activePlayer, move.getPieceType(), move.getFrom(), move.getTo());
+  _pst.movePiece(_activePlayer, move.getPieceType(), move.getFrom(), move.getTo());
 }
 
 void Board::doMove(CMove move) {
@@ -355,6 +360,7 @@ void Board::doMove(CMove move) {
     PieceType piece = _getPieceAtSquare(getInactivePlayer(), move.getTo());
 
     _zKey.flipPiece(getInactivePlayer(), piece, move.getTo());
+    _pst.removePiece(getInactivePlayer(), piece, move.getTo());
 
     _pieces[getInactivePlayer()][piece] ^= ONE << move.getTo();
 
@@ -375,9 +381,11 @@ void Board::doMove(CMove move) {
     if (_activePlayer == WHITE) {
       _pieces[WHITE][ROOK] ^= ((ONE << h1) | (ONE << f1));
       _zKey.movePiece(WHITE, ROOK, h1, f1);
+      _pst.movePiece(WHITE, ROOK, h1, f1);
     } else {
       _pieces[BLACK][ROOK] ^= ((ONE << h8) | (ONE << f8));
       _zKey.movePiece(BLACK, ROOK, h8, f8);
+      _pst.movePiece(BLACK, ROOK, h8, f8);
     }
   }
   if (flags & CMove::QSIDE_CASTLE) {
@@ -385,14 +393,17 @@ void Board::doMove(CMove move) {
     if (_activePlayer == WHITE) {
       _pieces[WHITE][ROOK] ^= ((ONE << a1) | (ONE << d1));
       _zKey.movePiece(WHITE, ROOK, a1, d1);
+      _pst.movePiece(WHITE, ROOK, a1, d1);
     } else {
       _pieces[BLACK][ROOK] ^= ((ONE << a8) | (ONE << d8));
       _zKey.movePiece(BLACK, ROOK, a8, d8);
+      _pst.movePiece(BLACK, ROOK, a8, d8);
     }
   }
 
   if (flags & CMove::EN_PASSANT) {
     _zKey.flipPiece(getInactivePlayer(), PAWN, move.getTo());
+    _pst.removePiece(getInactivePlayer(), PAWN, move.getTo());
     if (_activePlayer == WHITE) {
       _pieces[BLACK][PAWN] ^= (_enPassant >> 8);
     } else {
@@ -432,6 +443,7 @@ void Board::doMove(CMove move) {
     _pieces[_activePlayer][PAWN] ^= ONE << move.getTo();
 
     _zKey.flipPiece(_activePlayer, promotionPiece, move.getTo());
+    _pst.addPiece(_activePlayer, promotionPiece, move.getTo());
   }
 
 

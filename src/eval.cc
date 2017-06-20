@@ -29,6 +29,9 @@ void Eval::_doEval(const Board& board, Color color) {
   _score -= ROOK_VALUE * _popCount(board.getPieces(otherColor, ROOK));
   _score -= QUEEN_VALUE * _popCount(board.getPieces(otherColor, QUEEN));
   _score -= MOBILITY_WEIGHT * _popCount(board.getAttacks(otherColor));
+
+  PSquareTable pst = board.getPSquareTable();
+  _score += (pst.getScore(color) - pst.getScore(otherColor));
 }
 
 int Eval::_popCount(U64 value) {
