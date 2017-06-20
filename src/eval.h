@@ -17,6 +17,9 @@ private:
   static const int ROOK_VALUE = 500;
   static const int QUEEN_VALUE = 900;
 
+  // Other weights
+  static const int MOBILITY_WEIGHT = 15;
+
   int _score;
   void _doEval(const Board&, Color);
   int _popCount(U64);
