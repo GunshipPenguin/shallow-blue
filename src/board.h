@@ -33,8 +33,7 @@ class Board {
     bool blackKsCastlingRight() const;
     bool blackQsCastlingRight() const;
 
-    bool whiteIsInCheck() const;
-    bool blackIsInCheck() const;
+    bool colorIsInCheck(Color) const;
 
     U64 getPieces(Color, PieceType) const;
 

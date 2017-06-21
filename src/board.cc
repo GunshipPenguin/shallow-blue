@@ -57,12 +57,8 @@ PSquareTable Board::getPSquareTable() const {
   return _pst;
 }
 
-bool Board::whiteIsInCheck() const {
-  return (bool) (_attacks[BLACK] & _pieces[WHITE][KING]);
-}
-
-bool Board::blackIsInCheck() const {
-  return (bool) (_attacks[WHITE] & _pieces[BLACK][KING]);
+bool Board::colorIsInCheck(Color color) const {
+  return (bool) (_attacks[color == WHITE ? BLACK : WHITE] & _pieces[color][KING]);
 }
 
 bool Board::whiteCanCastleKs() const {
@@ -74,7 +70,7 @@ bool Board::whiteCanCastleKs() const {
   bool squaresOccupied = passThroughSquares & _occupied;
   bool squaresAttacked = passThroughSquares & _attacks[BLACK];
 
-  return !whiteIsInCheck() && !squaresOccupied && !squaresAttacked;
+  return !colorIsInCheck(WHITE) && !squaresOccupied && !squaresAttacked;
 }
 
 bool Board::whiteCanCastleQs() const {
@@ -87,7 +83,7 @@ bool Board::whiteCanCastleQs() const {
   bool squaresOccupied = inbetweenSquares & _occupied;
   bool squaresAttacked = passThroughSquares & _attacks[BLACK];
 
-  return !whiteIsInCheck() && !squaresOccupied && !squaresAttacked;
+  return !colorIsInCheck(WHITE) && !squaresOccupied && !squaresAttacked;
 }
 
 bool Board::blackCanCastleKs() const {
@@ -99,7 +95,7 @@ bool Board::blackCanCastleKs() const {
   bool squaresOccupied = passThroughSquares & _occupied;
   bool squaresAttacked = passThroughSquares & _attacks[WHITE];
 
-  return !blackIsInCheck() && !squaresOccupied && !squaresAttacked;
+  return !colorIsInCheck(BLACK) && !squaresOccupied && !squaresAttacked;
 }
 
 bool Board::blackCanCastleQs() const {
@@ -112,7 +108,7 @@ bool Board::blackCanCastleQs() const {
   bool squaresOccupied = inbetweenSquares & _occupied;
   bool squaresAttacked = passThroughSquares & _attacks[WHITE];
 
-  return !blackIsInCheck() && !squaresOccupied && !squaresAttacked;
+  return !colorIsInCheck(BLACK) && !squaresOccupied && !squaresAttacked;
 }
 
 bool Board::whiteKsCastlingRight() const {

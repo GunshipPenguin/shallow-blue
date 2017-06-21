@@ -24,9 +24,9 @@ void MoveGen::_genLegalMoves(const Board& board) {
     tempBoard.doMove(move);
 
     // Skip this move if it results in moving into check
-    if (!(tempBoard.getActivePlayer() == WHITE) && tempBoard.whiteIsInCheck()) {
+    if (!(tempBoard.getActivePlayer() == WHITE) && tempBoard.colorIsInCheck(WHITE)) {
       continue;
-    } else if (!(tempBoard.getActivePlayer() == BLACK) && tempBoard.blackIsInCheck()) {
+    } else if (!(tempBoard.getActivePlayer() == BLACK) && tempBoard.colorIsInCheck(BLACK)) {
       continue;
     }
 
