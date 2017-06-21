@@ -57,6 +57,11 @@ int Search::negaMax(const Board& board, int depth, int alpha, int beta) {
     Board movedBoard = moveBoard.second;
 
     bestScore = std::max(bestScore, -negaMax(movedBoard, depth-1, -beta, -alpha));
+    
+    alpha = std::max(alpha, bestScore);
+    if (alpha > beta) {
+      break;
+    }
   }
 
   return bestScore;
