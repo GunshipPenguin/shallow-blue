@@ -3,17 +3,15 @@
 #include "eval.h"
 #include "movegen.h"
 #include "transptable.h"
-#include <limits>
-#include <iostream>
-#include <fstream>
 #include <string>
+#include <ostream>
 #include <time.h>
 
-Search::Search(const Board& board) {
-  _iterDeep(board, 4, 5000);
+Search::Search(const Board& board, std::ostream& infoStream) {
+  _iterDeep(board, 5, 5000, infoStream);
 }
 
-void Search::_iterDeep(const Board& board, int depth, int maxTime) {
+void Search::_iterDeep(const Board& board, int depth, int maxTime, std::ostream& infoStream) {
   _tt.clear();
 
   int timeRemaining = maxTime;
@@ -21,10 +19,21 @@ void Search::_iterDeep(const Board& board, int depth, int maxTime) {
   for(int i=1;i<=depth;i++) {
     startTime = clock();
 
-    rootMax(board, i);
+    _rootMax(board, i);
 
     clock_t timeTaken = clock() - startTime;
     timeRemaining -= (float(timeTaken) / CLOCKS_PER_SEC)*1000;
+    getPv(board);
+
+    // Log UCI info about this iteration
+    std::string pvString;
+    for(auto move : getPv(board)) {
+      pvString += move.getNotation() + " ";
+    }
+    infoStream << "info depth " + std::to_string(i) + " ";
+    infoStream << "score cp " + std::to_string(_bestScore) + " ";
+    infoStream << "pv " + pvString;
+    infoStream << std::endl;
 
     if (timeRemaining < 0) {
       return;
@@ -32,11 +41,35 @@ void Search::_iterDeep(const Board& board, int depth, int maxTime) {
   }
 }
 
+MoveList Search::getPv(const Board& board) {
+  if (!_tt.contains(board.getZKey())) {
+    return MoveList();
+  }
+
+  int scoreToFind = -_tt.getScore(board.getZKey());
+  ZKey movedZKey;
+
+  for (auto moveBoard : MoveGen(board).getLegalMoves()) {
+    CMove move = moveBoard.first;
+    Board movedBoard = moveBoard.second;
+
+    movedZKey = movedBoard.getZKey();
+
+    if (_tt.contains(movedZKey) && _tt.getScore(movedZKey) == scoreToFind) {
+      MoveList pvList = getPv(movedBoard);
+      pvList.insert(pvList.begin(), move);
+      return pvList;
+    }
+  }
+
+  return MoveList();
+}
+
 CMove Search::getBestMove() {
   return _bestMove;
 }
 
-void Search::rootMax(const Board& board, int depth) {
+void Search::_rootMax(const Board& board, int depth) {
   MoveGen movegen(board);
   MoveBoardList legalMoves = movegen.getLegalMoves();
 
@@ -54,6 +87,8 @@ void Search::rootMax(const Board& board, int depth) {
       bestScore = currScore;
     }
   }
+
+  _tt.set(board.getZKey(), bestScore, depth, TranspTable::EXACT);
 
   _bestMove = bestMove;
   _bestScore = bestScore;
@@ -82,7 +117,9 @@ int Search::_negaMax(const Board& board, int depth, int alpha, int beta) {
   }
 
   if (depth == 0) {
-    return Eval(board, board.getActivePlayer()).getScore();
+    int score = Eval(board, board.getActivePlayer()).getScore();
+    _tt.set(board.getZKey(), score, 0, TranspTable::EXACT);
+    return score;
   }
 
   MoveGen movegen(board);

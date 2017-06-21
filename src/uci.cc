@@ -43,7 +43,7 @@ void Uci::setPosition(std::istringstream& is) {
 }
 
 CMove Uci::pickBestMove() {
-  Search search(_board);
+  Search search(_board, std::cout);
   return search.getBestMove();
 }
 
