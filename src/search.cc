@@ -10,37 +10,7 @@
 
 Search::Search(const Board& board) {
   _tt.clear();
-
-  for (int i=1;i<9;i++) {
-    _bestMove = rootMax(board, i);
-    std::string pvString = "info depth " + std::to_string(i);
-    for(auto move : getPv(board, _tt.getScore(board.getZKey()), i)) {
-      pvString += " " + move.getNotation();
-    }
-    std::cout << pvString << std::endl;
-  }
-}
-
-MoveList Search::getPv(const Board& board, int score, int depth) {
-  if (depth == 0) {
-    return MoveList();
-  }
-
-  for (auto moveBoard : MoveGen(board).getLegalMoves()) {
-    CMove move = moveBoard.first;
-    Board movedBoard = moveBoard.second;
-
-
-    if (_tt.contains(movedBoard.getZKey())) {
-      if(_tt.getScore(movedBoard.getZKey()) == score) {
-        MoveList pvList = getPv(movedBoard, -score, depth-1);
-        pvList.insert(pvList.begin(), move);
-        return pvList;
-      }
-    }
-  }
-
-  throw "Principal variation not found in transposition table";
+  _bestMove = rootMax(board, 4);
 }
 
 CMove Search::getBestMove() {
@@ -48,29 +18,25 @@ CMove Search::getBestMove() {
 }
 
 CMove Search::rootMax(const Board& board, int depth) {
+  MoveGen movegen(board);
+  MoveBoardList legalMoves = movegen.getLegalMoves();
+
+  int bestScore = -INF;
+  int currScore;
   CMove bestMove;
-
-  int max = -INF;
-
-  for (auto moveBoard : MoveGen(board).getLegalMoves()) {
+  for (auto moveBoard : legalMoves) {
     CMove move = moveBoard.first;
     Board movedBoard = moveBoard.second;
 
-    int score;
-    if (_tt.contains(movedBoard.getZKey()) && _tt.getDepth(movedBoard.getZKey()) >= depth) {
-      score = _tt.getScore(movedBoard.getZKey());
-    } else {
-      score = -negaMax(movedBoard, depth-1, -INF, INF);
-      _tt.set(movedBoard.getZKey(), score, depth);
-    }
+    //std::cout << "Rootmax " << move.getNotation() << std::endl;
 
-    if (score > max) {
-      max = score;
+    currScore = -negaMax(movedBoard, depth-1, -INF, INF);
+
+    if (currScore > bestScore) {
       bestMove = move;
+      bestScore = currScore;
     }
   }
-
-  _tt.set(board.getZKey(), max, depth);
 
   return bestMove;
 }
@@ -80,24 +46,20 @@ int Search::negaMax(const Board& board, int depth, int alpha, int beta) {
     return Eval(board, board.getActivePlayer()).getScore();
   }
 
-  for (auto moveBoard : MoveGen(board).getLegalMoves()) {
-    Board movedBoard = moveBoard.second;
+  MoveGen movegen(board);
+  MoveBoardList legalMoves = movegen.getLegalMoves();
 
-    int score;
-    if (_tt.contains(movedBoard.getZKey()) && _tt.getDepth(movedBoard.getZKey()) >= depth) {
-      score = _tt.getScore(movedBoard.getZKey());
-    } else {
-      score = -negaMax(movedBoard, depth-1, -beta, -alpha);
-      _tt.set(movedBoard.getZKey(), score, depth);
-    }
-
-    if (score >= beta) {
-      return beta; // Fail hard beta cutoff
-    }
-    if (score > alpha) {
-      alpha = score; // Alpha acts like max in minimax
-    }
+  // Check for checkmate
+  if (legalMoves.size() == 0 && board.colorIsInCheck(board.getActivePlayer())) {
+    return -INF;
   }
 
-  return alpha;
+  int bestScore = -INF;
+  for (auto moveBoard : legalMoves) {
+    Board movedBoard = moveBoard.second;
+
+    bestScore = std::max(bestScore, -negaMax(movedBoard, depth-1, -beta, -alpha));
+  }
+
+  return bestScore;
 }
