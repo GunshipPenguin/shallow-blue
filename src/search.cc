@@ -28,8 +28,6 @@ CMove Search::rootMax(const Board& board, int depth) {
     CMove move = moveBoard.first;
     Board movedBoard = moveBoard.second;
 
-    //std::cout << "Rootmax " << move.getNotation() << std::endl;
-
     currScore = -negaMax(movedBoard, depth-1, -INF, INF);
 
     if (currScore > bestScore) {
