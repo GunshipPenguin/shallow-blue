@@ -10,12 +10,7 @@ void TranspTable::clear() {
 }
 
 bool TranspTable::contains(ZKey key) {
-//  std::cout << key.getValue() << std::endl;
-
   std::unordered_map<U64, std::tuple<int, int, TranspTable::Flag> >::const_iterator got = _table.find(key.getValue());
-
-//  std::cout << "adsf" << std::endl;
-
   return got != _table.end();
 }
 
