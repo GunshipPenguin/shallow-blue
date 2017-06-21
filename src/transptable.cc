@@ -1,8 +1,8 @@
 #include "transptable.h"
 #include <iostream>
 
-void TranspTable::set(ZKey key, int score, int depth) {
-  _table[key.getValue()] = std::pair<int, int>(score, depth);
+void TranspTable::set(ZKey key, int score, int depth, Flag flag) {
+  _table[key.getValue()] = std::tuple<int, int, TranspTable::Flag>(score, depth, flag);
 }
 
 void TranspTable::clear() {
@@ -10,13 +10,26 @@ void TranspTable::clear() {
 }
 
 bool TranspTable::contains(ZKey key) {
-  return _table.find(key.getValue()) != _table.end();
+//  std::cout << key.getValue() << std::endl;
+
+  std::unordered_map<U64, std::tuple<int, int, TranspTable::Flag> >::const_iterator got = _table.find(key.getValue());
+
+//  std::cout << "adsf" << std::endl;
+
+  return got != _table.end();
 }
 
 int TranspTable::getScore(ZKey key) {
-  return _table[key.getValue()].first;
+  std::tuple<int, int, Flag> entry = _table.at(key.getValue());
+  return std::get<0>(entry);
 }
 
 int TranspTable::getDepth(ZKey key) {
-  return _table[key.getValue()].second;
+  std::tuple<int, int, Flag> entry = _table.at(key.getValue());
+  return std::get<1>(entry);
+}
+
+TranspTable::Flag TranspTable::getFlag(ZKey key) {
+  std::tuple<int, int, Flag> entry = _table.at(key.getValue());
+  return std::get<2>(entry);
 }
