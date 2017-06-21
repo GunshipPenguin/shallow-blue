@@ -7,8 +7,8 @@
 #include <ostream>
 #include <time.h>
 
-Search::Search(const Board& board, std::ostream& infoStream) {
-  _iterDeep(board, 5, 5000, infoStream);
+Search::Search(const Board& board, int depth, int maxTime, std::ostream& infoStream) {
+  _iterDeep(board, depth, maxTime, infoStream);
 }
 
 void Search::_iterDeep(const Board& board, int depth, int maxTime, std::ostream& infoStream) {

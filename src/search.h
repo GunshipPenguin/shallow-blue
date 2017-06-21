@@ -10,7 +10,7 @@
 
 class Search {
 public:
-  Search(const Board&, std::ostream&);
+  Search(const Board&, int depth, int maxTime, std::ostream&);
   CMove getBestMove();
 
 private:
