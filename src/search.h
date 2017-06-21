@@ -15,14 +15,17 @@ public:
 
 private:
   static const int INF = std::numeric_limits<int>::max();
-  CMove rootMax(const Board&, int);
+  void rootMax(const Board&, int);
 
-  MoveList getPv(const Board& board, int, int);
+  MoveList getPv(const Board&, int, int);
 
-  int negaMax(const Board&, int, int, int);
+  int _negaMax(const Board&, int, int, int);
+  void _iterDeep(const Board&, int, int);
 
   TranspTable _tt;
+
   CMove _bestMove;
+  int _bestScore;
 };
 
 #endif
