@@ -25,16 +25,26 @@ void Search::_iterDeep(const Board& board, int depth, int maxTime) {
 
     clock_t timeTaken = clock() - startTime;
     timeRemaining -= (float(timeTaken) / CLOCKS_PER_SEC)*1000;
-    getPv(board);
 
     // Log UCI info about this iteration
     if (_logUci) {
       std::string pvString;
-      for(auto move : getPv(board)) {
+      MoveList pv = getPv(board);
+      for(auto move : pv) {
         pvString += move.getNotation() + " ";
       }
+
+      std::string scoreString;
+      if (_bestScore == INF) {
+        scoreString = "mate " + std::to_string(pv.size());
+      } else if (_bestScore == -INF) {
+        scoreString = "mate -" + std::to_string(pv.size());
+      } else {
+        scoreString = "cp " + std::to_string(_bestScore);
+      }
+
       std::cout << "info depth " + std::to_string(i) + " ";
-      std::cout << "score cp " + std::to_string(_bestScore) + " ";
+      std::cout << "score " + scoreString + " ";
       std::cout << "pv " + pvString;
       std::cout << std::endl;
     }
