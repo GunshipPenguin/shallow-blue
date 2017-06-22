@@ -94,7 +94,7 @@ void Search::_rootMax(const Board& board, int depth) {
     CMove move = moveBoard.first;
     Board movedBoard = moveBoard.second;
 
-    currScore = -_negaMax(movedBoard, depth-1, -INF, INF);
+    currScore = -_negaMax(movedBoard, depth-1, bestScore, INF);
 
     if (currScore > bestScore) {
       bestMove = move;
