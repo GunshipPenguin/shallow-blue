@@ -130,6 +130,7 @@ int Search::_negaMax(const Board& board, int depth, int alpha, int beta) {
 
   // Check for checkmate
   if (legalMoves.size() == 0 && board.colorIsInCheck(board.getActivePlayer())) {
+    _tt.set(board.getZKey(), -INF, depth, TranspTable::EXACT);
     return -INF;
   }
 
