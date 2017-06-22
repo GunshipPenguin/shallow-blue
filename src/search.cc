@@ -6,12 +6,14 @@
 #include <string>
 #include <ostream>
 #include <time.h>
+#include <iostream>
 
-Search::Search(const Board& board, int depth, int maxTime, std::ostream& infoStream) {
-  _iterDeep(board, depth, maxTime, infoStream);
+Search::Search(const Board& board, int depth, int maxTime, bool logUci) {
+  _logUci = logUci;
+  _iterDeep(board, depth, maxTime);
 }
 
-void Search::_iterDeep(const Board& board, int depth, int maxTime, std::ostream& infoStream) {
+void Search::_iterDeep(const Board& board, int depth, int maxTime) {
   _tt.clear();
 
   int timeRemaining = maxTime;
@@ -26,14 +28,16 @@ void Search::_iterDeep(const Board& board, int depth, int maxTime, std::ostream&
     getPv(board);
 
     // Log UCI info about this iteration
-    std::string pvString;
-    for(auto move : getPv(board)) {
-      pvString += move.getNotation() + " ";
+    if (_logUci) {
+      std::string pvString;
+      for(auto move : getPv(board)) {
+        pvString += move.getNotation() + " ";
+      }
+      std::cout << "info depth " + std::to_string(i) + " ";
+      std::cout << "score cp " + std::to_string(_bestScore) + " ";
+      std::cout << "pv " + pvString;
+      std::cout << std::endl;
     }
-    infoStream << "info depth " + std::to_string(i) + " ";
-    infoStream << "score cp " + std::to_string(_bestScore) + " ";
-    infoStream << "pv " + pvString;
-    infoStream << std::endl;
 
     if (timeRemaining < 0) {
       return;
@@ -88,6 +92,11 @@ void Search::_rootMax(const Board& board, int depth) {
     }
   }
 
+  // If we couldn't find a path other than checkmate, just pick the first legal move
+  if (bestMove.getFlags() & CMove::NULL_MOVE) {
+    bestMove = legalMoves.at(0).first;
+  }
+
   _tt.set(board.getZKey(), bestScore, depth, TranspTable::EXACT);
 
   _bestMove = bestMove;
@@ -116,18 +125,19 @@ int Search::_negaMax(const Board& board, int depth, int alpha, int beta) {
     }
   }
 
-  if (depth == 0) {
-    int score = Eval(board, board.getActivePlayer()).getScore();
-    _tt.set(board.getZKey(), score, 0, TranspTable::EXACT);
-    return score;
-  }
-
   MoveGen movegen(board);
   MoveBoardList legalMoves = movegen.getLegalMoves();
 
   // Check for checkmate
   if (legalMoves.size() == 0 && board.colorIsInCheck(board.getActivePlayer())) {
     return -INF;
+  }
+
+  // Eval if depth is 0
+  if (depth == 0) {
+    int score = Eval(board, board.getActivePlayer()).getScore();
+    _tt.set(board.getZKey(), score, 0, TranspTable::EXACT);
+    return score;
   }
 
   int bestScore = -INF;

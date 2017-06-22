@@ -5,12 +5,11 @@
 #include "defs.h"
 #include "movegen.h"
 #include "transptable.h"
-#include <ostream>
 #include <limits>
 
 class Search {
 public:
-  Search(const Board&, int depth, int maxTime, std::ostream&);
+  Search(const Board&, int depth, int maxTime, bool=true);
   CMove getBestMove();
 
 private:
@@ -18,12 +17,12 @@ private:
 
   void _rootMax(const Board&, int);
   int _negaMax(const Board&, int, int, int);
-  void _iterDeep(const Board&, int, int, std::ostream&);
+  void _iterDeep(const Board&, int, int);
 
   MoveList getPv(const Board&);
 
+  bool _logUci;
   TranspTable _tt;
-
   CMove _bestMove;
   int _bestScore;
 };
