@@ -28,7 +28,7 @@ unsigned int CMove::getTo() {
 }
 
 unsigned int CMove::getFlags() {
-  return ((_move >> 15) & 0x1ff);
+  return ((_move >> 15) & 0x3ff);
 }
 
 std::string CMove::getNotation() {
