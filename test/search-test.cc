@@ -25,5 +25,13 @@ TEST_CASE("Search works as expected") {
 
       REQUIRE(search.getBestMove().getNotation() == "f1f2");
     }
+
+    SECTION("Search recognizes when a check can be made to capture a queen") {
+      board.setToFen("8/4N3/8/1k5q/8/8/8/2K2R2 w - -");
+
+      Search search(board, 3, 5000, false);
+
+      REQUIRE(search.getBestMove().getNotation() == "f1f5");
+    }
   }
 }
