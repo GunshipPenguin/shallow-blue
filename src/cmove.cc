@@ -50,6 +50,10 @@ std::string CMove::getNotation() {
   return moveNotation;
 }
 
+bool CMove::operator==(const CMove other) const {
+  return other._move == _move;
+}
+
 std::string CMove::indexToNotation (int index) {
   return std::string({FILES[index%8], RANKS[index/8]});
 }

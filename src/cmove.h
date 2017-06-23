@@ -36,6 +36,8 @@ public:
 
   static unsigned int notationToIndex(std::string);
   static std::string indexToNotation(int);
+
+  bool operator==(CMove) const;
 private:
   // Format
   // |----4-----|---3---|---2---|-1--|
