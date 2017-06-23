@@ -94,7 +94,7 @@ ZKey::ZKey(Board board) {
   }
 }
 
-U64 ZKey::getValue() {
+U64 ZKey::getValue() const {
   return _key;
 }
 

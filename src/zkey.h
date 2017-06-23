@@ -12,7 +12,7 @@ public:
 
   static void init();
 
-  U64 getValue();
+  U64 getValue() const;
 
   void movePiece(Color, PieceType, unsigned int, unsigned int);
   void flipPiece(Color, PieceType, unsigned int);
