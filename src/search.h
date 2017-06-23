@@ -21,6 +21,8 @@ private:
 
   void _orderMoves(MoveBoardList&, const MoveBoardList&, unsigned int);
 
+  void _logUciInfo(const MoveBoardList&, int, CMove, int);
+
   MoveBoardList _getPv(const Board&);
 
   bool _logUci;

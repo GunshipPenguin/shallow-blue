@@ -13,47 +13,51 @@ Search::Search(const Board& board, int depth, int maxTime, bool logUci) {
   _iterDeep(board, depth, maxTime);
 }
 
-void Search::_iterDeep(const Board& board, int depth, int maxTime) {
+void Search::_iterDeep(const Board& board, int maxDepth, int maxTime) {
   _tt.clear();
 
   int timeRemaining = maxTime;
   clock_t startTime;
   MoveBoardList pv;
-  for(int i=1;i<=depth;i++) {
+  for(int currDepth=1;currDepth<=maxDepth;currDepth++) {
     startTime = clock();
 
-    _rootMax(board, i, pv);
+    _rootMax(board, currDepth, pv);
 
     clock_t timeTaken = clock() - startTime;
     timeRemaining -= (float(timeTaken) / CLOCKS_PER_SEC)*1000;
 
-    // Log UCI info about this iteration
+    pv = _getPv(board);
+
     if (_logUci) {
-      std::string pvString;
-      pv = _getPv(board);
-      for(auto moveBoard : pv) {
-        pvString += moveBoard.first.getNotation() + " ";
-      }
-
-      std::string scoreString;
-      if (_bestScore == INF) {
-        scoreString = "mate " + std::to_string(pv.size());
-      } else if (_bestScore == -INF) {
-        scoreString = "mate -" + std::to_string(pv.size());
-      } else {
-        scoreString = "cp " + std::to_string(_bestScore);
-      }
-
-      std::cout << "info depth " + std::to_string(i) + " ";
-      std::cout << "score " + scoreString + " ";
-      std::cout << "pv " + pvString;
-      std::cout << std::endl;
+      _logUciInfo(pv, currDepth, _bestMove, _bestScore);
     }
 
     if (timeRemaining < 0) {
       return;
     }
   }
+}
+
+void Search::_logUciInfo(const MoveBoardList& pv, int depth, CMove bestMove, int bestScore) {
+  std::string pvString;
+  for(auto moveBoard : pv) {
+    pvString += moveBoard.first.getNotation() + " ";
+  }
+
+  std::string scoreString;
+  if (bestScore == INF) {
+    scoreString = "mate " + std::to_string(pv.size());
+  } else if (_bestScore == -INF) {
+    scoreString = "mate -" + std::to_string(pv.size());
+  } else {
+    scoreString = "cp " + std::to_string(bestScore);
+  }
+
+  std::cout << "info depth " + std::to_string(depth) + " ";
+  std::cout << "score " + scoreString + " ";
+  std::cout << "pv " + pvString;
+  std::cout << std::endl;
 }
 
 MoveBoardList Search::_getPv(const Board& board) {
