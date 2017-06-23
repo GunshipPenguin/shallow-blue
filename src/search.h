@@ -15,11 +15,13 @@ public:
 private:
   static const int INF = std::numeric_limits<int>::max();
 
-  void _rootMax(const Board&, int);
-  int _negaMax(const Board&, int, int, int);
+  void _rootMax(const Board&, int, MoveBoardList);
+  int _negaMax(const Board&, int, int, int, const MoveBoardList&);
   void _iterDeep(const Board&, int, int);
 
-  MoveList getPv(const Board&);
+  void _orderMoves(MoveBoardList&, const MoveBoardList&, unsigned int);
+
+  MoveBoardList _getPv(const Board&);
 
   bool _logUci;
   TranspTable _tt;

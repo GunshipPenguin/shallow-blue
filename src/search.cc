@@ -4,7 +4,7 @@
 #include "movegen.h"
 #include "transptable.h"
 #include <string>
-#include <ostream>
+#include <algorithm>
 #include <time.h>
 #include <iostream>
 
@@ -18,10 +18,11 @@ void Search::_iterDeep(const Board& board, int depth, int maxTime) {
 
   int timeRemaining = maxTime;
   clock_t startTime;
+  MoveBoardList pv;
   for(int i=1;i<=depth;i++) {
     startTime = clock();
 
-    _rootMax(board, i);
+    _rootMax(board, i, pv);
 
     clock_t timeTaken = clock() - startTime;
     timeRemaining -= (float(timeTaken) / CLOCKS_PER_SEC)*1000;
@@ -29,9 +30,9 @@ void Search::_iterDeep(const Board& board, int depth, int maxTime) {
     // Log UCI info about this iteration
     if (_logUci) {
       std::string pvString;
-      MoveList pv = getPv(board);
-      for(auto move : pv) {
-        pvString += move.getNotation() + " ";
+      pv = _getPv(board);
+      for(auto moveBoard : pv) {
+        pvString += moveBoard.first.getNotation() + " ";
       }
 
       std::string scoreString;
@@ -55,37 +56,37 @@ void Search::_iterDeep(const Board& board, int depth, int maxTime) {
   }
 }
 
-MoveList Search::getPv(const Board& board) {
+MoveBoardList Search::_getPv(const Board& board) {
   if (!_tt.contains(board.getZKey())) {
-    return MoveList();
+    return MoveBoardList();
   }
 
   int scoreToFind = -_tt.getScore(board.getZKey());
   ZKey movedZKey;
 
   for (auto moveBoard : MoveGen(board).getLegalMoves()) {
-    CMove move = moveBoard.first;
     Board movedBoard = moveBoard.second;
 
     movedZKey = movedBoard.getZKey();
 
     if (_tt.contains(movedZKey) && _tt.getScore(movedZKey) == scoreToFind) {
-      MoveList pvList = getPv(movedBoard);
-      pvList.insert(pvList.begin(), move);
+      MoveBoardList pvList = _getPv(moveBoard.second);
+      pvList.insert(pvList.begin(), moveBoard);
       return pvList;
     }
   }
 
-  return MoveList();
+  return MoveBoardList();
 }
 
 CMove Search::getBestMove() {
   return _bestMove;
 }
 
-void Search::_rootMax(const Board& board, int depth) {
+void Search::_rootMax(const Board& board, int depth, MoveBoardList pv) {
   MoveGen movegen(board);
   MoveBoardList legalMoves = movegen.getLegalMoves();
+  _orderMoves(legalMoves, pv, depth);
 
   int bestScore = -INF;
   int currScore;
@@ -94,7 +95,7 @@ void Search::_rootMax(const Board& board, int depth) {
     CMove move = moveBoard.first;
     Board movedBoard = moveBoard.second;
 
-    currScore = -_negaMax(movedBoard, depth-1, bestScore, INF);
+    currScore = -_negaMax(movedBoard, depth-1, bestScore, INF, pv);
 
     if (currScore > bestScore) {
       bestMove = move;
@@ -113,7 +114,26 @@ void Search::_rootMax(const Board& board, int depth) {
   _bestScore = bestScore;
 }
 
-int Search::_negaMax(const Board& board, int depth, int alpha, int beta) {
+void Search::_orderMoves(MoveBoardList& moveBoardList, const MoveBoardList& pv, unsigned int depth) {
+  CMove pvMove = (pv.size() > depth) ? pv.at(depth).first : CMove();
+
+  std::sort(moveBoardList.begin(), moveBoardList.end(), [this, pvMove](MoveBoard a, MoveBoard b) {
+    if (pvMove == a.first) {
+      return true;
+    } else if (pvMove == b.first) {
+      return false;
+    } else {
+      ZKey aKey = a.second.getZKey();
+      ZKey bKey = b.second.getZKey();
+      int aScore = _tt.contains(aKey) ? _tt.getScore(aKey) : -INF;
+      int bScore = _tt.contains(bKey) ? _tt.getScore(bKey) : -INF;
+
+      return aScore < bScore;
+    }
+  });
+}
+
+int Search::_negaMax(const Board& board, int depth, int alpha, int beta, const MoveBoardList& pv) {
   int alphaOrig = alpha;
 
   ZKey zKey = board.getZKey();
@@ -135,8 +155,10 @@ int Search::_negaMax(const Board& board, int depth, int alpha, int beta) {
     }
   }
 
+  // Transposition table lookups are inconclusive, generate moves and recurse
   MoveGen movegen(board);
   MoveBoardList legalMoves = movegen.getLegalMoves();
+  _orderMoves(legalMoves, pv, depth);
 
   // Check for checkmate
   if (legalMoves.size() == 0 && board.colorIsInCheck(board.getActivePlayer())) {
@@ -155,7 +177,7 @@ int Search::_negaMax(const Board& board, int depth, int alpha, int beta) {
   for (auto moveBoard : legalMoves) {
     Board movedBoard = moveBoard.second;
 
-    bestScore = std::max(bestScore, -_negaMax(movedBoard, depth-1, -beta, -alpha));
+    bestScore = std::max(bestScore, -_negaMax(movedBoard, depth-1, -beta, -alpha, pv));
 
     alpha = std::max(alpha, bestScore);
     if (alpha > beta) {
