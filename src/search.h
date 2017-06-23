@@ -15,11 +15,11 @@ public:
 private:
   static const int INF = std::numeric_limits<int>::max();
 
-  void _rootMax(const Board&, int, MoveBoardList);
-  int _negaMax(const Board&, int, int, int, const MoveBoardList&);
+  void _rootMax(const Board&, int);
+  int _negaMax(const Board&, int, int, int);
   void _iterDeep(const Board&, int, int);
 
-  void _orderMoves(MoveBoardList&, const MoveBoardList&, unsigned int);
+  void _orderMoves(MoveBoardList&, unsigned int);
 
   void _logUciInfo(const MoveBoardList&, int, CMove, int);
 
