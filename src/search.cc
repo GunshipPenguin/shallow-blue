@@ -194,3 +194,35 @@ int Search::_negaMax(const Board& board, int depth, int alpha, int beta) {
 
   return bestScore;
 }
+
+int Search::_qSearch(const Board& board, int alpha, int beta) {
+  int stand_pat = Eval(board, board.getActivePlayer()).getScore();
+  if (stand_pat >= beta) {
+    return beta;
+  }
+  if (alpha < stand_pat) {
+    alpha = stand_pat;
+  }
+
+  MoveGen movegen(board);
+
+  for (auto moveBoard : movegen.getLegalMoves())  {
+    CMove move = moveBoard.first;
+    Board movedBoard = moveBoard.second;
+    if ((move.getFlags() & CMove::CAPTURE) == 0) {
+      continue;
+    }
+
+    std::cout << move.getNotation() << std::endl;
+
+    int score = -_qSearch(movedBoard, -beta, -alpha);
+
+    if (score >= beta) {
+      return beta;
+    }
+    if (score > alpha) {
+      alpha = score;
+    }
+  }
+  return alpha;
+}

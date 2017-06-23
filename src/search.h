@@ -19,6 +19,8 @@ private:
   int _negaMax(const Board&, int, int, int);
   void _iterDeep(const Board&, int, int);
 
+  int _qSearch(const Board&, int=-INF, int=INF);
+
   void _orderMoves(MoveBoardList&, unsigned int);
 
   void _logUciInfo(const MoveBoardList&, int, CMove, int);
