@@ -288,6 +288,7 @@ void Board::setToFen(std::string fenString) {
 
   _updateNonPieceBitBoards();
   _zKey = ZKey(*this);
+  _pst = PSquareTable(*this);
 }
 
 void Board::_updateNonPieceBitBoards() {

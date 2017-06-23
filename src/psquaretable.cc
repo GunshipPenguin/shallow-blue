@@ -1,5 +1,6 @@
 #include "psquaretable.h"
 #include "defs.h"
+#include "board.h"
 #include <vector>
 #include <vector>
 #include <algorithm>
@@ -90,6 +91,27 @@ void PSquareTable::init() {
 PSquareTable::PSquareTable() {
   _scores[WHITE] = 0;
   _scores[BLACK] = 0;
+}
+
+PSquareTable::PSquareTable(const Board& board) {
+  _scores[WHITE] = 0;
+  _scores[BLACK] = 0;
+
+  PieceType pieceTypes[6] = {PAWN, ROOK, KNIGHT, BISHOP, QUEEN, KING};
+
+  for (auto pieceType : pieceTypes) {
+    U64 whiteBitBoard = board.getPieces(WHITE, pieceType);
+    U64 blackBitBoard = board.getPieces(BLACK,  pieceType);
+
+    for (int squareIndex=0;squareIndex<64;squareIndex++) {
+      U64 square = ONE << squareIndex;
+      if (square & whiteBitBoard) {
+        addPiece(WHITE, pieceType, squareIndex);
+      } else if (square & blackBitBoard) {
+        addPiece(BLACK, pieceType, squareIndex);
+      }
+    }
+  }
 }
 
 void PSquareTable::addPiece(Color color, PieceType pieceType, unsigned int square) {
