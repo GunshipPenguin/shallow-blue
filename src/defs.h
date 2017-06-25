@@ -29,6 +29,10 @@ enum Color {
   BLACK
 };
 
+inline Color getOppositeColor(Color color) {
+  return color == WHITE ? BLACK : WHITE;
+}
+
 enum PieceType {
   PAWN,
   ROOK,

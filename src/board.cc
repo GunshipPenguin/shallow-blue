@@ -25,10 +25,6 @@ U64 Board::getAttackable(Color color) const {
   return _attackable[color];
 }
 
-U64 Board::getAttacks(Color color) const {
-  return _attacks[color];
-}
-
 U64 Board::getOccupied() const {
   return _occupied;
 }
@@ -58,7 +54,9 @@ PSquareTable Board::getPSquareTable() const {
 }
 
 bool Board::colorIsInCheck(Color color) const {
-  return (bool) (_attacks[color == WHITE ? BLACK : WHITE] & _pieces[color][KING]);
+  int kingSquare = __builtin_ffsll(getPieces(color, KING)) - 1;
+
+  return _squareUnderAttack(getOppositeColor(color), kingSquare);
 }
 
 bool Board::whiteCanCastleKs() const {
@@ -68,7 +66,7 @@ bool Board::whiteCanCastleKs() const {
 
   U64 passThroughSquares = (ONE << f1) | (ONE << g1);
   bool squaresOccupied = passThroughSquares & _occupied;
-  bool squaresAttacked = passThroughSquares & _attacks[BLACK];
+  bool squaresAttacked = _squareUnderAttack(BLACK, f1) || _squareUnderAttack(BLACK, g1);
 
   return !colorIsInCheck(WHITE) && !squaresOccupied && !squaresAttacked;
 }
@@ -78,10 +76,9 @@ bool Board::whiteCanCastleQs() const {
     return false;
   }
 
-  U64 inbetweenSquares = (ONE << b1) | (ONE << c1) | (ONE << d1);
-  U64 passThroughSquares = (ONE << c1) | (ONE << d1);
+  U64 inbetweenSquares = (ONE << c1) | (ONE << d1) | (ONE << b1);
   bool squaresOccupied = inbetweenSquares & _occupied;
-  bool squaresAttacked = passThroughSquares & _attacks[BLACK];
+  bool squaresAttacked = _squareUnderAttack(BLACK, d1) || _squareUnderAttack(BLACK, c1);
 
   return !colorIsInCheck(WHITE) && !squaresOccupied && !squaresAttacked;
 }
@@ -93,7 +90,7 @@ bool Board::blackCanCastleKs() const {
 
   U64 passThroughSquares = (ONE << f8) | (ONE << g8);
   bool squaresOccupied = passThroughSquares & _occupied;
-  bool squaresAttacked = passThroughSquares & _attacks[WHITE];
+  bool squaresAttacked = _squareUnderAttack(WHITE, f8) || _squareUnderAttack(WHITE, g8);
 
   return !colorIsInCheck(BLACK) && !squaresOccupied && !squaresAttacked;
 }
@@ -104,9 +101,8 @@ bool Board::blackCanCastleQs() const {
   }
 
   U64 inbetweenSquares = (ONE << b8) | (ONE << c8) | (ONE << d8);
-  U64 passThroughSquares = (ONE << c8) | (ONE << d8);
   bool squaresOccupied = inbetweenSquares & _occupied;
-  bool squaresAttacked = passThroughSquares & _attacks[WHITE];
+  bool squaresAttacked = _squareUnderAttack(WHITE, c8) || _squareUnderAttack(WHITE, d8);
 
   return !colorIsInCheck(BLACK) && !squaresOccupied && !squaresAttacked;
 }
@@ -310,9 +306,6 @@ void Board::_updateNonPieceBitBoards() {
 
   _occupied = _allPieces[WHITE] | _allPieces[BLACK];
   _notOccupied = ~_occupied;
-
-  _attacks[WHITE] = _genWhiteAttacks();
-  _attacks[BLACK] = _genBlackAttacks();
 }
 
 PieceType Board::getPieceAtSquare(Color color, int squareIndex) const {
@@ -446,9 +439,30 @@ void Board::doMove(CMove move) {
 
   _zKey.flipActivePlayer();
   _activePlayer = getInactivePlayer();
+}
 
-  _attacks[WHITE] = _genWhiteAttacks();
-  _attacks[BLACK] = _genBlackAttacks();
+bool Board::_squareUnderAttack(Color color, int squareIndex) const {
+  bool squareAttacked = false;
+
+  if (getKnightAttacksForSquare(squareIndex, ZERO) & getPieces(color, KNIGHT)) squareAttacked = true;
+  else if (getBishopAttacksForSquare(squareIndex, ZERO) & getPieces(color, BISHOP)) squareAttacked = true;
+  else if (getRookAttacksForSquare(squareIndex, ZERO) & getPieces(color, ROOK)) squareAttacked = true;
+  else if (getQueenAttacksForSquare(squareIndex, ZERO) & getPieces(color, QUEEN)) squareAttacked = true;
+  else if (getKingAttacksForSquare(squareIndex, ZERO) & getPieces(color, KING)) squareAttacked = true;
+
+  // Pawns special case
+  if (!squareAttacked) {
+    switch(color) {
+      case WHITE:
+        if (getBlackPawnAttacksForSquare(squareIndex) & getPieces(WHITE, PAWN)) squareAttacked = true;
+        break;
+      case BLACK:
+        if (getWhitePawnAttacksForSquare(squareIndex) & getPieces(BLACK, PAWN)) squareAttacked = true;
+        break;
+    }
+  }
+
+  return squareAttacked;
 }
 
 void Board::_updateCastlingRightsForMove(CMove move) {
@@ -554,46 +568,4 @@ U64 Board::getRookAttacksForSquare(int square, U64 own) const {
 
 U64 Board::getQueenAttacksForSquare(int square, U64 own) const {
   return getBishopAttacksForSquare(square, own) | getRookAttacksForSquare(square, own);
-}
-
-U64 Board::_genWhiteAttacks() const {
-  U64 attacks = U64(0);
-
-  for(int squareIndex=0;squareIndex<64;squareIndex++) {
-    U64 square = ONE << squareIndex;
-    if ((square & _allPieces[WHITE]) == 0) {
-      continue;
-    }
-
-    if (square & _pieces[WHITE][PAWN]) attacks |= getWhitePawnAttacksForSquare(squareIndex);
-    else if (square & _pieces[WHITE][ROOK]) attacks |= getRookAttacksForSquare(squareIndex, _allPieces[WHITE]);
-    else if (square & _pieces[WHITE][KNIGHT]) attacks |= getKnightAttacksForSquare(squareIndex, _allPieces[WHITE]);
-    else if (square & _pieces[WHITE][BISHOP]) attacks |= getBishopAttacksForSquare(squareIndex, _allPieces[WHITE]);
-    else if (square & _pieces[WHITE][KING]) attacks |= getKingAttacksForSquare(squareIndex, _allPieces[WHITE]);
-    else if (square & _pieces[WHITE][QUEEN]) attacks |= getQueenAttacksForSquare(squareIndex, _allPieces[WHITE]);
-  }
-  attacks |= _enPassant;
-
-  return attacks;
-}
-
-U64 Board::_genBlackAttacks() const {
-  U64 attacks = U64(0);
-
-  for(int squareIndex=0;squareIndex<64;squareIndex++) {
-    U64 square = ONE << squareIndex;
-    if ((square & _allPieces[BLACK]) == 0) {
-      continue;
-    }
-
-    if (square & _pieces[BLACK][PAWN]) attacks |= getBlackPawnAttacksForSquare(squareIndex);
-    else if (square & _pieces[BLACK][ROOK]) attacks |= getRookAttacksForSquare(squareIndex, _allPieces[BLACK]);
-    else if (square & _pieces[BLACK][KNIGHT]) attacks |= getKnightAttacksForSquare(squareIndex, _allPieces[BLACK]);
-    else if (square & _pieces[BLACK][BISHOP]) attacks |= getBishopAttacksForSquare(squareIndex, _allPieces[BLACK]);
-    else if (square & _pieces[BLACK][KING]) attacks |= getKingAttacksForSquare(squareIndex, _allPieces[BLACK]);
-    else if (square & _pieces[BLACK][QUEEN]) attacks |= getQueenAttacksForSquare(squareIndex, _allPieces[BLACK]);
-  }
-  attacks |= _enPassant;
-
-  return attacks;
 }

@@ -73,7 +73,7 @@ class Board {
 
     U64 _attackable[2];
 
-    U64 _attacks[2];
+    // U64 _attacks[2];
 
     U64 _occupied;
     U64 _notOccupied;
@@ -93,6 +93,8 @@ class Board {
     bool _blackCanCastleKs;
     bool _blackCanCastleQs;
 
+    bool _squareUnderAttack(Color, int) const;
+
     void _updateCastlingRightsForMove(CMove);
 
     void _updateNonPieceBitBoards();
@@ -102,9 +104,6 @@ class Board {
     void _removePiece(Color, PieceType, int);
 
     void _clearBitBoards();
-
-    U64 _genWhiteAttacks() const;
-    U64 _genBlackAttacks() const;
 };
 
 #endif
