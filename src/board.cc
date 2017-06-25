@@ -315,7 +315,7 @@ void Board::_updateNonPieceBitBoards() {
   _attacks[BLACK] = _genBlackAttacks();
 }
 
-PieceType Board::_getPieceAtSquare(Color color, int squareIndex) const {
+PieceType Board::getPieceAtSquare(Color color, int squareIndex) const {
   U64 square = ONE << squareIndex;
 
   PieceType piece;
@@ -329,38 +329,133 @@ PieceType Board::_getPieceAtSquare(Color color, int squareIndex) const {
   return piece;
 }
 
-void Board::_doRegularMove(CMove move) {
-  U64* pieces = &_pieces[_activePlayer][move.getPieceType()];
+void Board::_movePiece(Color color, PieceType pieceType, int from, int to) {
+  _removePiece(color, pieceType, from);
+  _addPiece(color, pieceType, to);
+}
 
-  U64 fromSquare = ONE << move.getFrom();
-  U64 toSquare = ONE << move.getTo();
+void Board::_removePiece(Color color, PieceType pieceType, int squareIndex) {
+  U64 square = ONE << squareIndex;
 
-  *pieces ^= fromSquare;
-  *pieces ^= toSquare;
+  _pieces[color][pieceType] ^= square;
+  _allPieces[color] ^= square;
 
-  _zKey.movePiece(_activePlayer, move.getPieceType(), move.getFrom(), move.getTo());
-  _pst.movePiece(_activePlayer, move.getPieceType(), move.getFrom(), move.getTo());
+  _occupied ^= square;
+  _notOccupied = ~_occupied;
+
+  if (pieceType != KING) {
+    _attackable[color] ^= square;
+  }
+
+  _zKey.flipPiece(color, pieceType, squareIndex);
+  _pst.removePiece(color, pieceType, squareIndex);
+}
+
+void Board::_addPiece(Color color, PieceType pieceType, int squareIndex) {
+  U64 square = ONE << squareIndex;
+
+  _pieces[color][pieceType] |= square;
+  _allPieces[color] |= square;
+
+  _occupied |= square;
+  _notOccupied = ~_occupied;
+
+  if (pieceType != KING) {
+    _attackable[color] ^= square;
+  }
+
+  _zKey.flipPiece(color, pieceType, squareIndex);
+  _pst.addPiece(color, pieceType, squareIndex);
 }
 
 void Board::doMove(CMove move) {
-  if (move.getFlags() & CMove::NULL_MOVE) {
-    _zKey.flipActivePlayer();
-    _activePlayer = _activePlayer == WHITE ? BLACK : WHITE;
-    return;
+  unsigned int flags = move.getFlags();
+
+  // En passant always cleared after a move
+  _zKey.clearEnPassant();
+  _enPassant = ZERO;
+
+  // Handle move depending on what type of move it is
+  if (move.getFlags() == 0) {
+    // No flags set, not a special move
+    _movePiece(_activePlayer, move.getPieceType(), move.getFrom(), move.getTo());
+  } else if ((flags & CMove::CAPTURE) && (flags & CMove::PROMOTION)) { // Capture promotion special case
+    // Remove captured Piece
+    PieceType capturedPieceType = move.getCapturedPieceType();
+    _removePiece(getInactivePlayer(), capturedPieceType, move.getTo());
+
+    // Remove promoting pawn
+    _removePiece(_activePlayer, PAWN, move.getFrom());
+
+    // Add promoted piece
+    PieceType promotionPieceType = move.getPromotionPieceType();
+    _addPiece(_activePlayer, promotionPieceType, move.getTo());
+  } else if (flags & CMove::CAPTURE) {
+    // Remove captured Piece
+    PieceType capturedPieceType = move.getCapturedPieceType();
+    _removePiece(getInactivePlayer(), capturedPieceType, move.getTo());
+
+    // Move capturing piece
+    _movePiece(_activePlayer, move.getPieceType(), move.getFrom(), move.getTo());
+  } else if (flags & CMove::KSIDE_CASTLE) {
+    // Move the king
+    _movePiece(_activePlayer, KING, move.getFrom(), move.getTo());
+
+    // Move the correct rook
+    if (_activePlayer == WHITE) {
+      _movePiece(WHITE, ROOK, h1, f1);
+    } else {
+      _movePiece(BLACK, ROOK, h8, f8);
+    }
+  } else if (flags & CMove::QSIDE_CASTLE) {
+    // Move the king
+    _movePiece(_activePlayer, KING, move.getFrom(), move.getTo());
+
+    // Move the correct rook
+    if (_activePlayer == WHITE) {
+      _movePiece(WHITE, ROOK, a1, d1);
+    } else {
+      _movePiece(BLACK, ROOK, a8, d8);
+    }
+  } else if (flags & CMove::EN_PASSANT) {
+    // Remove the correct pawn
+    if (_activePlayer == WHITE) {
+      _removePiece(BLACK, PAWN, move.getTo() - 8);
+    } else {
+      _removePiece(WHITE, PAWN, move.getTo() + 8);
+    }
+
+    // Move the capturing pawn
+    _movePiece(_activePlayer, move.getPieceType(), move.getFrom(), move.getTo());
+  } else if (flags & CMove::PROMOTION) {
+    // Remove promoted pawn
+    _removePiece(_activePlayer, PAWN, move.getFrom());
+
+    // Add promoted piece
+    _addPiece(_activePlayer, move.getPromotionPieceType(), move.getTo());
+  } else if (flags & CMove::DOUBLE_PAWN_PUSH) {
+    _movePiece(_activePlayer, move.getPieceType(), move.getFrom(), move.getTo());
+
+    // Set square behind pawn as _enPassant
+    unsigned int enPasIndex = _activePlayer == WHITE ? move.getTo() - 8 : move.getTo() + 8;
+    _enPassant = ONE << enPasIndex;
+    _zKey.setEnPassantFile(enPasIndex % 8);
   }
 
-  _doRegularMove(move);
+  _updateCastlingRightsForMove(move);
 
-  // Handle special moves
+  _zKey.flipActivePlayer();
+  _activePlayer = getInactivePlayer();
+
+  _attacks[WHITE] = _genWhiteAttacks();
+  _attacks[BLACK] = _genBlackAttacks();
+}
+
+void Board::_updateCastlingRightsForMove(CMove move) {
   unsigned int flags = move.getFlags();
+
+  // Update castling flags if rooks have been captured
   if (flags & CMove::CAPTURE) {
-    PieceType piece = _getPieceAtSquare(getInactivePlayer(), move.getTo());
-
-    _zKey.flipPiece(getInactivePlayer(), piece, move.getTo());
-    _pst.removePiece(getInactivePlayer(), piece, move.getTo());
-
-    _pieces[getInactivePlayer()][piece] ^= ONE << move.getTo();
-
     // Update castling rights if a rook was captured
     switch(move.getTo()) {
       case a1: _whiteCanCastleQs = false;
@@ -373,76 +468,6 @@ void Board::doMove(CMove move) {
         break;
     }
   }
-  if (flags & CMove::KSIDE_CASTLE) {
-    // King has already been moved, kingside rook must be moved
-    if (_activePlayer == WHITE) {
-      _pieces[WHITE][ROOK] ^= ((ONE << h1) | (ONE << f1));
-      _zKey.movePiece(WHITE, ROOK, h1, f1);
-      _pst.movePiece(WHITE, ROOK, h1, f1);
-    } else {
-      _pieces[BLACK][ROOK] ^= ((ONE << h8) | (ONE << f8));
-      _zKey.movePiece(BLACK, ROOK, h8, f8);
-      _pst.movePiece(BLACK, ROOK, h8, f8);
-    }
-  }
-  if (flags & CMove::QSIDE_CASTLE) {
-    // King has already been moved, kingside rook must be moved
-    if (_activePlayer == WHITE) {
-      _pieces[WHITE][ROOK] ^= ((ONE << a1) | (ONE << d1));
-      _zKey.movePiece(WHITE, ROOK, a1, d1);
-      _pst.movePiece(WHITE, ROOK, a1, d1);
-    } else {
-      _pieces[BLACK][ROOK] ^= ((ONE << a8) | (ONE << d8));
-      _zKey.movePiece(BLACK, ROOK, a8, d8);
-      _pst.movePiece(BLACK, ROOK, a8, d8);
-    }
-  }
-
-  if (flags & CMove::EN_PASSANT) {
-    _zKey.flipPiece(getInactivePlayer(), PAWN, move.getTo());
-    _pst.removePiece(getInactivePlayer(), PAWN, move.getTo());
-    if (_activePlayer == WHITE) {
-      _pieces[BLACK][PAWN] ^= (_enPassant >> 8);
-    } else {
-      _pieces[WHITE][PAWN] ^= (_enPassant << 8);
-    }
-  }
-
-
-  _zKey.clearEnPassant();
-  if (flags & CMove::DOUBLE_PAWN_PUSH) {
-    // Set square behind as _enPassant
-    unsigned int enPasIndex = _activePlayer == WHITE ? move.getTo() - 8 : move.getTo() + 8;
-    _enPassant = ONE << enPasIndex;
-    _zKey.setEnPassantFile(enPasIndex % 8);
-  } else {
-    _enPassant = ZERO;
-  }
-
-  // Handle promotions
-  unsigned int promotionType = flags & (CMove::QUEEN_PROMOTION | CMove::ROOK_PROMOTION | CMove::BISHOP_PROMOTION | CMove::KNIGHT_PROMOTION);
-  if (promotionType) {
-    PieceType promotionPiece;
-    switch(promotionType) {
-      case CMove::QUEEN_PROMOTION: promotionPiece = QUEEN;
-        break;
-      case CMove::ROOK_PROMOTION: promotionPiece = ROOK;
-        break;
-      case CMove::BISHOP_PROMOTION: promotionPiece = BISHOP;
-        break;
-      case CMove::KNIGHT_PROMOTION: promotionPiece = KNIGHT;
-        break;
-    }
-    // Add promoted piece
-    _pieces[_activePlayer][promotionPiece] ^= ONE << move.getTo();
-
-    // Remove promoted pawn
-    _pieces[_activePlayer][PAWN] ^= ONE << move.getTo();
-
-    _zKey.flipPiece(_activePlayer, promotionPiece, move.getTo());
-    _pst.addPiece(_activePlayer, promotionPiece, move.getTo());
-  }
-
 
   // Update castling flags if rooks or kings have moved
   switch(move.getFrom()) {
@@ -463,11 +488,8 @@ void Board::doMove(CMove move) {
     case h8: _blackCanCastleKs = false;
       break;
   }
-  _zKey.updateCastlingRights(_whiteCanCastleKs, _whiteCanCastleQs, _blackCanCastleKs, _blackCanCastleQs);
 
-  _zKey.flipActivePlayer();
-  _activePlayer = _activePlayer == WHITE ? BLACK : WHITE;
-  _updateNonPieceBitBoards();
+  _zKey.updateCastlingRights(_whiteCanCastleKs, _whiteCanCastleQs, _blackCanCastleKs, _blackCanCastleQs);
 }
 
 void Board::setToStartPos() {

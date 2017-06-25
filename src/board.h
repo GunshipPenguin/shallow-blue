@@ -43,6 +43,8 @@ class Board {
 
     U64 getAttacks(Color) const;
 
+    PieceType getPieceAtSquare(Color, int) const;
+
     U64 getOccupied() const;
     U64 getNotOccupied() const;
 
@@ -91,16 +93,18 @@ class Board {
     bool _blackCanCastleKs;
     bool _blackCanCastleQs;
 
+    void _updateCastlingRightsForMove(CMove);
+
     void _updateNonPieceBitBoards();
 
-    void _doRegularMove(CMove);
+    void _movePiece(Color, PieceType, int, int);
+    void _addPiece(Color, PieceType, int);
+    void _removePiece(Color, PieceType, int);
 
     void _clearBitBoards();
 
     U64 _genWhiteAttacks() const;
     U64 _genBlackAttacks() const;
-
-    PieceType _getPieceAtSquare(Color, int) const;
 };
 
 #endif

@@ -31,6 +31,7 @@ TEST_CASE("Board::doMove works properly") {
     board.setToFen("8/8/8/4n3/8/2B5/8/8 w - -");
 
     CMove move(c3, e5, BISHOP, CMove::CAPTURE);
+    move.setCapturedPieceType(KNIGHT);
 
     board.doMove(move);
 
@@ -130,7 +131,8 @@ TEST_CASE("Board::doMove works properly") {
   SECTION("doMove works with white promotions") {
     board.setToFen("8/3P4/8/8/8/8/8/8 w - -");
 
-    CMove move(d7, d8, PAWN, CMove::QUEEN_PROMOTION);
+    CMove move(d7, d8, PAWN, CMove::PROMOTION);
+    move.setPromotionPieceType(QUEEN);
 
     board.doMove(move);
 
@@ -141,7 +143,8 @@ TEST_CASE("Board::doMove works properly") {
   SECTION("doMove works with black promotions") {
     board.setToFen("8/8/8/8/8/8/3p4/8 b - -");
 
-    CMove move(d2, d1, PAWN, CMove::QUEEN_PROMOTION);
+    CMove move(d2, d1, PAWN, CMove::PROMOTION);
+    move.setPromotionPieceType(QUEEN);
 
     board.doMove(move);
 
@@ -152,7 +155,10 @@ TEST_CASE("Board::doMove works properly") {
   SECTION("doMove works with white capture promotions") {
     board.setToFen("2q5/3P4/8/8/8/8/8/8 w - -");
 
-    CMove move(d7, c8, PAWN, CMove::CAPTURE | CMove::KNIGHT_PROMOTION);
+    CMove move(d7, c8, PAWN, CMove::CAPTURE | CMove::PROMOTION);
+    move.setCapturedPieceType(QUEEN);
+    move.setPromotionPieceType(KNIGHT);
+
     board.doMove(move);
 
     REQUIRE(board.getPieces(WHITE, PAWN) == ZERO);
@@ -163,11 +169,14 @@ TEST_CASE("Board::doMove works properly") {
   SECTION("doMove works with black capture promotions") {
     board.setToFen("8/8/8/8/8/8/3p4/2Q5 b - -");
 
-    CMove move(d2, c1, PAWN, CMove::CAPTURE | CMove::KNIGHT_PROMOTION);
+    CMove move(d2, c1, PAWN, CMove::CAPTURE | CMove::PROMOTION);
+    move.setCapturedPieceType(QUEEN);
+    move.setPromotionPieceType(KNIGHT);
+
     board.doMove(move);
 
-    REQUIRE(board.getPieces(BLACK,  PAWN) == ZERO);
-    REQUIRE(board.getPieces(BLACK,  KNIGHT) == (ONE << c1));
+    REQUIRE(board.getPieces(BLACK, PAWN) == ZERO);
+    REQUIRE(board.getPieces(BLACK, KNIGHT) == (ONE << c1));
     REQUIRE(board.getPieces(WHITE, QUEEN) == ZERO);
   }
 

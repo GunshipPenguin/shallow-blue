@@ -38,7 +38,11 @@ TEST_CASE("Boards update ZKeys correctly after moves") {
     SECTION("ZKeys are updated properly after captures") {
       board.setToFen("8/8/8/2n5/8/4B3/8/8 w - -");
 
-      board.doMove(CMove(e3, c5, BISHOP, CMove::CAPTURE));
+      CMove move(e3, c5, BISHOP, CMove::CAPTURE);
+      move.setCapturedPieceType(KNIGHT);
+
+      board.doMove(move);
+
       U64 initValue = board.getZKey().getValue();
 
       board.setToFen("8/8/8/2B5/8/8/8/8 b - -");
@@ -58,7 +62,11 @@ TEST_CASE("Boards update ZKeys correctly after moves") {
     SECTION("ZKeys are updated properly after castling rights are changed by a move") {
       board.setToFen("8/8/8/8/8/6n1/8/4K2R b K -");
 
-      board.doMove(CMove(g3, h1, KNIGHT, CMove::CAPTURE));
+      CMove move(g3, h1, KNIGHT, CMove::CAPTURE);
+      move.setCapturedPieceType(ROOK);
+
+      board.doMove(move);
+
       U64 initValue = board.getZKey().getValue();
 
       board.setToFen("8/8/8/8/8/8/8/4K2n w - -");

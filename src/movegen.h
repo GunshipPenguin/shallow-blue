@@ -33,8 +33,18 @@ private:
   void _genBlackMoves(const Board&);
 
   void _genWhitePawnMoves(const Board&);
+  void _genWhitePawnSingleMoves(const Board&);
+  void _genWhitePawnDoubleMoves(const Board&);
+  void _genWhitePawnRightAttacks(const Board&);
+  void _genWhitePawnLeftAttacks(const Board&);
+
   void _genBlackPawnMoves(const Board&);
-  void _genPawnPromotions(unsigned int, unsigned int, unsigned int=0);
+  void _genBlackPawnSingleMoves(const Board&);
+  void _genBlackPawnDoubleMoves(const Board&);
+  void _genBlackPawnRightAttacks(const Board&);
+  void _genBlackPawnLeftAttacks(const Board&);
+
+  void _genPawnPromotions(unsigned int, unsigned int, unsigned int=0, PieceType=PAWN);
 
   void _genWhiteKingMoves(const Board&);
   void _genBlackKingMoves(const Board&);
