@@ -20,7 +20,7 @@ void Eval::_doEval(const Board& board, Color color) {
   _score += ROOK_VALUE * _popCount(board.getPieces(color, ROOK));
   _score += QUEEN_VALUE * _popCount(board.getPieces(color, QUEEN));
 
-  Color otherColor = color == WHITE ? BLACK : WHITE;
+  Color otherColor = getOppositeColor(color);
 
   _score -= PAWN_VALUE * _popCount(board.getPieces(otherColor, PAWN));
   _score -= KNIGHT_VALUE * _popCount(board.getPieces(otherColor, KNIGHT));
