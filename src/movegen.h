@@ -68,6 +68,8 @@ private:
   void _genQueenMoves(const Board&, U64, U64, U64);
 
   void _addMoves(const Board&, int, PieceType, U64, U64);
+
+  int _pop_lsb(U64&);
 };
 
 #endif
