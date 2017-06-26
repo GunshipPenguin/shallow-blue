@@ -90,7 +90,7 @@ CMove Search::getBestMove() {
 void Search::_rootMax(const Board& board, int depth) {
   MoveGen movegen(board);
   MoveBoardList legalMoves = movegen.getLegalMoves();
-  _orderMoves(legalMoves, depth);
+  _orderMoves(legalMoves);
 
   int bestScore = -INF;
   int currScore;
@@ -118,7 +118,7 @@ void Search::_rootMax(const Board& board, int depth) {
   _bestScore = bestScore;
 }
 
-void Search::_orderMoves(MoveBoardList& moveBoardList, unsigned int depth) {
+void Search::_orderMoves(MoveBoardList& moveBoardList) {
   std::sort(moveBoardList.begin(), moveBoardList.end(), [this](MoveBoard a, MoveBoard b) {
     ZKey aKey = a.second.getZKey();
     ZKey bKey = b.second.getZKey();
@@ -127,6 +127,47 @@ void Search::_orderMoves(MoveBoardList& moveBoardList, unsigned int depth) {
 
     return aScore < bScore;
   });
+}
+
+void Search::_orderMovesQSearch(MoveBoardList & moveBoardList) {
+  std::sort(moveBoardList.begin(), moveBoardList.end(), [this](MoveBoard a, MoveBoard b) {
+    bool aIsCapture = a.first.getFlags() & CMove::CAPTURE;
+    bool bIsCapture = b.first.getFlags() & CMove::CAPTURE;
+
+    if (aIsCapture && !bIsCapture) {
+      return true;
+    } else if (bIsCapture && !aIsCapture) {
+      return false;
+    } else { // Both captures
+      // MVV/LVA
+      int aPieceValue = _getPieceValue(a.first.getPieceType());
+      int bPieceValue = _getPieceValue(b.first.getPieceType());
+      int aCaptureValue = _getPieceValue(a.first.getCapturedPieceType());
+      int bCaptureValue = _getPieceValue(b.first.getCapturedPieceType());
+
+      return (aCaptureValue - aPieceValue) > (bCaptureValue - bPieceValue);
+    }
+  });
+}
+
+int Search::_getPieceValue(PieceType pieceType) {
+  int score = 0;
+
+  switch(pieceType) {
+    case PAWN: score = 1;
+      break;
+    case KNIGHT: score = 3;
+      break;
+    case BISHOP: score = 3;
+      break;
+    case ROOK: score = 5;
+      break;
+    case QUEEN: score = 9;
+      break;
+    default: break;
+  }
+
+  return score;
 }
 
 int Search::_negaMax(const Board& board, int depth, int alpha, int beta) {
@@ -154,7 +195,7 @@ int Search::_negaMax(const Board& board, int depth, int alpha, int beta) {
   // Transposition table lookups are inconclusive, generate moves and recurse
   MoveGen movegen(board);
   MoveBoardList legalMoves = movegen.getLegalMoves();
-  _orderMoves(legalMoves, depth);
+  _orderMoves(legalMoves);
 
   // Check for checkmate
   if (legalMoves.size() == 0 && board.colorIsInCheck(board.getActivePlayer())) {
@@ -164,7 +205,7 @@ int Search::_negaMax(const Board& board, int depth, int alpha, int beta) {
 
   // Eval if depth is 0
   if (depth == 0) {
-    int score = Eval(board, board.getActivePlayer()).getScore();
+    int score = _qSearch(board, -INF, INF);
     _tt.set(board.getZKey(), score, 0, TranspTable::EXACT);
     return score;
   }
@@ -196,24 +237,24 @@ int Search::_negaMax(const Board& board, int depth, int alpha, int beta) {
 }
 
 int Search::_qSearch(const Board& board, int alpha, int beta) {
-  int stand_pat = Eval(board, board.getActivePlayer()).getScore();
-  if (stand_pat >= beta) {
+  int standPat = Eval(board, board.getActivePlayer()).getScore();
+  if (standPat >= beta) {
     return beta;
   }
-  if (alpha < stand_pat) {
-    alpha = stand_pat;
+  if (alpha < standPat) {
+    alpha = standPat;
   }
 
   MoveGen movegen(board);
+  MoveBoardList legalMoves = movegen.getLegalMoves();
+  _orderMovesQSearch(legalMoves);
 
-  for (auto moveBoard : movegen.getLegalMoves())  {
+  for (auto moveBoard : legalMoves) {
     CMove move = moveBoard.first;
     Board movedBoard = moveBoard.second;
     if ((move.getFlags() & CMove::CAPTURE) == 0) {
-      continue;
+      break;
     }
-
-    std::cout << move.getNotation() << std::endl;
 
     int score = -_qSearch(movedBoard, -beta, -alpha);
 

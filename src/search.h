@@ -21,9 +21,13 @@ private:
 
   int _qSearch(const Board&, int=-INF, int=INF);
 
-  void _orderMoves(MoveBoardList&, unsigned int);
+  void _orderMoves(MoveBoardList&);
+  void _orderMovesQSearch(MoveBoardList&);
 
   void _logUciInfo(const MoveBoardList&, int, CMove, int);
+
+  int _getPieceValue(PieceType);
+
 
   MoveBoardList _getPv(const Board&);
 
