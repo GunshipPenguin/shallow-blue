@@ -22,7 +22,6 @@ public:
   void printMoves();
 
 private:
-  Board _board;
   MoveList _moves;
   MoveBoardList _legalMoves;
 
