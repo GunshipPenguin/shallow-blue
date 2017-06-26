@@ -15,11 +15,11 @@ public:
 
   void set(ZKey, int, int, Flag);
 
-  bool contains(ZKey);
+  bool contains(const ZKey&) const;
 
-  int getScore(ZKey);
-  int getDepth(ZKey);
-  Flag getFlag(ZKey);
+  int getScore(const ZKey&) const;
+  int getDepth(const ZKey&) const;
+  Flag getFlag(const ZKey&) const;
 
   void clear();
 

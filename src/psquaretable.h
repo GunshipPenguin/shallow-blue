@@ -4,10 +4,12 @@
 #include "defs.h"
 #include <vector>
 
+class Board;
 
 class PSquareTable {
 public:
   PSquareTable();
+  PSquareTable(const Board&);
   static void init();
 
   void addPiece(Color, PieceType, unsigned int);

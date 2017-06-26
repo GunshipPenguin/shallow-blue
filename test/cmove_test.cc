@@ -4,12 +4,19 @@
 
 TEST_CASE("Move representation is correct") {
   SECTION("Getters in CMove work as expected") {
-    CMove move(1, 63, BISHOP, CMove::CAPTURE);
+    CMove move(g7, h8, PAWN, CMove::CAPTURE | CMove::PROMOTION);
+    move.setCapturedPieceType(KNIGHT);
+    move.setPromotionPieceType(QUEEN);
 
-    REQUIRE(move.getFrom() == 1);
-    REQUIRE(move.getTo() == 63);
-    REQUIRE(move.getPieceType() == BISHOP);
-    REQUIRE(move.getFlags() == CMove::CAPTURE);
+    REQUIRE(move.getFrom() == g7);
+    REQUIRE(move.getTo() == h8);
+
+    REQUIRE(move.getPieceType() == PAWN);
+
+    REQUIRE(move.getFlags() == (CMove::CAPTURE | CMove::PROMOTION));
+
+    REQUIRE(move.getCapturedPieceType() == KNIGHT);
+    REQUIRE(move.getPromotionPieceType() == QUEEN);
   }
 
   SECTION("indexToNotation works correctly") {
@@ -55,10 +62,18 @@ TEST_CASE("CMove.getNotation works properly") {
   }
 
   SECTION("getNotation works for all pawn promotion types") {
-    CMove queenPromotion(55, 63, PAWN, CMove::QUEEN_PROMOTION);
-    CMove knightPromotion(55, 63, PAWN, CMove::KNIGHT_PROMOTION);
-    CMove rookPromotion(55, 63, PAWN, CMove::ROOK_PROMOTION);
-    CMove bishopPromotion(55, 63, PAWN, CMove::BISHOP_PROMOTION);
+    CMove queenPromotion(55, 63, PAWN, CMove::PROMOTION);
+    queenPromotion.setPromotionPieceType(QUEEN);
+
+    CMove knightPromotion(55, 63, PAWN, CMove::PROMOTION);
+    knightPromotion.setPromotionPieceType(KNIGHT);
+
+    CMove rookPromotion(55, 63, PAWN, CMove::PROMOTION);
+    rookPromotion.setPromotionPieceType(ROOK);
+
+    CMove bishopPromotion(55, 63, PAWN, CMove::PROMOTION);
+    bishopPromotion.setPromotionPieceType(BISHOP);
+
 
     REQUIRE(queenPromotion.getNotation() == "h7h8q");
     REQUIRE(knightPromotion.getNotation() == "h7h8n");
@@ -67,10 +82,21 @@ TEST_CASE("CMove.getNotation works properly") {
   }
 
   SECTION("getNotation works for all pawn promotion types when making a capture") {
-    CMove queenPromotion(54, 63, PAWN, CMove::QUEEN_PROMOTION);
-    CMove knightPromotion(54, 63, PAWN, CMove::KNIGHT_PROMOTION);
-    CMove rookPromotion(54, 63, PAWN,CMove::ROOK_PROMOTION);
-    CMove bishopPromotion(54, 63, PAWN, CMove::BISHOP_PROMOTION);
+    CMove queenPromotion(54, 63, PAWN, CMove::PROMOTION | CMove::CAPTURE);
+    queenPromotion.setPromotionPieceType(QUEEN);
+    queenPromotion.setCapturedPieceType(ROOK);
+
+    CMove knightPromotion(54, 63, PAWN, CMove::PROMOTION | CMove::CAPTURE);
+    knightPromotion.setPromotionPieceType(KNIGHT);
+    queenPromotion.setCapturedPieceType(ROOK);
+
+    CMove rookPromotion(54, 63, PAWN, CMove::PROMOTION | CMove::CAPTURE);
+    rookPromotion.setPromotionPieceType(ROOK);
+    queenPromotion.setCapturedPieceType(ROOK);
+
+    CMove bishopPromotion(54, 63, PAWN, CMove::PROMOTION | CMove::CAPTURE);
+    bishopPromotion.setPromotionPieceType(BISHOP);
+    queenPromotion.setCapturedPieceType(ROOK);
 
     REQUIRE(queenPromotion.getNotation() == "g7h8q");
     REQUIRE(knightPromotion.getNotation() == "g7h8n");

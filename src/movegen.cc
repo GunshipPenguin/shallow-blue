@@ -76,111 +76,207 @@ void MoveGen::printMoves() {
   }
 }
 
-void MoveGen::_genPawnPromotions(unsigned int from, unsigned int to, unsigned int flags) {
-  _moves.push_back(CMove(from, to, PAWN, flags | CMove::QUEEN_PROMOTION));
-  _moves.push_back(CMove(from, to, PAWN, flags | CMove::KNIGHT_PROMOTION));
-  _moves.push_back(CMove(from, to, PAWN, flags | CMove::ROOK_PROMOTION));
-  _moves.push_back(CMove(from, to, PAWN, flags | CMove::BISHOP_PROMOTION));
+void MoveGen::_genPawnPromotions(unsigned int from, unsigned int to, unsigned int flags, PieceType capturedPieceType) {
+  CMove promotionBase = CMove(from, to, PAWN, flags | CMove::PROMOTION);
+  if (flags & CMove::CAPTURE) {
+    promotionBase.setCapturedPieceType(capturedPieceType);
+  }
+
+  CMove queenPromotion = promotionBase;
+  queenPromotion.setPromotionPieceType(QUEEN);
+  _moves.push_back(queenPromotion);
+
+  CMove rookPromotion = promotionBase;
+  rookPromotion.setPromotionPieceType(ROOK);
+  _moves.push_back(rookPromotion);
+
+  CMove bishopPromotion = promotionBase;
+  bishopPromotion.setPromotionPieceType(BISHOP);
+  _moves.push_back(bishopPromotion);
+
+  CMove knightPromotion = promotionBase;
+  knightPromotion.setPromotionPieceType(KNIGHT);
+  _moves.push_back(knightPromotion);
 }
 
-void MoveGen::_genWhitePawnMoves(const Board& board) {
-  U64 movedPawns1 = board.getPieces(WHITE, PAWN) << 8;
-  U64 movedPawns2 = (board.getPieces(WHITE, PAWN) & RANK_2) << 16;
+void MoveGen::_genWhitePawnSingleMoves(const Board& board) {
+  U64 movedPawns = board.getPieces(WHITE, PAWN) << 8;
 
-  U64 leftAttacks = (board.getPieces(WHITE, PAWN) << 7) & (~FILE_H);
-  U64 rightAttacks = (board.getPieces(WHITE, PAWN) << 9) & (~FILE_A);
+  for(int i=0;i<64;i++) {
+    U64 square = ONE << i;
 
-  U64 attackablePieces = board.getAttackable(BLACK) | board.getEnPassant();
-
-  for(U64 i=0;i<64;i++) {
-    U64 square = static_cast<U64>(1) << i;
-
-    if (movedPawns1 & square & board.getNotOccupied()) {
+    if (movedPawns & square & board.getNotOccupied()) {
       if (square & RANK_8) {
         _genPawnPromotions(i-8, i);
       } else {
         _moves.push_back(CMove(i-8, i, PAWN));
       }
     }
+  }
+}
 
-    if ((movedPawns2 & square & board.getNotOccupied()) && ((square >> 8) & board.getNotOccupied())) {
+void MoveGen::_genWhitePawnDoubleMoves(const Board& board) {
+  U64 movedPawns = (board.getPieces(WHITE, PAWN) & RANK_2) << 16;
+
+  for(int i=0;i<64;i++) {
+    U64 square = ONE << i;
+    if ((movedPawns & square & board.getNotOccupied()) && ((square >> 8) & board.getNotOccupied())) {
       _moves.push_back(CMove(i-16, i, PAWN, CMove::DOUBLE_PAWN_PUSH));
-    }
-
-    if (leftAttacks & square & attackablePieces) {
-      if (square & RANK_8) {
-        _genPawnPromotions(i-7, i, CMove::CAPTURE);
-      } else {
-        if (square & board.getEnPassant()) {
-          _moves.push_back(CMove(i-7, i, PAWN, CMove::EN_PASSANT));
-        } else {
-          _moves.push_back(CMove(i-7, i, PAWN, CMove::CAPTURE));
-        }
-      }
-    }
-
-    if (rightAttacks & square & attackablePieces) {
-      if (square & RANK_8) {
-        _genPawnPromotions(i-9, i, CMove::CAPTURE);
-      } else {
-        if (square & board.getEnPassant()) {
-          _moves.push_back(CMove(i-9, i, PAWN, CMove::EN_PASSANT));
-        } else {
-          _moves.push_back(CMove(i-9, i, PAWN, CMove::CAPTURE));
-        }
-      }
     }
   }
 }
 
-void MoveGen::_genBlackPawnMoves(const Board& board) {
-  U64 movedPawns1 = board.getPieces(BLACK, PAWN) >> 8;
-  U64 movedPawns2 = (board.getPieces(BLACK, PAWN) & RANK_7) >> 16;
+void MoveGen::_genWhitePawnLeftAttacks(const Board& board) {
+  U64 leftAttacks = (board.getPieces(WHITE, PAWN) << 7) & (~FILE_H);
+  U64 attackablePieces = board.getAttackable(BLACK) | board.getEnPassant();
 
-  U64 leftAttacks = (board.getPieces(BLACK, PAWN) >> 9) & (~FILE_H);
-  U64 rightAttacks = (board.getPieces(BLACK, PAWN) >> 7) & (~FILE_A);
-
-  U64 attackablePieces = board.getAttackable(WHITE) | board.getEnPassant();
-
-  for(U64 i=0;i<64;i++) {
-    U64 square = static_cast<U64>(1) << i;
-
-    if (movedPawns1 & square & board.getNotOccupied()) {
-      if (square & RANK_1) {
-        _genPawnPromotions(i+8, i);
-      } else {
-        _moves.push_back(CMove(i+8, i, PAWN));
-      }
+  for (int i=0;i<64;i++) {
+    U64 square = ONE << i;
+    if ((leftAttacks & square & attackablePieces) == ZERO) {
+      continue;
     }
 
-    if ((movedPawns2 & square & board.getNotOccupied()) && ((square << 8) & board.getNotOccupied())) {
-      _moves.push_back(CMove(i+16, i, PAWN, CMove::DOUBLE_PAWN_PUSH));
-    }
+    PieceType capturedPieceType = board.getPieceAtSquare(BLACK, i);
 
-    if (leftAttacks & square & attackablePieces) {
-      if (square & RANK_1) {
-        _genPawnPromotions(i+9, i, CMove::CAPTURE);
+    if (square & RANK_8) {
+      _genPawnPromotions(i-7, i, CMove::CAPTURE, capturedPieceType);
+    } else {
+      CMove move = CMove(i-7, i, PAWN);
+      if (square & board.getEnPassant()) {
+        move.setFlag(CMove::EN_PASSANT);
       } else {
-        if (square & board.getEnPassant()) {
-          _moves.push_back(CMove(i+9, i, PAWN, CMove::EN_PASSANT));
-        } else {
-          _moves.push_back(CMove(i+9, i, PAWN, CMove::CAPTURE));
-        }
+        move.setFlag(CMove::CAPTURE);
+        move.setCapturedPieceType(capturedPieceType);
       }
-    }
-
-    if (rightAttacks & square & attackablePieces) {
-      if (square & RANK_1) {
-        _genPawnPromotions(i+7, i, CMove::CAPTURE);
-      } else {
-        if (square & board.getEnPassant()) {
-          _moves.push_back(CMove(i+7, i, PAWN, CMove::EN_PASSANT));
-        } else {
-          _moves.push_back(CMove(i+7, i, PAWN, CMove::CAPTURE));
-        }
-      }
+      _moves.push_back(move);
     }
   }
+}
+
+void MoveGen::_genWhitePawnRightAttacks(const Board& board) {
+  U64 rightAttacks = (board.getPieces(WHITE, PAWN) << 9) & (~FILE_A);
+  U64 attackablePieces = board.getAttackable(BLACK) | board.getEnPassant();
+
+  for (int i=0;i<64;i++) {
+    U64 square = ONE << i;
+    if ((rightAttacks & square & attackablePieces) == ZERO) {
+      continue;
+    }
+
+    PieceType capturedPieceType = board.getPieceAtSquare(BLACK, i);
+
+    if (square & RANK_8) {
+      _genPawnPromotions(i-9, i, CMove::CAPTURE, capturedPieceType);
+    } else {
+      CMove move = CMove(i-9, i, PAWN);
+      if (square & board.getEnPassant()) {
+        move.setFlag(CMove::EN_PASSANT);
+      } else {
+        move.setFlag(CMove::CAPTURE);
+        move.setCapturedPieceType(capturedPieceType);
+      }
+      _moves.push_back(move);
+    }
+  }
+}
+
+void MoveGen::_genBlackPawnSingleMoves(const Board& board) {
+  U64 movedPawns = board.getPieces(BLACK, PAWN) >> 8;
+
+  for(int i=0;i<64;i++) {
+    U64 square = ONE << i;
+    if ((movedPawns & square & board.getNotOccupied()) == ZERO) {
+      continue;
+    }
+
+    if (square & RANK_1) {
+      _genPawnPromotions(i+8, i);
+    } else {
+      _moves.push_back(CMove(i+8, i, PAWN));
+    }
+  }
+}
+
+void MoveGen::_genBlackPawnDoubleMoves(const Board& board) {
+  U64 movedPawns = (board.getPieces(BLACK, PAWN) & RANK_7) >> 16;
+
+  for(int i=0;i<64;i++) {
+    U64 square = ONE << i;
+
+    if ((movedPawns & square & board.getNotOccupied()) && ((square << 8) & board.getNotOccupied())) {
+      _moves.push_back(CMove(i+16, i, PAWN, CMove::DOUBLE_PAWN_PUSH));
+    }
+  }
+}
+
+void MoveGen::_genBlackPawnLeftAttacks(const Board& board) {
+  U64 leftAttacks = (board.getPieces(BLACK, PAWN) >> 9) & (~FILE_H);
+  U64 attackablePieces = board.getAttackable(WHITE) | board.getEnPassant();
+
+  for(int i=0;i<64;i++) {
+    U64 square = ONE << i;
+
+    if ((leftAttacks & square & attackablePieces) == ZERO) {
+      continue;
+    }
+
+    PieceType capturedPieceType = board.getPieceAtSquare(WHITE, i);
+
+    if (square & RANK_1) {
+      _genPawnPromotions(i+9, i, CMove::CAPTURE, capturedPieceType);
+    } else {
+      CMove move(i+9, i, PAWN);
+      if (square & board.getEnPassant()) {
+        move.setFlag(CMove::EN_PASSANT);
+      } else {
+        move.setFlag(CMove::CAPTURE);
+        move.setCapturedPieceType(capturedPieceType);
+      }
+      _moves.push_back(move);
+    }
+  }
+}
+
+void MoveGen::_genBlackPawnRightAttacks(const Board& board) {
+  U64 rightAttacks = (board.getPieces(BLACK, PAWN) >> 7) & (~FILE_A);
+  U64 attackablePieces = board.getAttackable(WHITE) | board.getEnPassant();
+
+  for (int i=0;i<64;i++) {
+    U64 square = ONE << i;
+
+    if ((rightAttacks & square & attackablePieces) == ZERO) {
+      continue;
+    }
+
+    PieceType capturedPieceType = board.getPieceAtSquare(WHITE, i);
+
+    if (square & RANK_1) {
+      _genPawnPromotions(i+7, i, CMove::CAPTURE, capturedPieceType);
+    } else {
+      CMove move(i+7, i, PAWN);
+      if (square & board.getEnPassant()) {
+        move.setFlag(CMove::EN_PASSANT);
+      } else {
+        move.setFlag(CMove::CAPTURE);
+        move.setCapturedPieceType(capturedPieceType);
+      }
+      _moves.push_back(move);
+    }
+  }
+}
+
+void MoveGen::_genWhitePawnMoves(const Board& board) {
+  _genWhitePawnSingleMoves(board);
+  _genWhitePawnDoubleMoves(board);
+  _genWhitePawnLeftAttacks(board);
+  _genWhitePawnRightAttacks(board);
+}
+
+void MoveGen::_genBlackPawnMoves(const Board& board) {
+  _genBlackPawnSingleMoves(board);
+  _genBlackPawnDoubleMoves(board);
+  _genBlackPawnLeftAttacks(board);
+  _genBlackPawnRightAttacks(board);
 }
 
 void MoveGen::_genWhiteKingMoves(const Board& board) {
@@ -314,7 +410,10 @@ void MoveGen::_addMoves(const Board& board, int from, PieceType pieceType, U64 m
     }
 
     if(toSquare & attackable) {
-      _moves.push_back(CMove(from, to, pieceType, CMove::CAPTURE));
+      CMove move(from, to, pieceType, CMove::CAPTURE);
+      move.setCapturedPieceType(board.getPieceAtSquare(board.getInactivePlayer(), to));
+
+      _moves.push_back(move);
     } else {
       _moves.push_back(CMove(from, to, pieceType));
     }
