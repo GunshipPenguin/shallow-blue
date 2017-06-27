@@ -237,6 +237,14 @@ int Search::_negaMax(const Board& board, int depth, int alpha, int beta) {
 }
 
 int Search::_qSearch(const Board& board, int alpha, int beta) {
+  MoveGen movegen(board);
+  MoveBoardList legalMoves = movegen.getLegalMoves();
+
+  // Check for checkmate
+  if (legalMoves.size() == 0 && board.colorIsInCheck(board.getActivePlayer())) {
+    return -INF;
+  }
+
   int standPat = Eval(board, board.getActivePlayer()).getScore();
   if (standPat >= beta) {
     return beta;
@@ -245,10 +253,7 @@ int Search::_qSearch(const Board& board, int alpha, int beta) {
     alpha = standPat;
   }
 
-  MoveGen movegen(board);
-  MoveBoardList legalMoves = movegen.getLegalMoves();
   _orderMovesQSearch(legalMoves);
-
   for (auto moveBoard : legalMoves) {
     CMove move = moveBoard.first;
     Board movedBoard = moveBoard.second;
