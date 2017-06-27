@@ -4,6 +4,7 @@
 #include "cmove.h"
 #include "movegen.h"
 #include "search.h"
+#include "version.h"
 #include <iostream>
 #include <thread>
 #include <sstream>
@@ -65,6 +66,10 @@ void Uci::_go(std::istringstream& is) {
 }
 
 void Uci::start() {
+  std::cout << "Shallow Blue " << VER_MAJ << "." << VER_MIN << "." << VER_PATCH;
+  std::cout << " by Rhys Rustad-Elliott";
+  std::cout << " (built " << __DATE__ << " " << __TIME__ << ")" << std::endl;
+
   _board.setToStartPos();
 
   std::string line;
@@ -75,8 +80,8 @@ void Uci::start() {
     is >> token;
 
     if (token == "uci") {
-      std::cout << "id name chess" << std::endl;
-      std::cout << "id author rhys" << std::endl;
+      std::cout << "id name Shallow Blue" << std::endl;
+      std::cout << "id author Rhys Rustad-Elliott" << std::endl;
       std::cout << "uciok" << std::endl;
     } else if (token == "ucinewgame") {
       _uciNewGame();
