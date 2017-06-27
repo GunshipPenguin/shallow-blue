@@ -9,7 +9,8 @@
 
 class Search {
 public:
-  Search(const Board&, int depth, int maxTime, bool=true);
+  Search(const Board&, bool=true);
+  void perform(int);
   CMove getBestMove();
 
 private:
@@ -17,7 +18,6 @@ private:
 
   void _rootMax(const Board&, int);
   int _negaMax(const Board&, int, int, int);
-  void _iterDeep(const Board&, int, int);
 
   int _qSearch(const Board&, int=-INF, int=INF);
 
@@ -28,8 +28,9 @@ private:
 
   int _getPieceValue(PieceType);
 
-
   MoveBoardList _getPv(const Board&);
+
+  Board _board;
 
   bool _logUci;
   TranspTable _tt;

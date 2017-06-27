@@ -8,34 +8,17 @@
 #include <time.h>
 #include <iostream>
 
-Search::Search(const Board& board, int depth, int maxTime, bool logUci) {
+Search::Search(const Board& board, bool logUci) {
   _logUci = logUci;
-  _iterDeep(board, depth, maxTime);
+  _board = board;
 }
 
-void Search::_iterDeep(const Board& board, int maxDepth, int maxTime) {
-  _tt.clear();
+void Search::perform(int depth) {
+  _rootMax(_board, depth);
 
-  int timeRemaining = maxTime;
-  clock_t startTime;
-  MoveBoardList pv;
-  for(int currDepth=1;currDepth<=maxDepth;currDepth++) {
-    startTime = clock();
-
-    _rootMax(board, currDepth);
-
-    clock_t timeTaken = clock() - startTime;
-    timeRemaining -= (float(timeTaken) / CLOCKS_PER_SEC)*1000;
-
-    pv = _getPv(board);
-
-    if (_logUci) {
-      _logUciInfo(pv, currDepth, _bestMove, _bestScore);
-    }
-
-    if (timeRemaining < 0) {
-      return;
-    }
+  MoveBoardList pv = _getPv(_board);
+  if (_logUci) {
+    _logUciInfo(pv, depth, _bestMove, _bestScore);
   }
 }
 
@@ -237,6 +220,14 @@ int Search::_negaMax(const Board& board, int depth, int alpha, int beta) {
 }
 
 int Search::_qSearch(const Board& board, int alpha, int beta) {
+  MoveGen movegen(board);
+  MoveBoardList legalMoves = movegen.getLegalMoves();
+
+  // Check for checkmate
+  if (legalMoves.size() == 0 && board.colorIsInCheck(board.getActivePlayer())) {
+    return -INF;
+  }
+
   int standPat = Eval(board, board.getActivePlayer()).getScore();
   if (standPat >= beta) {
     return beta;
@@ -245,10 +236,7 @@ int Search::_qSearch(const Board& board, int alpha, int beta) {
     alpha = standPat;
   }
 
-  MoveGen movegen(board);
-  MoveBoardList legalMoves = movegen.getLegalMoves();
   _orderMovesQSearch(legalMoves);
-
   for (auto moveBoard : legalMoves) {
     CMove move = moveBoard.first;
     Board movedBoard = moveBoard.second;

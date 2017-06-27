@@ -4,14 +4,16 @@
 #include "cmove.h"
 #include "movegen.h"
 #include "search.h"
+#include "version.h"
 #include <iostream>
+#include <thread>
 #include <sstream>
 
-void Uci::uciNewGame(){
+void Uci::_uciNewGame(){
   _board.setToStartPos();
 }
 
-void Uci::setPosition(std::istringstream& is) {
+void Uci::_setPosition(std::istringstream& is) {
   std::string token;
   is >> token;
 
@@ -42,12 +44,32 @@ void Uci::setPosition(std::istringstream& is) {
   }
 }
 
-CMove Uci::pickBestMove() {
-  Search search(_board, DEFAULT_DEPTH, DEFAULT_MAX_TIME);
-  return search.getBestMove();
+void Uci::_pickBestMove(int maxDepth) {
+  Search search(_board);
+
+  for (int currDepth=1;currDepth<=maxDepth;currDepth++) {
+    search.perform(currDepth);
+  }
+
+  std::cout << "bestmove " << search.getBestMove().getNotation() << std::endl;
+}
+
+void Uci::_go(std::istringstream& is) {
+  std::string token;
+  int depth = DEFAULT_DEPTH;
+  while (is >> token) {
+    if (token == "depth") is >> depth;
+  }
+
+  std::thread searchThread(&Uci::_pickBestMove, this, depth);
+  searchThread.detach();
 }
 
 void Uci::start() {
+  std::cout << "Shallow Blue " << VER_MAJ << "." << VER_MIN << "." << VER_PATCH;
+  std::cout << " by Rhys Rustad-Elliott";
+  std::cout << " (built " << __DATE__ << " " << __TIME__ << ")" << std::endl;
+
   _board.setToStartPos();
 
   std::string line;
@@ -58,20 +80,19 @@ void Uci::start() {
     is >> token;
 
     if (token == "uci") {
-      std::cout << "id name chess" << std::endl;
-      std::cout << "id author rhys" << std::endl << std::endl;
+      std::cout << "id name Shallow Blue" << std::endl;
+      std::cout << "id author Rhys Rustad-Elliott" << std::endl;
       std::cout << "uciok" << std::endl;
     } else if (token == "ucinewgame") {
-      uciNewGame();
+      _uciNewGame();
     } else if (token == "isready") {
       std::cout << "readyok" << std::endl;
     } else if (token == "go") {
-      CMove bestMove = pickBestMove();
-      std::cout << "bestmove " << bestMove.getNotation() << std::endl;
+      _go(is);
     } else if (token == "quit") {
       return;
     } else if (token == "position") {
-      setPosition(is);
+      _setPosition(is);
     }
 
     // Non UCI commands
