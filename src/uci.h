@@ -15,9 +15,10 @@ private:
   static const int DEFAULT_DEPTH = 4;
   static const int DEFAULT_MAX_TIME = 5000;
 
-  void uciNewGame();
-  void setPosition(std::istringstream&);
-  CMove pickBestMove();
+  void _uciNewGame();
+  void _setPosition(std::istringstream&);
+  void _go(std::istringstream&);
+  void _pickBestMove(int);
 };
 
 #endif

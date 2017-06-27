@@ -6,7 +6,7 @@ TEST_CPP_FILES := $(filter-out src/main.cc, $(sort $(CPP_FILES) $(wildcard test/
 OBJ_FILES := $(addprefix obj/,$(notdir $(CPP_FILES:.cc=.o)))
 TEST_OBJ_FILES := $(addprefix obj/,$(notdir $(TEST_CPP_FILES:.cc=.o)))
 
-LD_FLAGS :=
+LD_FLAGS := -lpthread
 CC_FLAGS := -Wall -std=c++11 -g
 
 OBJ_DIR := obj

@@ -8,34 +8,17 @@
 #include <time.h>
 #include <iostream>
 
-Search::Search(const Board& board, int depth, int maxTime, bool logUci) {
+Search::Search(const Board& board, bool logUci) {
   _logUci = logUci;
-  _iterDeep(board, depth, maxTime);
+  _board = board;
 }
 
-void Search::_iterDeep(const Board& board, int maxDepth, int maxTime) {
-  _tt.clear();
+void Search::perform(int depth) {
+  _rootMax(_board, depth);
 
-  int timeRemaining = maxTime;
-  clock_t startTime;
-  MoveBoardList pv;
-  for(int currDepth=1;currDepth<=maxDepth;currDepth++) {
-    startTime = clock();
-
-    _rootMax(board, currDepth);
-
-    clock_t timeTaken = clock() - startTime;
-    timeRemaining -= (float(timeTaken) / CLOCKS_PER_SEC)*1000;
-
-    pv = _getPv(board);
-
-    if (_logUci) {
-      _logUciInfo(pv, currDepth, _bestMove, _bestScore);
-    }
-
-    if (timeRemaining < 0) {
-      return;
-    }
+  MoveBoardList pv = _getPv(_board);
+  if (_logUci) {
+    _logUciInfo(pv, depth, _bestMove, _bestScore);
   }
 }
 
