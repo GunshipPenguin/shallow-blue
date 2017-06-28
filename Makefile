@@ -11,8 +11,8 @@ CC_FLAGS := -Wall -std=c++11 -g
 
 OBJ_DIR := obj
 
-BIN_NAME := chess
-TEST_BIN_NAME := chesstest
+BIN_NAME := shallowblue
+TEST_BIN_NAME := shallowbluetest
 
 all: $(OBJ_DIR) $(BIN_NAME)
 
