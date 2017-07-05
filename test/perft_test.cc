@@ -28,10 +28,10 @@ TEST_CASE("Perft is correct") {
     REQUIRE(perft(2, board) == 400);
     REQUIRE(perft(3, board) == 8902);
     REQUIRE(perft(4, board) == 197281);
+    REQUIRE(perft(5, board) == 4865609);
+    REQUIRE(perft(6, board) == 119060324);
 
     // SLOW
-    // REQUIRE(perft(5, board) == 4865609);
-    // REQUIRE(perft(6, board) == 119060324);
     // REQUIRE(perft(7, board) == 3195901860);
     // REQUIRE(perft(8, board) == 84998978956);
   }
@@ -43,9 +43,7 @@ TEST_CASE("Perft is correct") {
     REQUIRE(perft(2, board) == 2039);
     REQUIRE(perft(3, board) == 97862);
     REQUIRE(perft(4, board) == 4085603);
-
-    // SLOW
-    // REQUIRE(perft(5, board) == 193690690);
+    REQUIRE(perft(5, board) == 193690690);
   }
 
   SECTION("Perft is correct from 8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - -") {
@@ -59,7 +57,7 @@ TEST_CASE("Perft is correct") {
 
     // SLOW
     // REQUIRE(perft(7, board) == 178633661);
-    // REQUIRE(perft(6, board) == 11030083); // SLOW
+    // REQUIRE(perft(6, board) == 11030083);
   }
 
   SECTION("Perft is correct from r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1") {
@@ -69,9 +67,9 @@ TEST_CASE("Perft is correct") {
     REQUIRE(perft(2, board) == 264);
     REQUIRE(perft(3, board) == 9467);
     REQUIRE(perft(4, board) == 422333);
+    REQUIRE(perft(5, board) == 15833292);
 
     // SLOW
-    // REQUIRE(perft(5, board) == 15833292);
     // REQUIRE(perft(6, board) == 706045033);
   }
 
@@ -82,9 +80,7 @@ TEST_CASE("Perft is correct") {
     REQUIRE(perft(2, board) == 1486);
     REQUIRE(perft(3, board) == 62379);
     REQUIRE(perft(4, board) == 2103487);
-
-    // SLOW
-    // REQUIRE(perft(5, board) == 89941194);
+    REQUIRE(perft(5, board) == 89941194);
   }
 
   SECTION("Perft is correct from r4rk1/1pp1qppp/p1np1n2/2b1p1B1/2B1P1b1/P1NP1N2/1PP1QPPP/R4RK1 w - - 0 10") {
@@ -94,9 +90,9 @@ TEST_CASE("Perft is correct") {
     REQUIRE(perft(2, board) == 2079);
     REQUIRE(perft(3, board) == 89890);
     REQUIRE(perft(4, board) == 3894594);
+    REQUIRE(perft(5, board) == 164075551);
 
     // SLOW
-    // REQUIRE(perft(5, board) == 164075551);
     // REQUIRE(perft(6, board) == 6923051137);
     // REQUIRE(perft(7, board) == 287188994746);
     // REQUIRE(perft(8, board) == 11923589843526);
@@ -110,10 +106,8 @@ TEST_CASE("Perft is correct") {
     REQUIRE(perft(2, board) == 496);
     REQUIRE(perft(3, board) == 9483);
     REQUIRE(perft(4, board) == 182838);
-
-    // SLOW
-    // REQUIRE(perft(5, board) == 3605103);
-    // REQUIRE(perft(6, board) == 71179139);
+    REQUIRE(perft(5, board) == 3605103);
+    REQUIRE(perft(6, board) == 71179139);
   }
 
   SECTION("Perft is correct from k1q4b/1qq3bR/qq3b1R/r2Rr2R/r2rR2R/r1B3QQ/rB3QQ1/B4Q1K w - -") {
@@ -122,8 +116,6 @@ TEST_CASE("Perft is correct") {
     REQUIRE(perft(1, board) == 78);
     REQUIRE(perft(2, board) == 5451);
     REQUIRE(perft(3, board) == 388081);
-
-    // SLOW
-    // REQUIRE(perft(4, board) == 26438936);
+    REQUIRE(perft(4, board) == 27735148);
   }
 }

@@ -44,26 +44,28 @@ void Search::_logUciInfo(const MoveBoardList& pv, int depth, CMove bestMove, int
 }
 
 MoveBoardList Search::_getPv(const Board& board) {
-  if (!_tt.contains(board.getZKey())) {
-    return MoveBoardList();
-  }
-
-  int scoreToFind = -_tt.getScore(board.getZKey());
-  ZKey movedZKey;
-
+  int bestScore = INF;
+  MoveBoard best;
+  bool foundBest = false;
   for (auto moveBoard : MoveGen(board).getLegalMoves()) {
     Board movedBoard = moveBoard.second;
 
-    movedZKey = movedBoard.getZKey();
+    ZKey movedZKey = movedBoard.getZKey();
 
-    if (_tt.contains(movedZKey) && _tt.getScore(movedZKey) == scoreToFind) {
-      MoveBoardList pvList = _getPv(moveBoard.second);
-      pvList.insert(pvList.begin(), moveBoard);
-      return pvList;
+    if (_tt.contains(movedZKey) && _tt.getFlag(movedZKey) == TranspTable::EXACT && _tt.getScore(movedZKey) < bestScore) {
+      foundBest = true;
+      bestScore = _tt.getScore(movedZKey);
+      best = moveBoard;
     }
   }
 
-  return MoveBoardList();
+  if (!foundBest) {
+    return MoveBoardList();
+  } else {
+    MoveBoardList pvList = _getPv(best.second);
+    pvList.insert(pvList.begin(), best);
+    return pvList;
+  }
 }
 
 CMove Search::getBestMove() {
@@ -82,7 +84,7 @@ void Search::_rootMax(const Board& board, int depth) {
     CMove move = moveBoard.first;
     Board movedBoard = moveBoard.second;
 
-    currScore = -_negaMax(movedBoard, depth-1, bestScore, INF);
+    currScore = -_negaMax(movedBoard, depth-1, -INF, -bestScore);
 
     if (currScore > bestScore) {
       bestMove = move;
@@ -178,7 +180,6 @@ int Search::_negaMax(const Board& board, int depth, int alpha, int beta) {
   // Transposition table lookups are inconclusive, generate moves and recurse
   MoveGen movegen(board);
   MoveBoardList legalMoves = movegen.getLegalMoves();
-  _orderMoves(legalMoves);
 
   // Check for checkmate
   if (legalMoves.size() == 0 && board.colorIsInCheck(board.getActivePlayer())) {
@@ -188,10 +189,12 @@ int Search::_negaMax(const Board& board, int depth, int alpha, int beta) {
 
   // Eval if depth is 0
   if (depth == 0) {
-    int score = _qSearch(board, -INF, INF);
+    int score = _qSearch(board, alpha, beta);
     _tt.set(board.getZKey(), score, 0, TranspTable::EXACT);
     return score;
   }
+
+  _orderMoves(legalMoves);
 
   int bestScore = -INF;
   for (auto moveBoard : legalMoves) {
@@ -228,7 +231,14 @@ int Search::_qSearch(const Board& board, int alpha, int beta) {
     return -INF;
   }
 
+  _orderMovesQSearch(legalMoves);
   int standPat = Eval(board, board.getActivePlayer()).getScore();
+
+  // If node is quiet, just return eval
+  if (!(legalMoves.at(0).first.getFlags() & CMove::CAPTURE)) {
+    return standPat;
+  }
+
   if (standPat >= beta) {
     return beta;
   }
@@ -236,7 +246,6 @@ int Search::_qSearch(const Board& board, int alpha, int beta) {
     alpha = standPat;
   }
 
-  _orderMovesQSearch(legalMoves);
   for (auto moveBoard : legalMoves) {
     CMove move = moveBoard.first;
     Board movedBoard = moveBoard.second;
