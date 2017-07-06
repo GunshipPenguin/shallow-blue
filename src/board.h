@@ -73,7 +73,11 @@ class Board {
 
     U64 _attackable[2];
 
-    // U64 _attacks[2];
+    // Calculating checks is expensive, so calculate on demand and cache the result
+    mutable bool _checks[2];
+    mutable bool _checksCalculated[2];
+
+    void _resetChecks();
 
     U64 _occupied;
     U64 _notOccupied;
