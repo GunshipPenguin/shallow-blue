@@ -1,3 +1,10 @@
+'''
+Given two files containing correct and incorrect perft divide data in the format
+
+[move]: [number]\n
+
+display the inaccuracy in the incorrect file.
+'''
 import sys
 
 if len(sys.argv) < 3:
