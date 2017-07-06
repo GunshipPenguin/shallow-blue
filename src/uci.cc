@@ -99,7 +99,9 @@ void Uci::start() {
     else if (token == "printboard") {
       std::cout << _board.getStringRep() << std::endl;
     } else if (token == "printmoves") {
-      MoveGen(_board).printMoves();
+      for (auto moveBoard : MoveGen(_board).getLegalMoves()) {
+        std::cout << moveBoard.first.getNotation() << std::endl;
+      }
     }
 
     else {

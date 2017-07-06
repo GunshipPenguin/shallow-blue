@@ -19,8 +19,6 @@ public:
   MoveList getMoves();
   MoveBoardList getLegalMoves();
 
-  void printMoves();
-
 private:
   MoveList _moves;
   MoveBoardList _legalMoves;

@@ -33,7 +33,7 @@ These commands can be useful for debugging.
 - `printboard`
     - Pretty prints the current state of the game board
 - `printmoves`
-    - Prints all pseudo-legal moves for the currently active player
+    - Prints all legal moves for the currently active player
 
 ## Future Improvements
 

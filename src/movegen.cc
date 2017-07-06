@@ -70,12 +70,6 @@ void MoveGen::_genBlackMoves(const Board& board) {
   _genBlackQueenMoves(board);
 }
 
-void MoveGen::printMoves() {
-  for(auto move : getMoves()) {
-    std::cout << move.getNotation() << std::endl;
-  }
-}
-
 void MoveGen::_genPawnPromotions(unsigned int from, unsigned int to, unsigned int flags, PieceType capturedPieceType) {
   CMove promotionBase = CMove(from, to, PAWN, flags | CMove::PROMOTION);
   if (flags & CMove::CAPTURE) {
