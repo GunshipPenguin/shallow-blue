@@ -1,22 +1,22 @@
-SRC_DIR := $(shell pwd)/src
+SRC_DIR = $(shell pwd)/src
 
-CPP_FILES := $(wildcard src/*.cc)
-TEST_CPP_FILES := $(filter-out src/main.cc, $(sort $(CPP_FILES) $(wildcard test/*.cc)))
+CPP_FILES = $(wildcard src/*.cc)
+TEST_CPP_FILES = $(filter-out src/main.cc, $(sort $(CPP_FILES) $(wildcard test/*.cc)))
 
-OBJ_FILES := $(addprefix obj/,$(notdir $(CPP_FILES:.cc=.o)))
-TEST_OBJ_FILES := $(addprefix obj/,$(notdir $(TEST_CPP_FILES:.cc=.o)))
+OBJ_FILES = $(addprefix obj/,$(notdir $(CPP_FILES:.cc=.o)))
+TEST_OBJ_FILES = $(addprefix obj/,$(notdir $(TEST_CPP_FILES:.cc=.o)))
 
-LD_FLAGS := -lpthread -lgomp -lrt
-CC_FLAGS := -Wall -std=c++11 -O3 -march=native -flto -fopenmp -D_GLIBCXX_PARALLEL
+LD_FLAGS = -lpthread -lgomp -lrt
+CC_FLAGS = -Wall -std=c++11 -O3 -march=native -flto -fopenmp -D_GLIBCXX_PARALLEL
 
 # Debug compile and linker flags (remove optimizations and add debugging symbols)
 debug: CC_FLAGS = -Wall -std=c++11 -g
 debug: LD_FLAGS = -lpthread
 
-OBJ_DIR := obj
+OBJ_DIR = obj
 
-BIN_NAME := shallowblue
-TEST_BIN_NAME := shallowbluetest
+BIN_NAME = shallowblue
+TEST_BIN_NAME = shallowbluetest
 
 all: $(OBJ_DIR) $(BIN_NAME)
 
