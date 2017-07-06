@@ -35,6 +35,23 @@ These commands can be useful for debugging.
 - `printmoves`
     - Prints all pseudo-legal moves for the currently active player
 
+## Future Improvements
+
+- General
+  - Avoid draws by repetition / 50 move rule
+  - Magic bitboards
+- Evaluation
+  - King safety
+  - Pawn structure
+- Search
+  - Switch search algorithm to Principal Variation Search
+  - Do more move ordering than just principal variation / transposition table
+- UCI
+  - Support more of the UCI protocol
+    - Support timers (wtime / btime)
+    - `stop` command
+    - `go infinite`
+
 # License
 
 [MIT](https://github.com/GunshipPenguin/shallow-blue/blob/master/LICENSE) © Rhys Rustad-Elliott
