@@ -13,7 +13,6 @@ public:
 private:
   Board _board;
   static const int DEFAULT_DEPTH = 4;
-  static const int DEFAULT_MAX_TIME = 5000;
 
   void _uciNewGame();
   void _setPosition(std::istringstream&);
