@@ -9,6 +9,8 @@ public:
   Eval(const Board&, Color);
   int getScore();
 
+  int _calcMobility(const Board&, Color);
+
 private:
   // Piece values in centipawns
   static const int PAWN_VALUE = 100;
@@ -22,6 +24,7 @@ private:
 
   int _score;
   void _doEval(const Board&, Color);
+
 };
 
 #endif

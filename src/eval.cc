@@ -30,4 +30,42 @@ void Eval::_doEval(const Board& board, Color color) {
 
   PSquareTable pst = board.getPSquareTable();
   _score += (pst.getScore(color) - pst.getScore(otherColor));
+
+  _score += MOBILITY_WEIGHT * (_calcMobility(board, color) - _calcMobility(board, otherColor));
+}
+
+int Eval::_calcMobility(const Board& board, Color color) {
+  int moves = 0;
+
+  // Special case for pawn moves
+  U64 pawns = board.getPieces(color, PAWN);
+  U64 movedPawns1 = (color == WHITE ? pawns << 8 : pawns >> 8) & board.getNotOccupied();
+  U64 movedPawns2 = (color == WHITE ? (movedPawns1 & RANK_3) << 8 : (movedPawns1 & RANK_6) >> 8) & board.getNotOccupied();
+  moves += _popCount(movedPawns1 | movedPawns2);
+
+  // Special case for pawn attacks
+  while (pawns) {
+    int square = _popLsb(pawns);
+
+    U64 attacks = board.getAttacksForSquare(PAWN, color, square);
+    attacks &= board.getAllPieces(getOppositeColor(color));
+
+    moves += _popCount(attacks);
+  }
+
+  PieceType pieceTypes[5] = {ROOK, KNIGHT, BISHOP, QUEEN, KING};
+
+  for (auto pieceType : pieceTypes) {
+    U64 pieces = board.getPieces(color, pieceType);
+
+    while (pieces) {
+      int square = _popLsb(pieces);
+
+      U64 attackBitBoard = board.getAttacksForSquare(pieceType, color, square);
+
+      moves += _popCount(attackBitBoard);
+    }
+  }
+
+  return moves;
 }

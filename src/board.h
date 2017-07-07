@@ -57,7 +57,6 @@ class Board {
     Color getActivePlayer() const;
     Color getInactivePlayer() const;
 
-    // Methods returning attack bitboards
     U64 getAttacksForSquare(PieceType, Color, int) const;
 
   private:
