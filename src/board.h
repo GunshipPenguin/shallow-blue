@@ -58,15 +58,17 @@ class Board {
     Color getInactivePlayer() const;
 
     // Methods returning attack bitboards
-    U64 getWhitePawnAttacksForSquare(int) const;
-    U64 getBlackPawnAttacksForSquare(int) const;
-    U64 getKingAttacksForSquare(int, U64) const;
-    U64 getKnightAttacksForSquare(int, U64) const;
-    U64 getBishopAttacksForSquare(int, U64) const;
-    U64 getRookAttacksForSquare(int, U64) const;
-    U64 getQueenAttacksForSquare(int, U64) const;
+    U64 getAttacksForSquare(PieceType, Color, int) const;
 
   private:
+    U64 _getWhitePawnAttacksForSquare(int) const;
+    U64 _getBlackPawnAttacksForSquare(int) const;
+    U64 _getKingAttacksForSquare(int, U64) const;
+    U64 _getKnightAttacksForSquare(int, U64) const;
+    U64 _getBishopAttacksForSquare(int, U64) const;
+    U64 _getRookAttacksForSquare(int, U64) const;
+    U64 _getQueenAttacksForSquare(int, U64) const;
+
     U64 _pieces[2][6];
 
     U64 _allPieces[2];

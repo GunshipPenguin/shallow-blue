@@ -320,7 +320,7 @@ void MoveGen::_genKingMoves(const Board& board, U64 king, U64 own, U64 attackabl
 
   int kingIndex = __builtin_ffsll(king) - 1;
 
-  U64 moves = board.getKingAttacksForSquare(kingIndex, own);
+  U64 moves = board.getAttacksForSquare(KING, board.getActivePlayer(), kingIndex);
 
   _addMoves(board, kingIndex, KING, moves, attackable);
 }
@@ -337,7 +337,7 @@ void MoveGen::_genKnightMoves(const Board& board, U64 knights, U64 own, U64 atta
   while (knights) {
     int from = _pop_lsb(knights);
 
-    U64 moves = board.getKnightAttacksForSquare(from, own);
+    U64 moves = board.getAttacksForSquare(KNIGHT, board.getActivePlayer(), from);
 
     _addMoves(board, from, KNIGHT, moves, attackable);
   }
@@ -355,7 +355,7 @@ void MoveGen::_genBishopMoves(const Board& board, U64 bishops, U64 own, U64 atta
   while (bishops) {
     int from = _pop_lsb(bishops);
 
-    U64 moves = board.getBishopAttacksForSquare(from, own);
+    U64 moves = board.getAttacksForSquare(BISHOP, board.getActivePlayer(), from);
 
     _addMoves(board, from, BISHOP, moves, attackable);
   }
@@ -373,7 +373,7 @@ void MoveGen::_genRookMoves(const Board& board, U64 rooks, U64 own, U64 attackab
   while (rooks) {
     int from = _pop_lsb(rooks);
 
-    U64 moves = board.getRookAttacksForSquare(from, own);
+    U64 moves = board.getAttacksForSquare(ROOK, board.getActivePlayer(), from);
 
     _addMoves(board, from, ROOK, moves, attackable);
   }
@@ -391,7 +391,7 @@ void MoveGen::_genQueenMoves(const Board& board, U64 queens, U64 own, U64 attack
   while (queens) {
     int from = _pop_lsb(queens);
 
-    U64 moves = board.getQueenAttacksForSquare(from, own);
+    U64 moves = board.getAttacksForSquare(QUEEN, board.getActivePlayer(), from);
 
     _addMoves(board, from, QUEEN, moves, attackable);
   }

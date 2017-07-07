@@ -41,6 +41,35 @@ Color Board::getActivePlayer() const {
   return _activePlayer;
 }
 
+U64 Board::getAttacksForSquare(PieceType pieceType, Color color, int square) const {
+  // Special case for pawns
+  if (pieceType == PAWN) {
+    switch (color) {
+      case WHITE: return _getWhitePawnAttacksForSquare(square);
+      case BLACK: return _getBlackPawnAttacksForSquare(square);
+    }
+  }
+
+  U64 own = getAllPieces(color);
+  U64 attacks;
+  switch (pieceType) {
+    case ROOK: attacks = _getRookAttacksForSquare(square, own);
+      break;
+    case KNIGHT: attacks = _getKnightAttacksForSquare(square, own);
+      break;
+    case BISHOP: attacks = _getBishopAttacksForSquare(square, own);
+      break;
+    case QUEEN: attacks = _getQueenAttacksForSquare(square, own);
+      break;
+    case KING: attacks = _getKingAttacksForSquare(square, own);
+      break;
+    default:
+      break;
+  }
+
+  return attacks;
+}
+
 Color Board::getInactivePlayer() const {
   return _activePlayer == WHITE ? BLACK : WHITE;
 }
@@ -466,20 +495,20 @@ void Board::doMove(CMove move) {
 bool Board::_squareUnderAttack(Color color, int squareIndex) const {
   bool squareAttacked = false;
 
-  if (getKnightAttacksForSquare(squareIndex, ZERO) & getPieces(color, KNIGHT)) squareAttacked = true;
-  else if (getBishopAttacksForSquare(squareIndex, ZERO) & getPieces(color, BISHOP)) squareAttacked = true;
-  else if (getRookAttacksForSquare(squareIndex, ZERO) & getPieces(color, ROOK)) squareAttacked = true;
-  else if (getQueenAttacksForSquare(squareIndex, ZERO) & getPieces(color, QUEEN)) squareAttacked = true;
-  else if (getKingAttacksForSquare(squareIndex, ZERO) & getPieces(color, KING)) squareAttacked = true;
+  if (_getKnightAttacksForSquare(squareIndex, ZERO) & getPieces(color, KNIGHT)) squareAttacked = true;
+  else if (_getBishopAttacksForSquare(squareIndex, ZERO) & getPieces(color, BISHOP)) squareAttacked = true;
+  else if (_getRookAttacksForSquare(squareIndex, ZERO) & getPieces(color, ROOK)) squareAttacked = true;
+  else if (_getQueenAttacksForSquare(squareIndex, ZERO) & getPieces(color, QUEEN)) squareAttacked = true;
+  else if (_getKingAttacksForSquare(squareIndex, ZERO) & getPieces(color, KING)) squareAttacked = true;
 
   // Pawns special case
   if (!squareAttacked) {
     switch(color) {
       case WHITE:
-        if (getBlackPawnAttacksForSquare(squareIndex) & getPieces(WHITE, PAWN)) squareAttacked = true;
+        if (_getBlackPawnAttacksForSquare(squareIndex) & getPieces(WHITE, PAWN)) squareAttacked = true;
         break;
       case BLACK:
-        if (getWhitePawnAttacksForSquare(squareIndex) & getPieces(BLACK, PAWN)) squareAttacked = true;
+        if (_getWhitePawnAttacksForSquare(squareIndex) & getPieces(BLACK, PAWN)) squareAttacked = true;
         break;
     }
   }
@@ -532,7 +561,7 @@ void Board::setToStartPos() {
   setToFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 }
 
-U64 Board::getWhitePawnAttacksForSquare(int square) const {
+U64 Board::_getWhitePawnAttacksForSquare(int square) const {
   U64 fromSquare = ONE << square;
 
   U64 attacks = ((fromSquare << 7) & ~FILE_H) | ((fromSquare << 9) & ~FILE_A);
@@ -540,7 +569,7 @@ U64 Board::getWhitePawnAttacksForSquare(int square) const {
   return attacks;
 }
 
-U64 Board::getBlackPawnAttacksForSquare(int square) const {
+U64 Board::_getBlackPawnAttacksForSquare(int square) const {
   U64 fromSquare = ONE << square;
 
   U64 attacks = ((fromSquare >> 7) & ~FILE_A) | ((fromSquare >> 9) & ~FILE_H);
@@ -549,7 +578,7 @@ U64 Board::getBlackPawnAttacksForSquare(int square) const {
 }
 
 
-U64 Board::getKnightAttacksForSquare(int square, U64 own) const {
+U64 Board::_getKnightAttacksForSquare(int square, U64 own) const {
   U64 fromSquare = ONE << square;
 
   U64 moves = (((fromSquare << 15) | (fromSquare >> 17)) & ~FILE_H) | // Left 1
@@ -560,7 +589,7 @@ U64 Board::getKnightAttacksForSquare(int square, U64 own) const {
   return moves & (~own);
 }
 
-U64 Board::getKingAttacksForSquare(int square, U64 own) const {
+U64 Board::_getKingAttacksForSquare(int square, U64 own) const {
   U64 king = ONE << square;
 
   U64 moves = (((king << 7) | (king >> 9) | (king >> 1)) & (~FILE_H)) |
@@ -570,7 +599,7 @@ U64 Board::getKingAttacksForSquare(int square, U64 own) const {
   return moves & (~own);
 }
 
-U64 Board::getBishopAttacksForSquare(int square, U64 own) const {
+U64 Board::_getBishopAttacksForSquare(int square, U64 own) const {
   U64 moves = _raytable.getPositiveAttacks(RayTable::NORTH_WEST, square, _occupied) |
     _raytable.getPositiveAttacks(RayTable::NORTH_EAST, square, _occupied) |
     _raytable.getNegativeAttacks(RayTable::SOUTH_WEST, square, _occupied) |
@@ -579,7 +608,7 @@ U64 Board::getBishopAttacksForSquare(int square, U64 own) const {
   return moves & (~own);
 }
 
-U64 Board::getRookAttacksForSquare(int square, U64 own) const {
+U64 Board::_getRookAttacksForSquare(int square, U64 own) const {
   U64 moves = _raytable.getPositiveAttacks(RayTable::NORTH, square, _occupied) |
     _raytable.getPositiveAttacks(RayTable::EAST, square, _occupied) |
     _raytable.getNegativeAttacks(RayTable::SOUTH, square, _occupied) |
@@ -588,6 +617,6 @@ U64 Board::getRookAttacksForSquare(int square, U64 own) const {
   return moves & (~own);
 }
 
-U64 Board::getQueenAttacksForSquare(int square, U64 own) const {
-  return getBishopAttacksForSquare(square, own) | getRookAttacksForSquare(square, own);
+U64 Board::_getQueenAttacksForSquare(int square, U64 own) const {
+  return _getBishopAttacksForSquare(square, own) | _getRookAttacksForSquare(square, own);
 }
