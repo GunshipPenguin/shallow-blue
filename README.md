@@ -40,12 +40,14 @@ These commands can be useful for debugging.
 - General
   - Avoid draws by repetition / 50 move rule
   - Magic bitboards
+  - Unmake move function
 - Evaluation
   - King safety
   - Pawn structure
 - Search
   - Switch search algorithm to Principal Variation Search
   - Do more move ordering than just principal variation / transposition table
+  - Use a capture-only move generator for quiescence search
 - UCI
   - Support more of the UCI protocol
     - Support timers (wtime / btime)
