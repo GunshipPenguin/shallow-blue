@@ -23,14 +23,10 @@ void MoveGen::_genLegalMoves(const Board& board) {
     Board tempBoard = board;
     tempBoard.doMove(move);
 
-    // Skip this move if it results in moving into check
-    if (!(tempBoard.getActivePlayer() == WHITE) && tempBoard.colorIsInCheck(WHITE)) {
-      continue;
-    } else if (!(tempBoard.getActivePlayer() == BLACK) && tempBoard.colorIsInCheck(BLACK)) {
-      continue;
+    // Skip adding this move if it results in moving into check
+    if (!tempBoard.colorIsInCheck(tempBoard.getInactivePlayer())) {
+      _legalMoves.push_back(MoveBoard(move, tempBoard));
     }
-
-    _legalMoves.push_back(MoveBoard(move, tempBoard));
   }
 }
 
