@@ -1,7 +1,7 @@
 #include "eval.h"
 #include "defs.h"
 #include "movegen.h"
-#include <iostream>
+#include "bitutils.h"
 
 Eval::Eval(const Board& board, Color color) {
   _doEval(board, color);
@@ -30,8 +30,4 @@ void Eval::_doEval(const Board& board, Color color) {
 
   PSquareTable pst = board.getPSquareTable();
   _score += (pst.getScore(color) - pst.getScore(otherColor));
-}
-
-int Eval::_popCount(U64 value) {
-  return __builtin_popcountll(value);
 }

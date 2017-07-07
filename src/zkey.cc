@@ -1,6 +1,7 @@
 #include "zkey.h"
 #include "defs.h"
 #include "board.h"
+#include "bitutils.h"
 #include <random>
 #include <climits>
 #include <iostream>
@@ -68,7 +69,7 @@ ZKey::ZKey(Board board) {
 
   // Add en passant
   if (board.getEnPassant()) {
-    _enPassantFile = (__builtin_ffsll(board.getEnPassant()) - 1) % 8;
+    _enPassantFile = (_bitscanForward(board.getEnPassant())) % 8;
     _key ^= EN_PASSANT_KEYS[_enPassantFile];
   } else {
     _enPassantFile = -1;

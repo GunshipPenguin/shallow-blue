@@ -2,6 +2,7 @@
 #include "cmove.h"
 #include "raytable.h"
 #include "defs.h"
+#include "bitutils.h"
 #include <string>
 #include <sstream>
 #include <iostream>
@@ -83,13 +84,13 @@ PSquareTable Board::getPSquareTable() const {
 }
 
 bool Board::colorIsInCheck(Color color) const {
-  int kingSquare = __builtin_ffsll(getPieces(color, KING)) - 1;
+  int kingSquare = _bitscanForward(getPieces(color, KING));
 
   return _squareUnderAttack(getOppositeColor(color), kingSquare);
   if (_checksCalculated[color]) {
     return _checks[color];
   } else {
-    int kingSquare = __builtin_ffsll(getPieces(color, KING)) - 1;
+    int kingSquare = _bitscanForward(getPieces(color, KING));
 
     bool isInCheck = _squareUnderAttack(getOppositeColor(color), kingSquare);
 

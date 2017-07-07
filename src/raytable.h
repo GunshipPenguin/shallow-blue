@@ -37,9 +37,6 @@ private:
 
   U64 _eastOne(U64);
   U64 _westOne(U64);
-
-  int _bitscanForward(U64);
-  int _bitscanReverse(U64);
 };
 
 #endif

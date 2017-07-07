@@ -1,6 +1,7 @@
 #include "movegen.h"
 #include "board.h"
 #include "eval.h"
+#include "bitutils.h"
 #include "defs.h"
 #include <iostream>
 
@@ -98,13 +99,13 @@ void MoveGen::_genWhitePawnSingleMoves(const Board& board) {
 
   // Generate single non promotion moves
   while (movedPawns) {
-    int to = _pop_lsb(movedPawns);
+    int to = _popLsb(movedPawns);
     _moves.push_back(CMove(to-8, to, PAWN));
   }
 
   // Generate promotions
   while (promotions) {
-    int to = _pop_lsb(promotions);
+    int to = _popLsb(promotions);
     _genPawnPromotions(to-8, to);
   }
 }
@@ -114,7 +115,7 @@ void MoveGen::_genWhitePawnDoubleMoves(const Board& board) {
   U64 doublePushes = (singlePushes << 8) & board.getNotOccupied() & RANK_4;
 
   while (doublePushes) {
-    int to = _pop_lsb(doublePushes);
+    int to = _popLsb(doublePushes);
     _moves.push_back(CMove(to-16, to, PAWN, CMove::DOUBLE_PAWN_PUSH));
   }
 }
@@ -129,7 +130,7 @@ void MoveGen::_genWhitePawnLeftAttacks(const Board& board) {
 
   // Add regular attacks (Not promotions or en passants)
   while (leftRegularAttacks) {
-    int to = _pop_lsb(leftRegularAttacks);
+    int to = _popLsb(leftRegularAttacks);
 
     CMove move = CMove(to-7, to, PAWN, CMove::CAPTURE);
     move.setCapturedPieceType(board.getPieceAtSquare(BLACK, to));
@@ -139,14 +140,14 @@ void MoveGen::_genWhitePawnLeftAttacks(const Board& board) {
 
   // Add promotion attacks
   while (leftAttackPromotions) {
-    int to = _pop_lsb(leftAttackPromotions);
+    int to = _popLsb(leftAttackPromotions);
     _genPawnPromotions(to-7, to, CMove::CAPTURE, board.getPieceAtSquare(BLACK, to));
   }
 
   // Add en passant attacks
   // There can only be one en passant square at a time, so no need for loop
   if (leftEnPassant) {
-    int to = _pop_lsb(leftEnPassant);
+    int to = _popLsb(leftEnPassant);
     _moves.push_back(CMove(to-7, to, PAWN, CMove::EN_PASSANT));
   }
 }
@@ -161,7 +162,7 @@ void MoveGen::_genWhitePawnRightAttacks(const Board& board) {
 
   // Add regular attacks (Not promotions or en passants)
   while (rightRegularAttacks) {
-    int to = _pop_lsb(rightRegularAttacks);
+    int to = _popLsb(rightRegularAttacks);
 
     CMove move = CMove(to-9, to, PAWN, CMove::CAPTURE);
     move.setCapturedPieceType(board.getPieceAtSquare(BLACK, to));
@@ -171,14 +172,14 @@ void MoveGen::_genWhitePawnRightAttacks(const Board& board) {
 
   // Add promotion attacks
   while (rightAttackPromotions) {
-    int to = _pop_lsb(rightAttackPromotions);
+    int to = _popLsb(rightAttackPromotions);
     _genPawnPromotions(to-9, to, CMove::CAPTURE, board.getPieceAtSquare(BLACK, to));
   }
 
   // Add en passant attacks
   // There can only be one en passant square at a time, so no need for loop
   if (rightEnPassant) {
-    int to = _pop_lsb(rightEnPassant);
+    int to = _popLsb(rightEnPassant);
     _moves.push_back(CMove(to-9, to, PAWN, CMove::EN_PASSANT));
   }
 }
@@ -192,13 +193,13 @@ void MoveGen::_genBlackPawnSingleMoves(const Board& board) {
 
   // Generate single non promotion moves'
   while (movedPawns) {
-    int to = _pop_lsb(movedPawns);
+    int to = _popLsb(movedPawns);
     _moves.push_back(CMove(to+8, to, PAWN));
   }
 
   // Generate promotions
   while (promotions) {
-    int to = _pop_lsb(promotions);
+    int to = _popLsb(promotions);
     _genPawnPromotions(to+8, to);
   }
 }
@@ -208,7 +209,7 @@ void MoveGen::_genBlackPawnDoubleMoves(const Board& board) {
   U64 doublePushes = (singlePushes >> 8) & board.getNotOccupied() & RANK_5;
 
   while (doublePushes) {
-    int to = _pop_lsb(doublePushes);
+    int to = _popLsb(doublePushes);
     _moves.push_back(CMove(to+16, to, PAWN, CMove::DOUBLE_PAWN_PUSH));
   }
 }
@@ -223,7 +224,7 @@ void MoveGen::_genBlackPawnLeftAttacks(const Board& board) {
 
   // Add regular attacks (Not promotions or en passants)
   while (leftRegularAttacks) {
-    int to = _pop_lsb(leftRegularAttacks);
+    int to = _popLsb(leftRegularAttacks);
 
     CMove move = CMove(to+9, to, PAWN, CMove::CAPTURE);
     move.setCapturedPieceType(board.getPieceAtSquare(WHITE, to));
@@ -233,14 +234,14 @@ void MoveGen::_genBlackPawnLeftAttacks(const Board& board) {
 
   // Add promotion attacks
   while (leftAttackPromotions) {
-    int to = _pop_lsb(leftAttackPromotions);
+    int to = _popLsb(leftAttackPromotions);
     _genPawnPromotions(to+9, to, CMove::CAPTURE, board.getPieceAtSquare(WHITE, to));
   }
 
   // Add en passant attacks
   // There can only be one en passant square at a time, so no need for loop
   if (leftEnPassant) {
-    int to = _pop_lsb(leftEnPassant);
+    int to = _popLsb(leftEnPassant);
     _moves.push_back(CMove(to+9, to, PAWN, CMove::EN_PASSANT));
   }
 }
@@ -255,7 +256,7 @@ void MoveGen::_genBlackPawnRightAttacks(const Board& board) {
 
   // Add regular attacks (Not promotions or en passants)
   while (rightRegularAttacks) {
-    int to = _pop_lsb(rightRegularAttacks);
+    int to = _popLsb(rightRegularAttacks);
 
     CMove move = CMove(to+7, to, PAWN, CMove::CAPTURE);
     move.setCapturedPieceType(board.getPieceAtSquare(WHITE, to));
@@ -265,14 +266,14 @@ void MoveGen::_genBlackPawnRightAttacks(const Board& board) {
 
   // Add promotion attacks
   while (rightAttackPromotions) {
-    int to = _pop_lsb(rightAttackPromotions);
+    int to = _popLsb(rightAttackPromotions);
     _genPawnPromotions(to+7, to, CMove::CAPTURE, board.getPieceAtSquare(WHITE, to));
   }
 
   // Add en passant attacks
   // There can only be one en passant square at a time, so no need for loop
   if (rightEnPassant) {
-    int to = _pop_lsb(rightEnPassant);
+    int to = _popLsb(rightEnPassant);
     _moves.push_back(CMove(to+7, to, PAWN, CMove::EN_PASSANT));
   }
 }
@@ -318,7 +319,7 @@ void MoveGen::_genKingMoves(const Board& board, U64 king, U64 own, U64 attackabl
     return;
   }
 
-  int kingIndex = __builtin_ffsll(king) - 1;
+  int kingIndex = _bitscanForward(king);
 
   U64 moves = board.getAttacksForSquare(KING, board.getActivePlayer(), kingIndex);
 
@@ -335,7 +336,7 @@ void MoveGen::_genBlackKnightMoves(const Board& board) {
 
 void MoveGen::_genKnightMoves(const Board& board, U64 knights, U64 own, U64 attackable) {
   while (knights) {
-    int from = _pop_lsb(knights);
+    int from = _popLsb(knights);
 
     U64 moves = board.getAttacksForSquare(KNIGHT, board.getActivePlayer(), from);
 
@@ -353,7 +354,7 @@ void MoveGen::_genBlackBishopMoves(const Board& board) {
 
 void MoveGen::_genBishopMoves(const Board& board, U64 bishops, U64 own, U64 attackable) {
   while (bishops) {
-    int from = _pop_lsb(bishops);
+    int from = _popLsb(bishops);
 
     U64 moves = board.getAttacksForSquare(BISHOP, board.getActivePlayer(), from);
 
@@ -371,7 +372,7 @@ void MoveGen::_genBlackRookMoves(const Board& board) {
 
 void MoveGen::_genRookMoves(const Board& board, U64 rooks, U64 own, U64 attackable) {
   while (rooks) {
-    int from = _pop_lsb(rooks);
+    int from = _popLsb(rooks);
 
     U64 moves = board.getAttacksForSquare(ROOK, board.getActivePlayer(), from);
 
@@ -389,7 +390,7 @@ void MoveGen::_genBlackQueenMoves(const Board& board) {
 
 void MoveGen::_genQueenMoves(const Board& board, U64 queens, U64 own, U64 attackable) {
   while (queens) {
-    int from = _pop_lsb(queens);
+    int from = _popLsb(queens);
 
     U64 moves = board.getAttacksForSquare(QUEEN, board.getActivePlayer(), from);
 
@@ -404,24 +405,18 @@ void MoveGen::_addMoves(const Board& board, int from, PieceType pieceType, U64 m
   // Generate non attacks
   U64 nonAttacks = moves & ~attackable;
   while (nonAttacks) {
-    int to = _pop_lsb(nonAttacks);
+    int to = _popLsb(nonAttacks);
     _moves.push_back(CMove(from, to, pieceType));
   }
 
   // Generate attacks
   U64 attacks = moves & attackable;
   while (attacks) {
-    int to = _pop_lsb(attacks);
+    int to = _popLsb(attacks);
 
     CMove move(from, to, pieceType, CMove::CAPTURE);
     move.setCapturedPieceType(board.getPieceAtSquare(board.getInactivePlayer(), to));
 
     _moves.push_back(move);
   }
-}
-
-int MoveGen::_pop_lsb(U64& val) {
-  int lsbIndex = __builtin_ffsll(val) - 1;
-  val &= val-1;
-  return lsbIndex;
 }

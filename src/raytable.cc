@@ -1,5 +1,6 @@
 #include "raytable.h"
 #include "defs.h"
+#include "bitutils.h"
 #include <iostream>
 
 RayTable::RayTable() {
@@ -114,12 +115,4 @@ U64 RayTable::_eastOne(U64 bb) {
 
 U64 RayTable::_westOne(U64 bb) {
   return ((bb >> 1ull) & (~FILE_H));
-}
-
-int RayTable::_bitscanForward(U64 board) {
-  return __builtin_ffsll(board) - 1;
-}
-
-int RayTable::_bitscanReverse(U64 board) {
-  return __builtin_clzll(board) + 1;
 }

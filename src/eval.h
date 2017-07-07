@@ -22,7 +22,6 @@ private:
 
   int _score;
   void _doEval(const Board&, Color);
-  int _popCount(U64);
 };
 
 #endif
