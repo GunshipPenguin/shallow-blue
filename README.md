@@ -39,6 +39,7 @@ These commands can be useful for debugging.
 
 - General
   - Avoid draws by repetition / 50 move rule
+  - Opening book support
   - Magic bitboards
   - Unmake move function
 - Evaluation
