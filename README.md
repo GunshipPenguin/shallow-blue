@@ -47,7 +47,6 @@ These commands can be useful for debugging.
   - Pawn structure
 - Search
   - Switch search algorithm to Principal Variation Search
-  - Do more move ordering than just principal variation / transposition table
   - Use a capture-only move generator for quiescence search
 - UCI
   - Support more of the UCI protocol
