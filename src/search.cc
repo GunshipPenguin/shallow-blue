@@ -226,9 +226,13 @@ int Search::_qSearch(const Board& board, int alpha, int beta) {
   MoveGen movegen(board);
   MoveBoardList legalMoves = movegen.getLegalMoves();
 
-  // Check for checkmate
-  if (legalMoves.size() == 0 && board.colorIsInCheck(board.getActivePlayer())) {
-    return -INF;
+  // Check for checkmate / stalemate
+  if (legalMoves.size() == 0) {
+    if (board.colorIsInCheck(board.getActivePlayer())) { // Checkmate
+      return -INF;
+    } else { // Stalemate
+      return 0;
+    }
   }
 
   _orderMovesQSearch(legalMoves);
