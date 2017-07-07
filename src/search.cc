@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <time.h>
 #include <iostream>
+#include <functional>
 
 Search::Search(const Board& board, bool logUci) {
   _logUci = logUci;
@@ -104,35 +105,74 @@ void Search::_rootMax(const Board& board, int depth) {
 }
 
 void Search::_orderMoves(MoveBoardList& moveBoardList) {
-  std::sort(moveBoardList.begin(), moveBoardList.end(), [this](MoveBoard a, MoveBoard b) {
-    ZKey aKey = a.second.getZKey();
-    ZKey bKey = b.second.getZKey();
-    int aScore = _tt.contains(aKey) ? _tt.getScore(aKey) : -INF;
-    int bScore = _tt.contains(bKey) ? _tt.getScore(bKey) : -INF;
+  // Order moves from tt score
+  std::sort(moveBoardList.begin(), moveBoardList.end(), std::bind(&Search::_compareMovesTt, this, std::placeholders::_1, std::placeholders::_2));
 
-    return aScore < bScore;
-  });
+  // Ending index of sorted section of moveBoardList
+  unsigned int i;
+
+  // Order captures by mvv/lva
+  for (i=0;i<moveBoardList.size();i++) {
+    if (!_tt.contains(moveBoardList.at(i).second.getZKey())) {
+      break;
+    }
+  }
+  std::sort(moveBoardList.begin() + i, moveBoardList.end(), std::bind(&Search::_compareMovesMvvLva, this, std::placeholders::_1, std::placeholders::_2));
+
+  // Order promotions by promotion value
+  for(;i<moveBoardList.size();i++) {
+    if (!(moveBoardList.at(i).first.getFlags() & CMove::CAPTURE)) {
+      break;
+    }
+  }
+  std::sort(moveBoardList.begin() + i, moveBoardList.end(), std::bind(&Search::_compareMovesPromotionValue, this, std::placeholders::_1, std::placeholders::_2));
 }
 
 void Search::_orderMovesQSearch(MoveBoardList & moveBoardList) {
-  std::sort(moveBoardList.begin(), moveBoardList.end(), [this](MoveBoard a, MoveBoard b) {
-    bool aIsCapture = a.first.getFlags() & CMove::CAPTURE;
-    bool bIsCapture = b.first.getFlags() & CMove::CAPTURE;
+  std::sort(moveBoardList.begin(), moveBoardList.end(), std::bind(&Search::_compareMovesMvvLva, this, std::placeholders::_1, std::placeholders::_2));
+}
 
-    if (aIsCapture && !bIsCapture) {
-      return true;
-    } else if (bIsCapture && !aIsCapture) {
-      return false;
-    } else { // Both captures
-      // MVV/LVA
-      int aPieceValue = _getPieceValue(a.first.getPieceType());
-      int bPieceValue = _getPieceValue(b.first.getPieceType());
-      int aCaptureValue = _getPieceValue(a.first.getCapturedPieceType());
-      int bCaptureValue = _getPieceValue(b.first.getCapturedPieceType());
+bool Search::_compareMovesTt(MoveBoard a, MoveBoard b) {
+  ZKey aKey = a.second.getZKey();
+  ZKey bKey = b.second.getZKey();
+  int aScore = _tt.contains(aKey) ? _tt.getScore(aKey) : -INF;
+  int bScore = _tt.contains(bKey) ? _tt.getScore(bKey) : -INF;
 
-      return (aCaptureValue - aPieceValue) > (bCaptureValue - bPieceValue);
-    }
-  });
+  return aScore < bScore;
+}
+
+bool Search::_compareMovesMvvLva(MoveBoard a, MoveBoard b) {
+  bool aIsCapture = a.first.getFlags() & CMove::CAPTURE;
+  bool bIsCapture = b.first.getFlags() & CMove::CAPTURE;
+
+  if (aIsCapture && !bIsCapture) {
+    return true;
+  } else if (bIsCapture && !aIsCapture) {
+    return false;
+  } else { // Both captures
+    int aPieceValue = _getPieceValue(a.first.getPieceType());
+    int bPieceValue = _getPieceValue(b.first.getPieceType());
+    int aCaptureValue = _getPieceValue(a.first.getCapturedPieceType());
+    int bCaptureValue = _getPieceValue(b.first.getCapturedPieceType());
+
+    return (aCaptureValue - aPieceValue) > (bCaptureValue - bPieceValue);
+  }
+}
+
+bool Search::_compareMovesPromotionValue(MoveBoard a, MoveBoard b) {
+  bool aIsPromotion = a.first.getFlags() & CMove::PROMOTION;
+  bool bIsPromotion = b.first.getFlags() & CMove::PROMOTION;
+
+  if (aIsPromotion && !bIsPromotion) {
+    return true;
+  } else if (bIsPromotion && !aIsPromotion) {
+    return false;
+  } else { // Both promotions
+    int aPromotionValue = _getPieceValue(a.first.getPromotionPieceType());
+    int bPromotionValue = _getPieceValue(b.first.getPromotionPieceType());
+
+    return aPromotionValue < bPromotionValue;
+  }
 }
 
 int Search::_getPieceValue(PieceType pieceType) {

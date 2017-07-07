@@ -24,6 +24,10 @@ private:
   void _orderMoves(MoveBoardList&);
   void _orderMovesQSearch(MoveBoardList&);
 
+  bool _compareMovesTt(MoveBoard, MoveBoard);
+  bool _compareMovesMvvLva(MoveBoard, MoveBoard);
+  bool _compareMovesPromotionValue(MoveBoard, MoveBoard);
+
   void _logUciInfo(const MoveBoardList&, int, CMove, int);
 
   int _getPieceValue(PieceType);
