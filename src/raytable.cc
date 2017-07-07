@@ -108,11 +108,3 @@ void RayTable::_calcWest() {
     rays[WEST][square] = (ONE << square) - (ONE << (square&56));
   }
 }
-
-U64 RayTable::_eastOne(U64 bb) {
-  return ((bb << 1ull) & (~FILE_A));
-}
-
-U64 RayTable::_westOne(U64 bb) {
-  return ((bb >> 1ull) & (~FILE_H));
-}

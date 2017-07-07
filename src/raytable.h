@@ -34,9 +34,6 @@ private:
   void _calcSouthWest();
   void _calcWest();
   void _calcSouthEast();
-
-  U64 _eastOne(U64);
-  U64 _westOne(U64);
 };
 
 #endif

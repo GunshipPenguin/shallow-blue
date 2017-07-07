@@ -19,4 +19,12 @@ inline int _bitscanReverse(U64 board) {
   return __builtin_clzll(board) + 1;
 }
 
+inline U64 _eastOne(U64 bb) {
+  return ((bb << ONE) & (~FILE_A));
+}
+
+inline U64 _westOne(U64 bb) {
+  return ((bb >> ONE) & (~FILE_H));
+}
+
 #endif
