@@ -5,10 +5,10 @@
 #include "raytable.h"
 #include "psquaretable.h"
 #include "zkey.h"
-#include "cmove.h"
+#include "move.h"
 #include <string>
 
-class CMove;
+class Move;
 
 class Board {
   public:
@@ -19,7 +19,7 @@ class Board {
     void setToStartPos();
     void setToFen(std::string);
 
-    void doMove(CMove);
+    void doMove(Move);
 
     bool whiteCanCastleKs() const;
     bool whiteCanCastleQs() const;
@@ -100,7 +100,7 @@ class Board {
 
     bool _squareUnderAttack(Color, int) const;
 
-    void _updateCastlingRightsForMove(CMove);
+    void _updateCastlingRightsForMove(Move);
 
     void _updateNonPieceBitBoards();
 

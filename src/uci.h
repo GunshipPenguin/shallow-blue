@@ -2,7 +2,7 @@
 #define UCI_H
 
 #include "board.h"
-#include "cmove.h"
+#include "move.h"
 #include <sstream>
 #include <fstream>
 

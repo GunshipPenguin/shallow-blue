@@ -1,7 +1,7 @@
 #include "uci.h"
 #include "board.h"
 #include "defs.h"
-#include "cmove.h"
+#include "move.h"
 #include "movegen.h"
 #include "search.h"
 #include "version.h"

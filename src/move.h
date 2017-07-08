@@ -6,10 +6,10 @@
 #include <string>
 #include <vector>
 
-class CMove {
+class Move {
 public:
-  CMove(); // Null Move
-  CMove(unsigned int, unsigned int, PieceType, unsigned int=0); // Non Null Move
+  Move(); // Null Move
+  Move(unsigned int, unsigned int, PieceType, unsigned int=0); // Non Null Move
 
   enum Flag {
     NULL_MOVE = 1<<0,
@@ -40,7 +40,7 @@ public:
   static unsigned int notationToIndex(std::string);
   static std::string indexToNotation(int);
 
-  bool operator==(CMove) const;
+  bool operator==(Move) const;
 private:
   // Format (28 bits total):
   // MSB  |----6----|---5---|---4---|-3--|-2--|-1--|  LSB

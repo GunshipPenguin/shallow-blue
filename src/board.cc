@@ -1,5 +1,5 @@
 #include "board.h"
-#include "cmove.h"
+#include "move.h"
 #include "raytable.h"
 #include "defs.h"
 #include "bitutils.h"
@@ -320,7 +320,7 @@ void Board::setToFen(std::string fenString) {
   if (enPasSquare == "-") {
     _enPassant = 0;
   } else {
-    int enPasIndex = CMove::notationToIndex(enPasSquare);
+    int enPasIndex = Move::notationToIndex(enPasSquare);
     _enPassant = static_cast<U64>(1) << enPasIndex;
   }
 
@@ -410,7 +410,7 @@ void Board::_resetChecks() {
   _checks[WHITE] = 0, _checks[BLACK] = 0;
 }
 
-void Board::doMove(CMove move) {
+void Board::doMove(Move move) {
   unsigned int flags = move.getFlags();
 
   // En passant always cleared after a move
@@ -424,7 +424,7 @@ void Board::doMove(CMove move) {
   if (move.getFlags() == 0) {
     // No flags set, not a special move
     _movePiece(_activePlayer, move.getPieceType(), move.getFrom(), move.getTo());
-  } else if ((flags & CMove::CAPTURE) && (flags & CMove::PROMOTION)) { // Capture promotion special case
+  } else if ((flags & Move::CAPTURE) && (flags & Move::PROMOTION)) { // Capture promotion special case
     // Remove captured Piece
     PieceType capturedPieceType = move.getCapturedPieceType();
     _removePiece(getInactivePlayer(), capturedPieceType, move.getTo());
@@ -435,14 +435,14 @@ void Board::doMove(CMove move) {
     // Add promoted piece
     PieceType promotionPieceType = move.getPromotionPieceType();
     _addPiece(_activePlayer, promotionPieceType, move.getTo());
-  } else if (flags & CMove::CAPTURE) {
+  } else if (flags & Move::CAPTURE) {
     // Remove captured Piece
     PieceType capturedPieceType = move.getCapturedPieceType();
     _removePiece(getInactivePlayer(), capturedPieceType, move.getTo());
 
     // Move capturing piece
     _movePiece(_activePlayer, move.getPieceType(), move.getFrom(), move.getTo());
-  } else if (flags & CMove::KSIDE_CASTLE) {
+  } else if (flags & Move::KSIDE_CASTLE) {
     // Move the king
     _movePiece(_activePlayer, KING, move.getFrom(), move.getTo());
 
@@ -452,7 +452,7 @@ void Board::doMove(CMove move) {
     } else {
       _movePiece(BLACK, ROOK, h8, f8);
     }
-  } else if (flags & CMove::QSIDE_CASTLE) {
+  } else if (flags & Move::QSIDE_CASTLE) {
     // Move the king
     _movePiece(_activePlayer, KING, move.getFrom(), move.getTo());
 
@@ -462,7 +462,7 @@ void Board::doMove(CMove move) {
     } else {
       _movePiece(BLACK, ROOK, a8, d8);
     }
-  } else if (flags & CMove::EN_PASSANT) {
+  } else if (flags & Move::EN_PASSANT) {
     // Remove the correct pawn
     if (_activePlayer == WHITE) {
       _removePiece(BLACK, PAWN, move.getTo() - 8);
@@ -472,13 +472,13 @@ void Board::doMove(CMove move) {
 
     // Move the capturing pawn
     _movePiece(_activePlayer, move.getPieceType(), move.getFrom(), move.getTo());
-  } else if (flags & CMove::PROMOTION) {
+  } else if (flags & Move::PROMOTION) {
     // Remove promoted pawn
     _removePiece(_activePlayer, PAWN, move.getFrom());
 
     // Add promoted piece
     _addPiece(_activePlayer, move.getPromotionPieceType(), move.getTo());
-  } else if (flags & CMove::DOUBLE_PAWN_PUSH) {
+  } else if (flags & Move::DOUBLE_PAWN_PUSH) {
     _movePiece(_activePlayer, move.getPieceType(), move.getFrom(), move.getTo());
 
     // Set square behind pawn as _enPassant
@@ -517,11 +517,11 @@ bool Board::_squareUnderAttack(Color color, int squareIndex) const {
   return squareAttacked;
 }
 
-void Board::_updateCastlingRightsForMove(CMove move) {
+void Board::_updateCastlingRightsForMove(Move move) {
   unsigned int flags = move.getFlags();
 
   // Update castling flags if rooks have been captured
-  if (flags & CMove::CAPTURE) {
+  if (flags & Move::CAPTURE) {
     // Update castling rights if a rook was captured
     switch(move.getTo()) {
       case a1: _whiteCanCastleQs = false;

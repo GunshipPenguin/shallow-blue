@@ -12,7 +12,7 @@ public:
   Search(const Board&, bool=true);
   void perform(int);
 
-  CMove getBestMove();
+  Move getBestMove();
   int getBestScore();
 
 private:
@@ -30,7 +30,7 @@ private:
   bool _compareMovesMvvLva(MoveBoard, MoveBoard);
   bool _compareMovesPromotionValue(MoveBoard, MoveBoard);
 
-  void _logUciInfo(const MoveBoardList&, int, CMove, int);
+  void _logUciInfo(const MoveBoardList&, int, Move, int);
 
   int _getPieceValue(PieceType);
 
@@ -40,7 +40,7 @@ private:
 
   bool _logUci;
   TranspTable _tt;
-  CMove _bestMove;
+  Move _bestMove;
   int _bestScore;
 };
 

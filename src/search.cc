@@ -23,7 +23,7 @@ void Search::perform(int depth) {
   }
 }
 
-void Search::_logUciInfo(const MoveBoardList& pv, int depth, CMove bestMove, int bestScore) {
+void Search::_logUciInfo(const MoveBoardList& pv, int depth, Move bestMove, int bestScore) {
   std::string pvString;
   for(auto moveBoard : pv) {
     pvString += moveBoard.first.getNotation() + " ";
@@ -69,7 +69,7 @@ MoveBoardList Search::_getPv(const Board& board, int depth) {
   }
 }
 
-CMove Search::getBestMove() {
+Move Search::getBestMove() {
   return _bestMove;
 }
 
@@ -84,9 +84,9 @@ void Search::_rootMax(const Board& board, int depth) {
 
   int bestScore = -INF;
   int currScore;
-  CMove bestMove;
+  Move bestMove;
   for (auto moveBoard : legalMoves) {
-    CMove move = moveBoard.first;
+    Move move = moveBoard.first;
     Board movedBoard = moveBoard.second;
 
     currScore = -_negaMax(movedBoard, depth-1, -INF, -bestScore);
@@ -103,7 +103,7 @@ void Search::_rootMax(const Board& board, int depth) {
   }
 
   // If we couldn't find a path other than checkmate, just pick the first legal move
-  if (bestMove.getFlags() & CMove::NULL_MOVE) {
+  if (bestMove.getFlags() & Move::NULL_MOVE) {
     bestMove = legalMoves.at(0).first;
   }
 
@@ -130,7 +130,7 @@ void Search::_orderMoves(MoveBoardList& moveBoardList) {
 
   // Order promotions by promotion value
   for(;i<moveBoardList.size();i++) {
-    if (!(moveBoardList.at(i).first.getFlags() & CMove::CAPTURE)) {
+    if (!(moveBoardList.at(i).first.getFlags() & Move::CAPTURE)) {
       break;
     }
   }
@@ -151,8 +151,8 @@ bool Search::_compareMovesTt(MoveBoard a, MoveBoard b) {
 }
 
 bool Search::_compareMovesMvvLva(MoveBoard a, MoveBoard b) {
-  bool aIsCapture = a.first.getFlags() & CMove::CAPTURE;
-  bool bIsCapture = b.first.getFlags() & CMove::CAPTURE;
+  bool aIsCapture = a.first.getFlags() & Move::CAPTURE;
+  bool bIsCapture = b.first.getFlags() & Move::CAPTURE;
 
   if (aIsCapture && !bIsCapture) {
     return true;
@@ -169,8 +169,8 @@ bool Search::_compareMovesMvvLva(MoveBoard a, MoveBoard b) {
 }
 
 bool Search::_compareMovesPromotionValue(MoveBoard a, MoveBoard b) {
-  bool aIsPromotion = a.first.getFlags() & CMove::PROMOTION;
-  bool bIsPromotion = b.first.getFlags() & CMove::PROMOTION;
+  bool aIsPromotion = a.first.getFlags() & Move::PROMOTION;
+  bool bIsPromotion = b.first.getFlags() & Move::PROMOTION;
 
   if (aIsPromotion && !bIsPromotion) {
     return true;
@@ -290,7 +290,7 @@ int Search::_qSearch(const Board& board, int alpha, int beta) {
   int standPat = Eval(board, board.getActivePlayer()).getScore();
 
   // If node is quiet, just return eval
-  if (!(legalMoves.at(0).first.getFlags() & CMove::CAPTURE)) {
+  if (!(legalMoves.at(0).first.getFlags() & Move::CAPTURE)) {
     return standPat;
   }
 
@@ -302,9 +302,9 @@ int Search::_qSearch(const Board& board, int alpha, int beta) {
   }
 
   for (auto moveBoard : legalMoves) {
-    CMove move = moveBoard.first;
+    Move move = moveBoard.first;
     Board movedBoard = moveBoard.second;
-    if ((move.getFlags() & CMove::CAPTURE) == 0) {
+    if ((move.getFlags() & Move::CAPTURE) == 0) {
       break;
     }
 

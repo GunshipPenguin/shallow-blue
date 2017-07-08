@@ -4,9 +4,9 @@
 #include "board.h"
 #include "defs.h"
 
-typedef std::vector<CMove> MoveList;
+typedef std::vector<Move> MoveList;
 
-typedef std::pair<CMove, Board> MoveBoard;
+typedef std::pair<Move, Board> MoveBoard;
 typedef std::vector<MoveBoard> MoveBoardList;
 
 class MoveGen {
