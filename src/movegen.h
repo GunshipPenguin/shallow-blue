@@ -4,45 +4,135 @@
 #include "board.h"
 #include "defs.h"
 
+/**
+ * @brief Vector of move objects
+ */
 typedef std::vector<Move> MoveList;
 
+/**
+ * @brief Pair consisting of a move and board that it has just been applied to.
+ */
 typedef std::pair<Move, Board> MoveBoard;
+
+/**
+ * @brief Vector of MoveBoard pairs.
+ */
 typedef std::vector<MoveBoard> MoveBoardList;
 
+/**
+ * @brief Pseudo-legal move generator.
+ */
 class MoveGen {
 public:
+  /**
+   * @brief Construct a new MoveGen and generate moves for the given board.
+   *
+   * @param Board Board to generate moves for.
+   */
   MoveGen(const Board& board);
+
+  /**
+   * @brief Construct a new MoveGen for an empty board.
+   */
   MoveGen();
 
+  /**
+   * @brief Set the board for this movegen to the specified board and generate moves for it.
+   * @param board [description]
+   */
   void setBoard(const Board& board);
 
+  /**
+   * @brief Returns all pseudo-legal moves that have been generated for the current board.
+   *
+   * @return A MoveList of all pseudo-legal moves that have been generated for the current board.
+   */
   MoveList getMoves();
+
+  /**
+   * @brief Returns the subset of pseudo-legal moves that are legal and the boards that they correspond to.
+   *
+   * @return A MoveBoardList of all legal moves that have been generated for the current board and the boards they correspond to
+   */
   MoveBoardList getLegalMoves();
 
 private:
+  /**
+   * @brief Vector of generated pseudo-legal moves
+   */
   MoveList _moves;
+
+  /**
+   * @brief MoveBoardList of legal moves.
+   */
   MoveBoardList _legalMoves;
 
+  /**
+   * @brief Populate the _moves vector with pseudo-legal moves.
+   *
+   * @param Board Board to generate moves for
+   */
   void _genMoves(const Board& board);
+
+  /**
+   * @brief Populate the _legalMoves vector with moves from _moves that are legal.
+   *
+   * @param board Board to check legality of moves with.
+   */
   void _genLegalMoves(const Board& board);
 
+  /**
+   * @name White/black move generation functions
+   *
+   * @{
+   */
   void _genWhiteMoves(const Board&);
   void _genBlackMoves(const Board&);
+  /**@}*/
 
+  /**
+   * @name White pawn pseudo-legal move generation functions
+   *
+   * @{
+   */
   void _genWhitePawnMoves(const Board&);
   void _genWhitePawnSingleMoves(const Board&);
   void _genWhitePawnDoubleMoves(const Board&);
   void _genWhitePawnRightAttacks(const Board&);
   void _genWhitePawnLeftAttacks(const Board&);
+  /**@}*/
 
+  /**
+   * @name Black pawn pseudo-legal generation functions
+   *
+   * @{
+   */
   void _genBlackPawnMoves(const Board&);
   void _genBlackPawnSingleMoves(const Board&);
   void _genBlackPawnDoubleMoves(const Board&);
   void _genBlackPawnRightAttacks(const Board&);
   void _genBlackPawnLeftAttacks(const Board&);
+  /**@}*/
 
+  /**
+   * @brief Convenience function to generate pawn promotions.
+   *
+   * Given the from square, to square, extra flags (if applicable) and a captured
+   * piece type (if this is a capture promotion), generate the 4 possible promotion moves
+   * (queen, rook, bishop, knight).
+   *
+   * @param int       From square (little endian rank-file mapping)
+   * @param int       To square (little endian rank-file mapping)
+   * @param int       Extra move flags (if applicable)
+   * @param PieceType Captured piece type (if applicable)
+   */
   void _genPawnPromotions(unsigned int, unsigned int, unsigned int=0, PieceType=PAWN);
 
+  /**
+   * @name Pseudo-legal move generation functions for all pieces except pawns.
+   *
+   * @{
+   */
   void _genWhiteKingMoves(const Board&);
   void _genBlackKingMoves(const Board&);
 
@@ -63,7 +153,21 @@ private:
   void _genBishopMoves(const Board&, U64, U64, U64);
   void _genRookMoves(const Board&, U64, U64, U64);
   void _genQueenMoves(const Board&, U64, U64, U64);
+  /**@}*/
 
+  /**
+   * @brief Convenience function to add moves from a bitboard of generated moves.
+   *
+   * Given a board, a from square, a PieceType, a bitboard containing generated
+   * moves and a bitboard containing attackable pieces, generate all possible Move
+   * objects, and add them to the vector of pseudo-legal moves.
+   *
+   * @param Board     Board to generate moves for
+   * @param int       Originating square of moves
+   * @param PieceType Type of piece that is moving
+   * @param U64       Bitboard containing possible destination squares
+   * @param U64       Bitboard containing attackable pieces for this move
+   */
   void _addMoves(const Board&, int, PieceType, U64, U64);
 };
 
