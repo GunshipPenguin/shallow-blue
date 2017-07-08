@@ -80,7 +80,7 @@ void Uci::start() {
     is >> token;
 
     if (token == "uci") {
-      std::cout << "id name Shallow Blue" << std::endl;
+      std::cout << "id name Shallow Blue " << VER_MAJ << "." << VER_MIN << "." << VER_PATCH << std::endl;
       std::cout << "id author Rhys Rustad-Elliott" << std::endl;
       std::cout << "uciok" << std::endl;
     } else if (token == "ucinewgame") {
