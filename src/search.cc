@@ -73,6 +73,10 @@ CMove Search::getBestMove() {
   return _bestMove;
 }
 
+int Search::getBestScore() {
+  return _bestScore;
+}
+
 void Search::_rootMax(const Board& board, int depth) {
   MoveGen movegen(board);
   MoveBoardList legalMoves = movegen.getLegalMoves();
@@ -90,6 +94,11 @@ void Search::_rootMax(const Board& board, int depth) {
     if (currScore > bestScore) {
       bestMove = move;
       bestScore = currScore;
+
+      // Break if we've found a checkmate
+      if (bestScore == INF) {
+        break;
+      }
     }
   }
 
@@ -221,10 +230,12 @@ int Search::_negaMax(const Board& board, int depth, int alpha, int beta) {
   MoveGen movegen(board);
   MoveBoardList legalMoves = movegen.getLegalMoves();
 
-  // Check for checkmate
-  if (legalMoves.size() == 0 && board.colorIsInCheck(board.getActivePlayer())) {
-    _tt.set(board.getZKey(), -INF, depth, TranspTable::EXACT);
-    return -INF;
+  // Check for checkmate and stalemate
+  if (legalMoves.size() == 0) {
+    int score = board.colorIsInCheck(board.getActivePlayer()) ? -INF : 0; // -INF = checkmate, 0 = stalemate (draw)
+
+    _tt.set(board.getZKey(), score, depth, TranspTable::EXACT);
+    return score;
   }
 
   // Eval if depth is 0

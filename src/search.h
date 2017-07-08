@@ -11,7 +11,9 @@ class Search {
 public:
   Search(const Board&, bool=true);
   void perform(int);
+
   CMove getBestMove();
+  int getBestScore();
 
 private:
   static const int INF = std::numeric_limits<int>::max();

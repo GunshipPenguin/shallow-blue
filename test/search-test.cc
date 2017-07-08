@@ -36,5 +36,20 @@ TEST_CASE("Search works as expected") {
 
       REQUIRE(search.getBestMove().getNotation() == "f1f5");
     }
+
+    SECTION("Search finds a checkmate on the next move with multiple searches with depth > 1") {
+      board.setToFen("2kr3r/pp4pp/4N3/q7/2K5/8/PR1b2PP/8 b - - 7 33");
+
+      Search search(board, false);
+
+      search.perform(1);
+      REQUIRE(search.getBestMove().getNotation() == "a5d5");
+
+      search.perform(2);
+      REQUIRE(search.getBestMove().getNotation() == "a5d5");
+
+      search.perform(3);
+      REQUIRE(search.getBestMove().getNotation() == "a5d5");
+    }
   }
 }
