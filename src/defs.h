@@ -1,3 +1,10 @@
+/**
+ * @file
+ *
+ * Contains global constants and functions used in many classes / functions.
+ *
+ */
+
 #ifndef DEFS_H
 #define DEFS_H
 
@@ -21,7 +28,14 @@ const U64 FILE_C = 289360691352306692ull;
 const U64 FILE_B = 144680345676153346ull;
 const U64 FILE_A = 72340172838076673ull;
 
+/**
+ * @brief An empty bitboard. (ie. the number 0)
+ */
 const U64 ZERO = U64(0);
+
+/**
+ * @brief A bitboard containing only the square a1. (ie. the number 1)
+ */
 const U64 ONE = U64(1);
 
 enum Color {
@@ -41,6 +55,7 @@ enum PieceType {
   QUEEN,
   KING
 };
+
 
 enum SquareIndex {
   a1, b1, c1, d1, e1, f1, g1, h1,
