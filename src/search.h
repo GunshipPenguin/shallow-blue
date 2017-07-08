@@ -32,7 +32,7 @@ private:
 
   int _getPieceValue(PieceType);
 
-  MoveBoardList _getPv(const Board&);
+  MoveBoardList _getPv(const Board&, int);
 
   Board _board;
 

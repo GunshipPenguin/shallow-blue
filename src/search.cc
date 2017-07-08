@@ -17,7 +17,7 @@ Search::Search(const Board& board, bool logUci) {
 void Search::perform(int depth) {
   _rootMax(_board, depth);
 
-  MoveBoardList pv = _getPv(_board);
+  MoveBoardList pv = _getPv(_board, depth);
   if (_logUci) {
     _logUciInfo(pv, depth, _bestMove, _bestScore);
   }
@@ -44,7 +44,7 @@ void Search::_logUciInfo(const MoveBoardList& pv, int depth, CMove bestMove, int
   std::cout << std::endl;
 }
 
-MoveBoardList Search::_getPv(const Board& board) {
+MoveBoardList Search::_getPv(const Board& board, int depth) {
   int bestScore = INF;
   MoveBoard best;
   bool foundBest = false;
@@ -60,10 +60,10 @@ MoveBoardList Search::_getPv(const Board& board) {
     }
   }
 
-  if (!foundBest) {
+  if (!foundBest || depth == 0) {
     return MoveBoardList();
   } else {
-    MoveBoardList pvList = _getPv(best.second);
+    MoveBoardList pvList = _getPv(best.second, depth-1);
     pvList.insert(pvList.begin(), best);
     return pvList;
   }
