@@ -77,10 +77,6 @@ std::string Move::getNotation() {
   return moveNotation;
 }
 
-bool Move::operator==(const Move other) const {
-  return other._move == _move;
-}
-
 std::string Move::indexToNotation (int index) {
   return std::string({FILES[index%8], RANKS[index/8]});
 }
