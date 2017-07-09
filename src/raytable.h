@@ -15,6 +15,7 @@ public:
     SOUTH_EAST,
     SOUTH_WEST
   };
+
   static void init();
 
   static U64 getRay(Dir, int);
@@ -22,7 +23,7 @@ public:
   static U64 getNegativeAttacks(Dir, int, U64);
 
 private:
-  static U64 rays[8][64];
+  static U64 _rays[8][64];
 
   static void _calcNorth();
   static void _calcNorthEast();
