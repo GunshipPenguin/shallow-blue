@@ -6,7 +6,7 @@ before_install:
 - sudo apt-get update -qq
 
 install:
-  - sudo apt-get install -qq g++-4.8
+  - sudo apt-get install -qq g++-6
   - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-6 90
 
 before_script:
