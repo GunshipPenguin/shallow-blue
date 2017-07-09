@@ -12,26 +12,26 @@ class Board;
 class PSquareTable {
 public:
   /**
-   * @brief Construct a new empty piece square table.
+   * @brief Constructs a new empty piece square table.
    */
   PSquareTable();
 
   /**
-   * @brief Construct a new piece square table from the given board.
+   * @brief Constructs a new piece square table from the given board.
    *
-   * @param board Board to construct PSquareTable for
+   * @param board Board to construct this PSquareTable for
    */
   PSquareTable(const Board&);
 
   /**
-   * @brief Initialize PSquareTable square values.
+   * @brief Initializes PSquareTable square values.
    *
    * This must be called once prior to using a PSquareTable.
    */
   static void init();
 
   /**
-   * @brief Add a piece at the given square.
+   * @brief Adds a piece at the given square.
    *
    * @param color     Color of piece to add
    * @param pieceType Type of piece to add
@@ -40,7 +40,7 @@ public:
   void addPiece(Color, PieceType, unsigned int);
 
   /**
-   * @brief Remove a piece from the given square.
+   * @brief Removes a piece from the given square.
    *
    * @param color     Color of piece to remove
    * @param pieceType Type of piece to remove
@@ -49,7 +49,7 @@ public:
   void removePiece(Color, PieceType, unsigned int);
 
   /**
-   * @brief Move a piece between the given squares.
+   * @brief Moves a piece between the given squares.
    *
    * @param color      Color of piece to add
    * @param pieceType  Type of piece to add
@@ -59,7 +59,7 @@ public:
   void movePiece(Color, PieceType, unsigned int, unsigned int);
 
   /**
-   * @brief Get the piece square table score of the given player.
+   * @brief Gets the piece square table score of the given player.
    *
    * @param  color Color to get score for
    * @return The piece square table score for the given player
@@ -73,7 +73,7 @@ private:
   static int PIECE_VALUES[2][6][64];
 
   /**
-   * @brief Set PIECE_VALUES for white and black.
+   * @brief Sets PIECE_VALUES for white and black.
    *
    * Note that this function must be given the values for black and will set
    * the entry in PIECE_VALUES for white and black.
@@ -84,7 +84,7 @@ private:
   static void _setValues(std::vector<int>, PieceType);
 
   /**
-   * @brief Mirror the list of square values along the x axis.
+   * @brief Mirrors the list of square values along the x axis.
    *
    * @param  list Square values to mirror
    * @return Mirrored square values
