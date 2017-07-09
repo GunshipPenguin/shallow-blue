@@ -53,11 +53,19 @@ const U64 ZERO = U64(0);
  */
 const U64 ONE = U64(1);
 
+/**
+ * @enum Color
+ * @brief Represents a color.
+ */
 enum Color {
   WHITE,
   BLACK
 };
 
+/**
+ * @enum PieceType
+ * @brief Represents a piece type.
+ */
 enum PieceType {
   PAWN,
   ROOK,
