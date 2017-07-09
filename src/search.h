@@ -19,7 +19,7 @@
 class Search {
 public:
   /**
-   * @brief Construct a new Search with the given board.
+   * @brief Constructs a new Search for the given board.
    *
    * @param board The board to search
    * @param logUci If logUci is set, UCI info commands about the search will be printed
@@ -28,7 +28,8 @@ public:
   Search(const Board&, bool=true);
 
   /**
-   * @brief Perform a search to the given depth.
+   * @brief Performs a search to the given depth.
+   *
    * @param depth Depth to search to
    */
   void perform(int);
@@ -40,7 +41,7 @@ public:
   Move getBestMove();
 
   /**
-   * @brief Return the best score obtained through the last search performed.
+   * @brief Returns the best score obtained through the last search performed.
    * @return The best score obtained through the last search performed.
    */
   int getBestScore();
@@ -85,7 +86,7 @@ private:
   void _rootMax(const Board&, int);
 
   /**
-   * @brief non root negamax function, should only be called by _rootMax()
+   * @brief Non root negamax function, should only be called by _rootMax()
    *
    *
    * @param  board Board to search
@@ -169,7 +170,7 @@ private:
   bool _compareMovesPromotionValue(MoveBoard, MoveBoard);
 
   /**
-   * @brief Log info about a search according to the UCI protocol.
+   * @brief Logs info about a search according to the UCI protocol.
    *
    * @param pv        MoveBoardList representing the Principal Variation (first moves at index 0)
    * @param depth     Depth of search
@@ -187,7 +188,7 @@ private:
   int _getPieceValue(PieceType);
 
   /**
-   * @brief Extracts and returns the Principal Variation of the last search from the transposition table
+   * @brief Extracts and returns the principal variation of the last search from the transposition table
    *
    * Can only be called after a search has been called via _rootMax().
    *
