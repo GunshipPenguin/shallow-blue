@@ -28,16 +28,16 @@ public:
 
   /**
    * @enum Flag
-   * @brief Move flags (indicate special moves)
+   * @brief Flags that indicate special moves.
    */
   enum Flag {
-    NULL_MOVE = 1<<0, /**< Move is a null move */
-    CAPTURE = 1<<1, /**< Move is a capture */
-    DOUBLE_PAWN_PUSH = 1<<2, /**< Move is a double pawn push */
-    KSIDE_CASTLE = 1<<3, /**< Move is a kingisde castle */
-    QSIDE_CASTLE = 1<<4, /**< Move is a queenside castle */
-    EN_PASSANT = 1<<5, /**< Move is an en passant capture (Do not set the CAPTURE flag additionally) */
-    PROMOTION = 1<<6 /**< Move is a promotion */
+    NULL_MOVE = 1<<0, /**< The move is a null move */
+    CAPTURE = 1<<1, /**< The move is a capture (Captured piece type must be set with setCapturedPieceType()) */
+    DOUBLE_PAWN_PUSH = 1<<2, /**< The move is a double pawn push */
+    KSIDE_CASTLE = 1<<3, /**< The move is a kingisde castle */
+    QSIDE_CASTLE = 1<<4, /**< The move is a queenside castle */
+    EN_PASSANT = 1<<5, /**< The move is an en passant capture (Do not set the CAPTURE flag additionally) */
+    PROMOTION = 1<<6 /**< The move is a promotion (Promotion piece type must be set with setPromotionPieceType()) */
   };
 
   /**
