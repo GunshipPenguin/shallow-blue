@@ -82,39 +82,6 @@ private:
   void _genLegalMoves(const Board& board);
 
   /**
-   * @name White/black move generation functions
-   *
-   * @{
-   */
-  void _genWhiteMoves(const Board&);
-  void _genBlackMoves(const Board&);
-  /**@}*/
-
-  /**
-   * @name White pawn pseudo-legal move generation functions
-   *
-   * @{
-   */
-  void _genWhitePawnMoves(const Board&);
-  void _genWhitePawnSingleMoves(const Board&);
-  void _genWhitePawnDoubleMoves(const Board&);
-  void _genWhitePawnRightAttacks(const Board&);
-  void _genWhitePawnLeftAttacks(const Board&);
-  /**@}*/
-
-  /**
-   * @name Black pawn pseudo-legal generation functions
-   *
-   * @{
-   */
-  void _genBlackPawnMoves(const Board&);
-  void _genBlackPawnSingleMoves(const Board&);
-  void _genBlackPawnDoubleMoves(const Board&);
-  void _genBlackPawnRightAttacks(const Board&);
-  void _genBlackPawnLeftAttacks(const Board&);
-  /**@}*/
-
-  /**
    * @brief Convenience function to generate pawn promotions.
    *
    * Given the from square, to square, extra flags (if applicable) and a captured
@@ -129,10 +96,26 @@ private:
   void _genPawnPromotions(unsigned int, unsigned int, unsigned int=0, PieceType=PAWN);
 
   /**
-   * @name Pseudo-legal move generation functions for all pieces except pawns.
+   * @name White/black move generation functions
+   *
+   * These functions generate all pseudo-legal moves for black and white.
    *
    * @{
    */
+  void _genWhiteMoves(const Board&);
+  void _genBlackMoves(const Board&);
+  /**@}*/
+
+  /**
+   * @name Pseudo-legal move generation functions
+   *
+   * These functions generate pseudo-legal moves for their piece and color for the given board.
+   *
+   * @{
+   */
+  void _genWhitePawnMoves(const Board&);
+  void _genBlackPawnMoves(const Board&);
+
   void _genWhiteKingMoves(const Board&);
   void _genBlackKingMoves(const Board&);
 
@@ -147,7 +130,41 @@ private:
 
   void _genWhiteQueenMoves(const Board&);
   void _genBlackQueenMoves(const Board&);
+  /**@}*/
 
+  /**
+   * @name White pawn pseudo-legal move generation functions
+   *
+   * These functions generate the four types of pawn moves for white for a given board.
+   * @{
+   */
+  void _genWhitePawnSingleMoves(const Board&);
+  void _genWhitePawnDoubleMoves(const Board&);
+  void _genWhitePawnRightAttacks(const Board&);
+  void _genWhitePawnLeftAttacks(const Board&);
+  /**@}*/
+
+  /**
+   * @name Black pawn pseudo-legal generation functions
+   *
+   * These functions generate the four types of pawn moves for black for a given board.
+   *
+   * @{
+   */
+  void _genBlackPawnSingleMoves(const Board&);
+  void _genBlackPawnDoubleMoves(const Board&);
+  void _genBlackPawnRightAttacks(const Board&);
+  void _genBlackPawnLeftAttacks(const Board&);
+  /**@}*/
+
+  /**
+   * @name Generalized pseudo-legal generation functions for all pieces execpt pawns
+   *
+   * Each of these functions take a board reference, a bitboard of pieces to
+   * generate moves for, a bitboard of friendly pieces and a bitboard of
+   * attackable pieces.
+   *
+   */
   void _genKingMoves(const Board&, U64, U64, U64);
   void _genKnightMoves(const Board&, U64, U64, U64);
   void _genBishopMoves(const Board&, U64, U64, U64);
