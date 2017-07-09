@@ -13,57 +13,75 @@ class Move;
 /**
  * @brief Represents a chess board.
  *
+ * Chess boards are represented using bitboards (of U64 type). Internally, each
+ * Board maintains 12 bitboards (one for each piece type and each color), as well
+ * as bitboards containing the occupancy, inverse of the occupancy, en passant
+ * target square and attackable pieces.
+ *
  */
 class Board {
   public:
     /**
-     * @brief Construct a new empty chess board.
+     * @brief Constructs a new empty chess board.
      */
     Board();
 
     /**
-     * @brief Returns a string representation of the chess board.
-     * @return A string representation of the chess board.
+     * @brief Returns a pretty human readable string representation of this board.
+     *
+     * White pieces are represented as upper case letters and black pieces are
+     * represented as lower case letters. Standard piece symbols are used
+     * (pnbrqk) and empty squares are represented with dots.
+     *
+     * The string is returned with square a1 in the bottom left hand corner.
+     *
+     * @return A pretty human readable string representation of this board.
      */
     std::string getStringRep() const;
 
     /**
-     * @brief Set the chess board to the starting position
+     * @brief Sets this board to the starting position
      */
     void setToStartPos();
 
     /**
-     * @brief Set the chess board to the specified FEN string.
+     * @brief Sets this board to the specified FEN string.
+     *
      * @param fenString FEN string to set the board to.
      */
     void setToFen(std::string);
 
     /**
-     * @brief Perform the specified move on the board.
+     * @brief Performs the specified move on this board.
+     *
      * @param move Move to perform on the board.
      */
     void doMove(Move);
 
     /**
      * @brief Returns true if white can castle kingside, false otherwise.
+     *
      * @return true if white can castle kingside, false otherwise.
      */
     bool whiteCanCastleKs() const;
 
     /**
      * @brief Returns true if white can castle queenside, false otherwise.
+     *
      * @return true if white can castle queenside, false otherwise.
      */
     bool whiteCanCastleQs() const;
 
     /**
      * @brief Returns true if black can castle kingside, false otherwise.
+     *
      * @return true if black can castle queenside, false otherwise.
      */
     bool blackCanCastleKs() const;
 
     /**
      * @brief Returns true if black can castle queenside, false otherwise.
+     *
      * @return true if black can castle queenside, false otherwise.
      */
     bool blackCanCastleQs() const;
@@ -153,7 +171,7 @@ class Board {
     U64 getAttackable(Color) const;
 
     /**
-     * @brief Returns the type of the piece at the given sqare. Color must be provided.
+     * @brief Returns the type of the piece at the given square. Color must be provided.
      *
      * @param  color        Color of piece to lookup type.
      * @param  squareIndex  Little endian rank file index of square to lookup.
@@ -162,38 +180,39 @@ class Board {
     PieceType getPieceAtSquare(Color, int) const;
 
     /**
-     * @brief Returns a bitboard containing all of the occupied squares on the chess board.
+     * @brief Returns a bitboard containing all of the occupied squares on this board.
      *
-     * @return A bitboard containing all occupied squares on the chess board.
+     * @return A bitboard containing all occupied squares on this board.
      */
     U64 getOccupied() const;
 
     /**
-     * @brief Returns a bitboard containing all of the unoccpuied squares on the chess board.
-     * @return A bitboard containing all of the unoccpuied squares on the chess board.
+     * @brief Returns a bitboard containing all of the unoccpuied squares on this board.
+     *
+     * @return A bitboard containing all of the unoccpuied squares on this board.
      */
     U64 getNotOccupied() const;
 
     /**
-     * @brief Returns a bitboard containing the En Passant target square of the chess board.
+     * @brief Returns a bitboard containing the en passant target square of this board.
      *
-     * This method will return an empty bitboard if there is no En Passant target square.
-     * @return A bitboard containing the En Passant target square of the chess board.
+     * This method will return an empty bitboard if there is no en passant target square.
+     *
+     * @return A bitboard containing the en passant target square of this board.
      */
     U64 getEnPassant() const;
 
     /**
+     * @brief Returns the Zobrist Key of this board for its current state.
      *
-     * @brief Returns the Zobrist Key of the chess board for its current state.
-     *
-     * @return The Zobrist Key of the chess board for its current state.
+     * @return The Zobrist Key of this board for its current state.
      */
     ZKey getZKey() const;
 
     /**
-     * @brief Returns the Piece Square Table of the chess board for its current state.
+     * @brief Returns the Piece Square Table of this board for its current state.
      *
-     * @return The Piece Square Table of the chess board for its current state.
+     * @return The Piece Square Table of this board for its current state.
      */
     PSquareTable getPSquareTable() const;
 
@@ -205,7 +224,7 @@ class Board {
     Color getActivePlayer() const;
 
     /**
-     * @brief returns the opposite of the color whose turn it is to move.
+     * @brief Returns the opposite of the color whose turn it is to move.
      *
      * @return The opposite of the color whose turn it is to move.
      */
@@ -298,12 +317,12 @@ class Board {
     Color _activePlayer;
 
     /**
-     * @brief Zobrist key for the board in its current state.
+     * @brief Zobrist key for this board in its current state.
      */
     ZKey _zKey;
 
     /**
-     * @brief Piece Square table for the board in its current state.
+     * @brief Piece Square table for this board in its current state.
      */
     PSquareTable _pst;
 
@@ -318,7 +337,7 @@ class Board {
     /**@}*/
 
     /**
-     * @brief Determine if the given square is under attack by the given color.
+     * @brief Determines if the given square is under attack by the given color.
      *
      * Returns true if the square (given as a little endian rank file map index)
      * is under attack by the given color.
@@ -340,12 +359,12 @@ class Board {
     void _updateCastlingRightsForMove(Move);
 
     /**
-     * @brief Update the _occupied, _notOccupied and _allPieces bitboards based on the _pieces bitboards.
+     * @brief Updates the _occupied, _notOccupied and _allPieces bitboards based on the _pieces bitboards.
      */
     void _updateNonPieceBitBoards();
 
     /**
-     * @brief Move a piece between the given squares.
+     * @brief Moves a piece between the given squares.
      *
      * Moves the piece from the from square to the to square and updates the
      * board state appropriately.
@@ -358,7 +377,7 @@ class Board {
     void _movePiece(Color, PieceType, int, int);
 
     /**
-     * @brief Add a piece of the specified color and piece type at the given square.
+     * @brief Adds a piece of the specified color and piece type at the given square.
      *
      * Adds a piece of the given piece type and color to the given square and
      * updates the board state appropriately.
@@ -370,7 +389,7 @@ class Board {
     void _addPiece(Color, PieceType, int);
 
     /**
-     * @brief Remove a piece of the specified color and piece type from the given square.
+     * @brief Removes a piece of the specified color and piece type from the given square.
      *
      * Removes a piece of the given piece type and color from the given square and
      * updates the board state appropriately.
