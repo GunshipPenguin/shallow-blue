@@ -25,19 +25,20 @@ typedef std::vector<MoveBoard> MoveBoardList;
 class MoveGen {
 public:
   /**
-   * @brief Construct a new MoveGen and generate moves for the given board.
+   * @brief Constructs a new MoveGen and generates moves for the given board.
    *
    * @param board Board to generate moves for.
    */
   MoveGen(const Board& board);
 
   /**
-   * @brief Construct a new MoveGen for an empty board.
+   * @brief Constructs a new MoveGen for an empty board.
    */
   MoveGen();
 
   /**
-   * @brief Set the board for this movegen to the specified board and generate moves for it.
+   * @brief Sets the board for this MoveGen to the specified board and generates moves for it.
+   *
    * @param board Board to set and generate moves for
    */
   void setBoard(const Board& board);
@@ -58,24 +59,26 @@ public:
 
 private:
   /**
-   * @brief Vector of generated pseudo-legal moves
+   * @brief A vector containing generated pseudo-legal moves
    */
   MoveList _moves;
 
   /**
-   * @brief MoveBoardList of legal moves.
+   * @brief MoveBoardList of legal moves and their boards.
    */
   MoveBoardList _legalMoves;
 
   /**
-   * @brief Populate the _moves vector with pseudo-legal moves.
+   * @brief Generates pseudo-legal moves for the active player of the given board
+   *
+   * Generated pseudo-legal moves are stored in the _moves vector.
    *
    * @param board Board to generate moves for
    */
   void _genMoves(const Board& board);
 
   /**
-   * @brief Populate the _legalMoves vector with moves from _moves that are legal.
+   * @brief Populates the _legalMoves vector with moves from _moves that are legal.
    *
    * @param board Board to check legality of moves with.
    */
