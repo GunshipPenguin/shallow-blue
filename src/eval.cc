@@ -31,7 +31,7 @@ void Eval::_doEval(const Board& board, Color color) {
   PSquareTable pst = board.getPSquareTable();
   _score += (pst.getScore(color) - pst.getScore(otherColor));
 
-  _score += MOBILITY_WEIGHT * (_calcMobility(board, color) - _calcMobility(board, otherColor));
+  _score += MOBILITY_VALUE * (_calcMobility(board, color) - _calcMobility(board, otherColor));
 }
 
 int Eval::_calcMobility(const Board& board, Color color) {

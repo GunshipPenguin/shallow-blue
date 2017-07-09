@@ -44,7 +44,7 @@ private:
   /**
    * @brief Mobility weight factored into an evaluation score.
    */
-  static const int MOBILITY_WEIGHT = 1;
+  static const int MOBILITY_VALUE = 1;
 
   int _score;
   /**
