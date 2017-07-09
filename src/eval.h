@@ -11,13 +11,18 @@ class Eval {
 public:
 
   /**
-   * @brief Evaluate the given board for the given color.
+   * @brief Constructs a new Eval for the given board for the given color.
    */
   Eval(const Board&, Color);
 
   /**
-   * @brief Get a score representing the favourability of the position for the color with which
+   * @brief Gets a score representing the favourability of the position for the color with which
    * this Eval was constructed.
+   *
+   * The returned score is relative to the opposite player. For example, if
+   * black's total score is 980 and white's score is 900, this method will
+   * return 80 if black is the color to be evaluated and -80 if white is the
+   * color to be evaluated.
    *
    * @return A favourability score for the board and color.
    */
@@ -43,12 +48,13 @@ private:
 
   int _score;
   /**
-   * @brief Evaluate the given board for the given color and update this Evaluation's state appropriately
+   * @brief Evaluates the given board for the given color and updates this evaluation's state appropriately.
    */
   void _doEval(const Board&, Color);
 
   /**
    * @brief Returns an estimate for the number of legal moves for the given color on the given board.
+   *
    *
    * @param board The board to estimate the number of moves for
    * @param color The color to estimate the number of moves for
