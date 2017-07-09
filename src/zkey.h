@@ -13,20 +13,20 @@ class Board;
 class ZKey {
 public:
   /**
-   * @brief Construct a new Zkey from an empty board.
+   * @brief Constructs a new Zkey from an empty board.
    */
   ZKey();
 
   /**
-   * @brief Construct a new ZKey from the given board.
-   * @param board Board to
+   * @brief Constructs a new ZKey from the given board.
+   * @param board Board to construct this ZKey from
    */
   ZKey(Board);
 
   /**
    * @brief Initialize the pseudo-random values used to generate a ZKey.
    *
-   * This must be called once prior to using a ZKey.
+   * This must be called once prior to using the ZKey class.
    */
   static void init();
 
@@ -38,8 +38,7 @@ public:
   U64 getValue() const;
 
   /**
-   * @brief Update the ZKey such that the given piece has been moved between the given
-   * squares.
+   * @brief Updates the ZKey such that the given piece has been moved between the given squares.
    *
    * @param color  Color of piece to move
    * @param piece  Type of piece to move
@@ -49,7 +48,7 @@ public:
   void movePiece(Color, PieceType, unsigned int, unsigned int);
 
   /**
-   * @brief Flip the value of the piece with the given color and PieceType on the given square in the ZKey.
+   * @brief Flips the value of the piece with the given color and PieceType on the given square in the ZKey.
    *
    * If the piece is set, this method will unset it and vica-versa.
    *
@@ -60,7 +59,9 @@ public:
   void flipPiece(Color, PieceType, unsigned int);
 
   /**
-   * @brief Flip the value of the active player in the ZKey (Eg. if WHITE, changes to BLACK and vica-versa)
+   * @brief Flips the value of the active player in the ZKey
+   *
+   * If the active color is black, this method changes it to white, and vica-versa.
    */
   void flipActivePlayer();
 
@@ -79,7 +80,7 @@ public:
   void setEnPassantFile(unsigned int);
 
   /**
-   * @brief Update the castling rights in the ZKey.
+   * @brief Updates the castling rights in the ZKey.
    *
    * @param whiteKs White kingside castling right
    * @param whiteQs White queenside castling right
@@ -140,7 +141,7 @@ private:
   /**@}*/
 
   /**
-   * @brief Key representing that it is white's turn to move
+   * @brief Key to xor into _key when it's white's turn to move.
    */
   static U64 WHITE_TO_MOVE_KEY;
 
