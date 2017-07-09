@@ -7,6 +7,10 @@
 
 /**
  * @brief A transposition table.
+ *
+ * Each entry is mapped to by a ZKey and contains a score, depth and flag which
+ * indicates if the stored score is an upper bound, lower bound or exact score.
+ * 
  */
 class TranspTable {
 public:
@@ -21,7 +25,7 @@ public:
   };
 
   /**
-   * @brief Create a new entry in the transposition table.
+   * @brief Creates a new entry in the transposition table.
    *
    * If the entry already exists, it will be overwritten.
    *
