@@ -12,7 +12,7 @@
 class Uci {
 public:
   /**
-   * @brief Start listening for UCI input and respond to it when received.
+   * @brief Starts listening for UCI input and responds to it when received.
    */
   void start();
 
@@ -28,14 +28,14 @@ private:
   static const int DEFAULT_DEPTH = 4;
 
   /**
-   * @brief Handle the ucinewgame command
+   * @brief Handles the ucinewgame command
    *
    * Sets the board to the starting position.
    */
   void _uciNewGame();
 
   /**
-   * @brief Handle the position command
+   * @brief Handles the position command
    *
    * The passed istringstream should contain the received line with everything following the `position` command.
    *
@@ -44,7 +44,7 @@ private:
   void _setPosition(std::istringstream&);
 
   /**
-   * @brief Handle the go command
+   * @brief Handles the go command
    *
    * The passed istringstream should contain the received line with everything following the `go` command
    *
