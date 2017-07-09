@@ -3,7 +3,9 @@
 #include "bitutils.h"
 #include <iostream>
 
-RayTable::RayTable() {
+U64 RayTable::rays[8][64];
+
+void RayTable::init() {
   _calcNorth();
   _calcNorthEast();
   _calcEast();

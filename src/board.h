@@ -308,11 +308,6 @@ class Board {
     PSquareTable _pst;
 
     /**
-     * @brief Static RayTable object used to calculate sliding piece attacks.
-     */
-    static RayTable _raytable;
-
-    /**
      * @name Castling right booleans.
      * @{
      */

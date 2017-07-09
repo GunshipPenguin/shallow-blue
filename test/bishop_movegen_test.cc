@@ -1,10 +1,13 @@
 #include "catch.hpp"
 #include "board.h"
 #include "movegen.h"
+#include "raytable.h"
 #include <iostream>
+
 TEST_CASE("Bishop move generation is correct") {
   Board board;
   MoveGen movegen;
+  RayTable::init();
 
   SECTION("Bishop move generation is correct in the middle of an empty board") {
     board.setToFen("8/8/8/3B4/8/8/8/8 w - -");

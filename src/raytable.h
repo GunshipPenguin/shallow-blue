@@ -5,8 +5,6 @@
 
 class RayTable {
 public:
-  RayTable();
-
   enum Dir {
     NORTH,
     SOUTH,
@@ -17,23 +15,24 @@ public:
     SOUTH_EAST,
     SOUTH_WEST
   };
+  static void init();
 
-  U64 getRay(Dir, int);
-  U64 getPositiveAttacks(Dir, int, U64);
-  U64 getNegativeAttacks(Dir, int, U64);
+  static U64 getRay(Dir, int);
+  static U64 getPositiveAttacks(Dir, int, U64);
+  static U64 getNegativeAttacks(Dir, int, U64);
 
 private:
-  U64 rays[8][64];
+  static U64 rays[8][64];
 
-  void _calcNorth();
-  void _calcNorthEast();
-  void _calcEast();
-  void _calcNorthWest();
+  static void _calcNorth();
+  static void _calcNorthEast();
+  static void _calcEast();
+  static void _calcNorthWest();
 
-  void _calcSouth();
-  void _calcSouthWest();
-  void _calcWest();
-  void _calcSouthEast();
+  static void _calcSouth();
+  static void _calcSouthWest();
+  static void _calcWest();
+  static void _calcSouthEast();
 };
 
 #endif

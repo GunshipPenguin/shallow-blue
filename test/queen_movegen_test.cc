@@ -1,10 +1,13 @@
 #include "catch.hpp"
 #include "movegen.h"
 #include "board.h"
+#include "raytable.h"
 
 TEST_CASE("Queen move generation is corect") {
   Board board;
   MoveGen movegen;
+  RayTable::init();
+
 
   SECTION("Queen move generation is correct in the middle of an empty board") {
     board.setToFen("8/8/8/3Q4/8/8/8/8 w - -");
