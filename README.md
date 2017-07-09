@@ -26,6 +26,13 @@ To build and run the unit tests, use:
 
 `make test`
 
+## Documentation
+
+Shallow Blue's code is extensively documented with Doxygen. To generate HTML
+documentation use:
+
+`doxygen`
+
 ## Implemented non UCI Commands
 
 These commands can be useful for debugging.
