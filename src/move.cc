@@ -15,11 +15,11 @@ Move::Move(unsigned int from, unsigned int to, PieceType piece, unsigned int fla
   _move = ((flags & 0x7f) << 21) | ((to & 0x3f) << 15) | ((from & 0x3f) << 9) | (piece & 0x7);
 }
 
-PieceType Move::getPieceType() {
+PieceType Move::getPieceType() const {
   return static_cast<PieceType>(_move & 0x7);
 }
 
-PieceType Move::getCapturedPieceType() {
+PieceType Move::getCapturedPieceType() const {
   return static_cast<PieceType>((_move >> 6) & 0x7);
 }
 
@@ -28,7 +28,7 @@ void Move::setCapturedPieceType(PieceType pieceType) {
   _move = (_move & ~mask) | ((pieceType << 6) & mask);
 }
 
-PieceType Move::getPromotionPieceType() {
+PieceType Move::getPromotionPieceType() const {
   return static_cast<PieceType>((_move >> 3) & 0x7);
 }
 
@@ -37,15 +37,15 @@ void Move::setPromotionPieceType(PieceType pieceType) {
   _move = (_move & ~mask) | ((pieceType << 3) & mask);
 }
 
-unsigned int Move::getFrom() {
+unsigned int Move::getFrom() const {
   return ((_move >> 9) & 0x3f);
 }
 
-unsigned int Move::getTo() {
+unsigned int Move::getTo() const {
   return ((_move >> 15) & 0x3f);
 }
 
-unsigned int Move::getFlags() {
+unsigned int Move::getFlags() const {
   return ((_move >> 21) & 0x7f);
 }
 
@@ -53,7 +53,7 @@ void Move::setFlag(Flag flag) {
   _move = _move | (flag << 21);
 }
 
-std::string Move::getNotation() {
+std::string Move::getNotation() const {
   int fromIndex = getFrom();
   int toIndex = getTo();
 

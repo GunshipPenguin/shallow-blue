@@ -44,7 +44,7 @@ public:
    * @brief Returns an int containing this moves's flags.
    * @return [description]
    */
-  unsigned int getFlags();
+  unsigned int getFlags() const;
 
   /**
    * @brief Sets the specified flag on this move.
@@ -57,7 +57,7 @@ public:
    *
    * @return The type of piece being moved.
    */
-  PieceType getPieceType();
+  PieceType getPieceType() const;
 
   /**
    * @brief Returns The type of piece captured by this move (if it is a capture).
@@ -66,7 +66,7 @@ public:
    *
    * @return The type of piece captured by this move.
    */
-  PieceType getCapturedPieceType();
+  PieceType getCapturedPieceType() const;
 
   /**
    * @brief Set the type of piece captured by this move.
@@ -84,7 +84,7 @@ public:
    *
    * @return the type of piece that this move promotes to.
    */
-  PieceType getPromotionPieceType();
+  PieceType getPromotionPieceType() const;
 
   /**
    * @brief Set the type of piece that this move promotes to.
@@ -102,7 +102,7 @@ public:
    *
    * @return The square that this move is from.
    */
-  unsigned int getFrom();
+  unsigned int getFrom() const;
 
   /**
    * @brief Return the square that this move is to.
@@ -111,13 +111,13 @@ public:
    *
    * @return The square that this move is to.
    */
-  unsigned int getTo();
+  unsigned int getTo() const;
 
   /**
    * @brief Return a UCI compliant string representation of this move.
    * @return A UCI compliant string representation of this move.
    */
-  std::string getNotation();
+  std::string getNotation() const;
 
   /**
    * @brief Returns the index of a square on the chess board given its algebraic notation.
