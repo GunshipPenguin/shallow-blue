@@ -27,7 +27,7 @@ public:
   /**
    * @brief Construct a new MoveGen and generate moves for the given board.
    *
-   * @param Board Board to generate moves for.
+   * @param board Board to generate moves for.
    */
   MoveGen(const Board& board);
 
@@ -38,7 +38,7 @@ public:
 
   /**
    * @brief Set the board for this movegen to the specified board and generate moves for it.
-   * @param board [description]
+   * @param board Board to set and generate moves for
    */
   void setBoard(const Board& board);
 
@@ -70,7 +70,7 @@ private:
   /**
    * @brief Populate the _moves vector with pseudo-legal moves.
    *
-   * @param Board Board to generate moves for
+   * @param board Board to generate moves for
    */
   void _genMoves(const Board& board);
 
@@ -121,10 +121,10 @@ private:
    * piece type (if this is a capture promotion), generate the 4 possible promotion moves
    * (queen, rook, bishop, knight).
    *
-   * @param int       From square (little endian rank-file mapping)
-   * @param int       To square (little endian rank-file mapping)
-   * @param int       Extra move flags (if applicable)
-   * @param PieceType Captured piece type (if applicable)
+   * @param from              From square (little endian rank-file mapping)
+   * @param to                To square (little endian rank-file mapping)
+   * @param flags             Extra move flags (if applicable)
+   * @param capturedPieceType Captured piece type (if applicable)
    */
   void _genPawnPromotions(unsigned int, unsigned int, unsigned int=0, PieceType=PAWN);
 
@@ -162,11 +162,11 @@ private:
    * moves and a bitboard containing attackable pieces, generate all possible Move
    * objects, and add them to the vector of pseudo-legal moves.
    *
-   * @param Board     Board to generate moves for
-   * @param int       Originating square of moves
-   * @param PieceType Type of piece that is moving
-   * @param U64       Bitboard containing possible destination squares
-   * @param U64       Bitboard containing attackable pieces for this move
+   * @param board      Board to generate moves for
+   * @param from       Originating square of moves
+   * @param pieceType  Type of piece that is moving
+   * @param moves      Bitboard containing possible destination squares
+   * @param attackable Bitboard containing attackable pieces for this move
    */
   void _addMoves(const Board&, int, PieceType, U64, U64);
 };

@@ -19,7 +19,7 @@ public:
   /**
    * @brief Construct a new piece square table from the given board.
    *
-   * @param Board Board to construct PSquareTable for
+   * @param board Board to construct PSquareTable for
    */
   PSquareTable(const Board&);
 
@@ -33,35 +33,36 @@ public:
   /**
    * @brief Add a piece at the given square.
    *
-   * @param Color     Color of piece to add
-   * @param PieceType Type of piece to add
-   * @param int       Square to add piece at (little endian rank-file mapping)
+   * @param color     Color of piece to add
+   * @param pieceType Type of piece to add
+   * @param square    Square to add piece at (little endian rank-file mapping)
    */
   void addPiece(Color, PieceType, unsigned int);
 
   /**
    * @brief Remove a piece from the given square.
    *
-   * @param Color     Color of piece to remove
-   * @param PieceType Type of piece to remove
-   * @param int       Square to remove piece from (little endian rank-file mapping)
+   * @param color     Color of piece to remove
+   * @param pieceType Type of piece to remove
+   * @param square    Square to remove piece from (little endian rank-file mapping)
    */
   void removePiece(Color, PieceType, unsigned int);
 
   /**
    * @brief Move a piece between the given squares.
    *
-   * @param Color     Color of piece to add
-   * @param PieceType Type of piece to add
-   * @param int       Square to add piece at (little endian rank-file mapping)
+   * @param color      Color of piece to add
+   * @param pieceType  Type of piece to add
+   * @param fromSquare Square to add piece at (little endian rank-file mapping)
+   * @param toSquare   Square to move piece to (little endian rank-file mapping)
    */
   void movePiece(Color, PieceType, unsigned int, unsigned int);
 
   /**
    * @brief Get the piece square table score of the given player.
    *
-   * @param  Color Color to get score for
-   * @return       The piece square table score for the given player
+   * @param  color Color to get score for
+   * @return The piece square table score for the given player
    */
   int getScore(Color);
 
@@ -77,15 +78,15 @@ private:
    * Note that this function must be given the values for black and will set
    * the entry in PIECE_VALUES for white and black.
    *
-   * @param std::vector<int> Square values for black.
-   * @param PieceType Piece type to set values for.
+   * @param list Square values for black.
+   * @param pieceType Piece type to set values for.
    */
   static void _setValues(std::vector<int>, PieceType);
 
   /**
    * @brief Mirror the list of square values along the x axis.
    *
-   * @param  std::vector<int> Square values to mirror
+   * @param  list Square values to mirror
    * @return Mirrored square values
    */
   static std::vector<int> _mirrorList(std::vector<int>);

@@ -19,25 +19,25 @@ public:
   /**
    * @brief Construct a move from and to the specified squares, and with the specified piece type and flags.
    *
-   * @param int       From square (little endian rank file mapping)
-   * @param int       To square (little endian rank file mapping)
-   * @param PieceType Type of piece
-   * @param int       Flags
+   * @param from  From square (little endian rank file mapping)
+   * @param to    To square (little endian rank file mapping)
+   * @param piece Type of piece
+   * @param flags Flags
    */
   Move(unsigned int, unsigned int, PieceType, unsigned int=0); // Non Null Move
 
   /**
-   * @enum
+   * @enum Flag
    * @brief Move flags (indicate special moves)
    */
   enum Flag {
-    NULL_MOVE = 1<<0,
-    CAPTURE = 1<<1,
-    DOUBLE_PAWN_PUSH = 1<<2,
-    KSIDE_CASTLE = 1<<3,
-    QSIDE_CASTLE = 1<<4,
-    EN_PASSANT = 1<<5,
-    PROMOTION = 1<<6
+    NULL_MOVE = 1<<0, /**< Move is a null move */
+    CAPTURE = 1<<1, /**< Move is a capture */
+    DOUBLE_PAWN_PUSH = 1<<2, /**< Move is a double pawn push */
+    KSIDE_CASTLE = 1<<3, /**< Move is a kingisde castle */
+    QSIDE_CASTLE = 1<<4, /**< Move is a queenside castle */
+    EN_PASSANT = 1<<5, /**< Move is an en passant capture (Do not set the CAPTURE flag additionally) */
+    PROMOTION = 1<<6 /**< Move is a promotion */
   };
 
   /**
@@ -48,7 +48,7 @@ public:
 
   /**
    * @brief Sets the specified flag on this move.
-   * @param Flag Flag to set
+   * @param flag Flag to set
    */
   void setFlag(Flag);
 
@@ -73,7 +73,7 @@ public:
    *
    * Note that the CAPTURE flag should be set if this method is to be called.
    *
-   * @param PieceType The type of captured piece to set
+   * @param pieceType The type of captured piece to set
    */
   void setCapturedPieceType(PieceType);
 
@@ -91,7 +91,7 @@ public:
    *
    * Note that the PROMOTION flag should be set if this method is to be called.
    *
-   * @param PieceType The type of promotion piece to set
+   * @param pieceType The type of promotion piece to set
    */
   void setPromotionPieceType(PieceType);
 
@@ -124,8 +124,8 @@ public:
    *
    * Eg. notationToIndex("g1") would return 6
    *
-   * @param  std::string The algebraic notation of the square on the chess board to get the index for.
-   * @return             The index of the square (little endian rank-file mapping)
+   * @param  notation The algebraic notation of the square on the chess board to get the index for.
+   * @return The index of the square (little endian rank-file mapping)
    */
   static unsigned int notationToIndex(std::string);
 
@@ -134,7 +134,7 @@ public:
    *
    * Eg. indexToNotation(6) would return "g1"
    *
-   * @param  int Index to get algebraic notation for
+   * @param  index Index to get algebraic notation for
    * @return Algebraic notation of the square at the given index.
    */
   static std::string indexToNotation(int);

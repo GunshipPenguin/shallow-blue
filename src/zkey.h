@@ -19,7 +19,7 @@ public:
 
   /**
    * @brief Construct a new ZKey from the given board.
-   * @param Board Board to
+   * @param board Board to
    */
   ZKey(Board);
 
@@ -41,10 +41,10 @@ public:
    * @brief Update the ZKey such that the given piece has been moved between the given
    * squares.
    *
-   * @param Color     Color of piece to move
-   * @param PieceType Type of piece to move
-   * @param int       Square to move from
-   * @param int       Square to move to
+   * @param color  Color of piece to move
+   * @param piece  Type of piece to move
+   * @param from   Square to move from
+   * @param to     Square to move to
    */
   void movePiece(Color, PieceType, unsigned int, unsigned int);
 
@@ -53,9 +53,9 @@ public:
    *
    * If the piece is set, this method will unset it and vica-versa.
    *
-   * @param Color     Color of piece to flip
-   * @param PieceType Type of piece to flip
-   * @param int       Square to flip piece on (little endian rank-file mapping)
+   * @param color  Color of piece to flip
+   * @param piece  Type of piece to flip
+   * @param index  Square to flip piece on (little endian rank-file mapping)
    */
   void flipPiece(Color, PieceType, unsigned int);
 
@@ -74,17 +74,17 @@ public:
    *
    * File numbers are 0 indexed and start at a.
    *
-   * @param int file number to set en passant file to
+   * @param file file number to set en passant file to
    */
   void setEnPassantFile(unsigned int);
 
   /**
    * @brief Update the castling rights in the ZKey.
    *
-   * @param bool White kingside castling right
-   * @param bool White queenside castling right
-   * @param bool Black kingside castling right
-   * @param bool Black queenside castling right
+   * @param whiteKs White kingside castling right
+   * @param whiteQs White queenside castling right
+   * @param blackKs Black kingside castling right
+   * @param blackQs Black queenside castling right
    */
   void updateCastlingRights(bool, bool, bool, bool);
 

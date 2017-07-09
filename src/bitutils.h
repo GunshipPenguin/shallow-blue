@@ -10,8 +10,8 @@
 /**
  * @brief Sets the LSB of the given bitboard to 0 and returns its index.
  *
- * @param  val Value to reset LSB of
- * @return     Index of reset LSB
+ * @param  board Value to reset LSB of
+ * @return Index of reset LSB
  */
 inline int _popLsb(U64& board) {
   int lsbIndex = __builtin_ffsll(board) - 1;
@@ -22,8 +22,8 @@ inline int _popLsb(U64& board) {
 /**
  * @brief Returns the number of set bits in the given value.
  *
- * @param  value Value to return number of set bits for
- * @return       Number of set bits in value
+ * @param  board Value to return number of set bits for
+ * @return Number of set bits in value
  */
 inline int _popCount(U64 board) {
   return __builtin_popcountll(board);
@@ -52,7 +52,7 @@ inline int _bitscanReverse(U64 board) {
 /**
  * @brief Moves all set bits in the given bitboard one square east and returns the new bitboard, discarding those that fall off the edge.
  * @param  board Board to move bits east on.
- * @return       A bitboard with all set bits moved one square east, bits falling off the edge discarded
+ * @return A bitboard with all set bits moved one square east, bits falling off the edge discarded
  */
 inline U64 _eastOne(U64 board) {
   return ((board << ONE) & (~FILE_A));
@@ -61,7 +61,7 @@ inline U64 _eastOne(U64 board) {
 /**
  * @brief Moves all set bits in the given bitboard one square west and returns the new bitboard, discarding those that fall off the edge.
  * @param  board Board to move bits west on.
- * @return       A bitboard with all set bits moved one square west, bits falling off the edge discarded
+ * @return A bitboard with all set bits moved one square west, bits falling off the edge discarded
  */
 inline U64 _westOne(U64 board) {
   return ((board >> ONE) & (~FILE_H));

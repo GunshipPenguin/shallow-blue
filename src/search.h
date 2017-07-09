@@ -21,15 +21,15 @@ public:
   /**
    * @brief Construct a new Search with the given board.
    *
-   * @param Board The board to search
-   * @param bool If logUci is set, UCI info commands about the search will be printed
+   * @param board The board to search
+   * @param logUci If logUci is set, UCI info commands about the search will be printed
    * to standard output in real time.
    */
   Search(const Board&, bool=true);
 
   /**
    * @brief Perform a search to the given depth.
-   * @param int Depth to search to
+   * @param depth Depth to search to
    */
   void perform(int);
 
@@ -79,8 +79,8 @@ private:
    * Starts performing a search to the given depth using recursive minimax
    * with alpha-beta pruning.
    *
-   * @param Board Board to search through
-   * @param int Maximum depth to search to
+   * @param board Board to search through
+   * @param depth Maximum depth to search to
    */
   void _rootMax(const Board&, int);
 
@@ -88,10 +88,10 @@ private:
    * @brief non root negamax function, should only be called by _rootMax()
    *
    *
-   * @param  Board Board to search
-   * @param  int   Plys remaining to search
-   * @param  int   Alpha value
-   * @param  int   Beta value
+   * @param  board Board to search
+   * @param  depth Plys remaining to search
+   * @param  alpha Alpha value
+   * @param  beta  Beta value
    * @return The score of the given board
    */
   int _negaMax(const Board&, int, int, int);
@@ -102,10 +102,10 @@ private:
    * _qSearch only takes into account captures (checks, promotions are not
    * considered)
    *
-   * @param  Board  Board to perform a quiescence search on
-   * @param  int    Alpha value
-   * @param  int    Beta value
-   * @return        The score of the given board
+   * @param  board Board to perform a quiescence search on
+   * @param  alpha Alpha value
+   * @param  beta  Beta value
+   * @return The score of the given board
    */
   int _qSearch(const Board&, int=-INF, int=INF);
 
@@ -118,7 +118,7 @@ private:
    * 3. Promotions sorted by value
    * 4. All other moves
    *
-   * @param MoveBoardList MoveBoardList to sort
+   * @param moveBoardList MoveBoardList to sort
    */
   void _orderMoves(MoveBoardList&);
 
@@ -127,7 +127,7 @@ private:
    *
    * Places captures first sorted by MVV/LVA and non captures after.
    *
-   * @param MoveBoardList MoveBoardList to sort
+   * @param moveBoardList MoveBoardList to sort
    */
   void _orderMovesQSearch(MoveBoardList&);
 
@@ -139,8 +139,8 @@ private:
    * If a or b are not in the transposition table, returns false or true respectively.
    * If a and b are both not in the transposition table, returns false.
    *
-   * @param  MoveBoard First MoveBoard to compare
-   * @param  MoveBoard Second MoveBoard to compare
+   * @param  a First MoveBoard to compare
+   * @param  b Second MoveBoard to compare
    * @return true if a is a better move than b according to the transposition table.
    */
   bool _compareMovesTt(MoveBoard, MoveBoard);
@@ -150,8 +150,8 @@ private:
    *
    * Returns true if a is a better move than b according to MVV/LVA.
    *
-   * @param  MoveBoard First MoveBoard to compare
-   * @param  MoveBoard Second MoveBoard to compare
+   * @param  a First MoveBoard to compare
+   * @param  b Second MoveBoard to compare
    * @return true if a is a better move than b according to MVV/LVA, false otherwise
    */
   bool _compareMovesMvvLva(MoveBoard, MoveBoard);
@@ -162,8 +162,8 @@ private:
    * Returns true if a is a better promotion than b according to the value of the
    * promotion piece.
    *
-   * @param  MoveBoard First moveboard to compare
-   * @param  MoveBoard Second moveboard to compare.
+   * @param  a First moveboard to compare
+   * @param  b Second moveboard to compare.
    * @return true if a is a better move than b according to promotion piece value.
    */
   bool _compareMovesPromotionValue(MoveBoard, MoveBoard);
@@ -171,17 +171,17 @@ private:
   /**
    * @brief Log info about a search according to the UCI protocol.
    *
-   * @param MoveBoardList MoveBoardList representing the Principal Variation (first moves at index 0)
-   * @param int           Depth of search
-   * @param Move          Best move obtained from search
-   * @param int           Score corresponding to the best move
+   * @param pv        MoveBoardList representing the Principal Variation (first moves at index 0)
+   * @param depth     Depth of search
+   * @param bestMove  Best move obtained from search
+   * @param bestScore Score corresponding to the best move
    */
   void _logUciInfo(const MoveBoardList&, int, Move, int);
 
   /**
    * @brief Returns the value of a pieceType that can be used for comparisons.
    *
-   * @param  PieceType PieceType to get value for
+   * @param  pieceType PieceType to get value for
    * @return Value of the given piece type.
    */
   int _getPieceValue(PieceType);
@@ -191,9 +191,9 @@ private:
    *
    * Can only be called after a search has been called via _rootMax().
    *
-   * @param  Board  Initial board used in the last search
-   * @param  int    Depth of the last search
-   * @return        MoveBoardList representing the Principal Variation of the last search
+   * @param  board Initial board used in the last search
+   * @param  depth Depth of the last search
+   * @return       MoveBoardList representing the Principal Variation of the last search
    */
   MoveBoardList _getPv(const Board&, int);
 };

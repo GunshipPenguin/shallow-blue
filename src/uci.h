@@ -39,7 +39,7 @@ private:
    *
    * The passed istringstream should contain the received line with everything following the `position` command.
    *
-   * @param std::istringstream istringstream contining position information
+   * @param is istringstream contining position information
    */
   void _setPosition(std::istringstream&);
 
@@ -47,12 +47,14 @@ private:
    * @brief Handle the go command
    *
    * The passed istringstream should contain the received line with everything following the `go` command
+   *
+   * @param is istringstream containing go parameters
    */
   void _go(std::istringstream&);
 
   /**
    * @brief Performs a search to the given depth and outputs the best move.
-   * @param int Depth to search to
+   * @param maxDepth Depth to search to
    */
   void _pickBestMove(int);
 };

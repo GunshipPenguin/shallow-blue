@@ -11,7 +11,7 @@
 class TranspTable {
 public:
   /**
-   * @enum
+   * @enum Flag
    * @brief Flag stored with each transposition table entry indicating its type.
    */
   enum Flag {
@@ -25,17 +25,17 @@ public:
    *
    * If the entry already exists, it will be overwritten.
    *
-   * @param ZKey Zobrist key of the board
-   * @param int  Score of position
-   * @param int  Depth of entry
-   * @param Flag Type of entry
+   * @param key Zobrist key of the board
+   * @param score  Score of position
+   * @param depth  Depth of entry
+   * @param flag Type of entry
    */
   void set(ZKey, int, int, Flag);
 
   /**
    * @brief Returns true if the transposition table contains the given ZKey.
-   * @param  ZKey ZKey to lookup
-   * @return True if there is an entry in the transposition table with the ZKey, false otherwise
+   * @param  key ZKey to lookup
+   * @return true if there is an entry in the transposition table with the ZKey, false otherwise
    */
   bool contains(const ZKey&) const;
 
@@ -44,7 +44,7 @@ public:
    *
    * Throws an exception if the entry does not exist.
    *
-   * @param   ZKey ZKey of the entry to get the score of
+   * @param  key ZKey of the entry to get the score of
    * @return The score of the entry with the given ZKey
    */
   int getScore(const ZKey&) const;
@@ -54,7 +54,7 @@ public:
    *
    * Throws an exception if the entry does not exist.
    *
-   * @param  ZKey ZKey of the entry to get the depth of
+   * @param  key ZKey of the entry to get the depth of
    * @return The depth of the entry with the given ZKey
    */
   int getDepth(const ZKey&) const;
@@ -64,7 +64,7 @@ public:
    *
    * Throws an exception if the entry does not exist.
    *
-   * @param  ZKey ZKey of the entry to get the flag of
+   * @param  key ZKey of the entry to get the flag of
    * @return The flag of the entry with the given ZKey
    */
   Flag getFlag(const ZKey&) const;

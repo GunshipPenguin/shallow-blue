@@ -10,8 +10,8 @@
 class RayTable {
 public:
   /**
-   * @enum
-   * Represents the 8 possible ray directions.
+   * @enum Dir
+   * @brief Represents the 8 possible ray directions.
    */
   enum Dir {
     NORTH,
@@ -34,8 +34,8 @@ public:
   /**
    * @brief Returns a bitboard containing a ray in the given direction from the given square on an empty board
    *
-   * @param  Dir Direction of ray
-   * @param  int Origin square of ray (little endian rank-file mapping)
+   * @param  direction Direction of ray
+   * @param  square Origin square of ray (little endian rank-file mapping)
    * @return A bitboard containing the ray
    */
   static U64 getRay(Dir, int);

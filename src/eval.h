@@ -50,8 +50,8 @@ private:
   /**
    * @brief Returns an estimate for the number of legal moves for the given color on the given board.
    *
-   * @param Board The board to estimate the number of moves for
-   * @param Color The color to estimate the number of moves for
+   * @param board The board to estimate the number of moves for
+   * @param color The color to estimate the number of moves for
    * @return An estimate for the number of moves for the given color on the given board.
    */
   int _calcMobility(const Board&, Color);

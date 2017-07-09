@@ -34,13 +34,13 @@ class Board {
 
     /**
      * @brief Set the chess board to the specified FEN string.
-     * @param std::string FEN string to set the board to.
+     * @param fenString FEN string to set the board to.
      */
     void setToFen(std::string);
 
     /**
      * @brief Perform the specified move on the board.
-     * @param Move Move to perform on the board.
+     * @param move Move to perform on the board.
      */
     void doMove(Move);
 
@@ -119,7 +119,7 @@ class Board {
     /**
      * @brief Returns true if the given color is in check, false otherwise.
      *
-     * @param Color Color to check for being in check
+     * @param color Color to check for being in check
      * @return true if the given color is in check, false otherwise.
      */
     bool colorIsInCheck(Color) const;
@@ -128,26 +128,26 @@ class Board {
      * @brief Returns a bitboard containing all of the pieces of the specified
      * color and piece type.
      *
-     * @param  Color color of pieces to return
-     * @param  PieceType Type of pieces to return
+     * @param  color color of pieces to return
+     * @param  pieceType Type of pieces to return
      * @return A bitboard containing all of the pieces of the specified color and piece type.
      */
     U64 getPieces(Color, PieceType) const;
 
     /**
      * @brief Returns a bitboard containing all of the pieces of the specified color.
-     *
-     * @param  Color Color to return piece bitboard for.
+
+     * @param  color Color to return piece bitboard for.
      * @return A bitboard containing all of the pieces of the specified color.
      */
     U64 getAllPieces(Color) const;
 
     /**
      * @brief Returns a bitboard containing all of the pieces of the specified color that are attackable.
-     * asdfadfef
+     *
      * Attackable pieces are any piece that is not a king.
      *
-     * @param  Color Color to return attackable piece bitboard for.
+     * @param  color Color to return attackable piece bitboard for.
      * @return A bitboard containing all of the pieces of the specified color that are attackable.
      */
     U64 getAttackable(Color) const;
@@ -155,8 +155,8 @@ class Board {
     /**
      * @brief Returns the type of the piece at the given sqare. Color must be provided.
      *
-     * @param  Color Color of piece to lookup type.
-     * @param  int Little endian rank file index of square to lookup.
+     * @param  color        Color of piece to lookup type.
+     * @param  squareIndex  Little endian rank file index of square to lookup.
      * @return The PieceType at the specified square.
      */
     PieceType getPieceAtSquare(Color, int) const;
@@ -215,9 +215,9 @@ class Board {
      * @brief Returns a bitboard containing all of the squares that a piece of the specified
      * piece type and color could move to if it was on the specified square.
      *
-     * @param  PieceType The piece type to lookup move locations for
-     * @param  Color     The color of the piece to lookup move locations for.
-     * @param  int       The little endian rank file mapping of the destination square.
+     * @param  pieceType The piece type to lookup move locations for
+     * @param  color     The color of the piece to lookup move locations for.
+     * @param  square       The little endian rank file mapping of the destination square.
      * @return           A bitboard containing all of the squares that a piece of the specified piece type and color could move to.
      */
     U64 getAttacksForSquare(PieceType, Color, int) const;
@@ -323,8 +323,8 @@ class Board {
      * Returns true if the square (given as a little endian rank file map index)
      * is under attack by the given color.
      *
-     * @param  Color Color to check
-     * @param  int   Square to check (little endian rank file mapping)
+     * @param  color        Color to check
+     * @param  squareIndex  Square to check (little endian rank file mapping)
      * @return True if the square is under attack, false otherwise
      */
     bool _squareUnderAttack(Color, int) const;
@@ -335,7 +335,7 @@ class Board {
      * This method updates the correct castling rights if a rook is captured,
      * moves, or the king moves.
      *
-     * @param Move The move to update castling rights for.
+     * @param move The move to update castling rights for.
      */
     void _updateCastlingRightsForMove(Move);
 
@@ -350,10 +350,10 @@ class Board {
      * Moves the piece from the from square to the to square and updates the
      * board state appropriately.
      *
-     * @param Color     Color of piece to move
-     * @param PieceType Type of piece to move
-     * @param int       Square to move from (little endian rank file mapping)
-     * @param int       Square to move to (little endian rank file mapping)
+     * @param color     Color of piece to move
+     * @param pieceType Type of piece to move
+     * @param from      Square to move from (little endian rank file mapping)
+     * @param to        Square to move to (little endian rank file mapping)
      */
     void _movePiece(Color, PieceType, int, int);
 
@@ -363,9 +363,9 @@ class Board {
      * Adds a piece of the given piece type and color to the given square and
      * updates the board state appropriately.
      *
-     * @param Color     Color of piece to add
-     * @param PieceType Type of piece to add
-     * @param int       Square to add piece at (little endian rank file mapping)
+     * @param color     Color of piece to add
+     * @param pieceType Type of piece to add
+     * @param squareIndex    Square to add piece at (little endian rank file mapping)
      */
     void _addPiece(Color, PieceType, int);
 
@@ -375,9 +375,9 @@ class Board {
      * Removes a piece of the given piece type and color from the given square and
      * updates the board state appropriately.
      *
-     * @param Color     Color of piece to remove
-     * @param PieceType Type of piece to remove
-     * @param int       Square to remoe piece from (little endian rank file mapping)
+     * @param color     Color of piece to remove
+     * @param pieceType Type of piece to remove
+     * @param squareIndex    Square to remoe piece from (little endian rank file mapping)
      */
     void _removePiece(Color, PieceType, int);
 
