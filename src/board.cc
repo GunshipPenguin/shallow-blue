@@ -8,8 +8,6 @@
 #include <iostream>
 #include <string.h>
 
-RayTable Board::_raytable = RayTable();
-
 Board::Board() {
   setToFen("8/8/8/8/8/8/8/8 w - -");
 }
@@ -601,19 +599,19 @@ U64 Board::_getKingAttacksForSquare(int square, U64 own) const {
 }
 
 U64 Board::_getBishopAttacksForSquare(int square, U64 own) const {
-  U64 moves = _raytable.getPositiveAttacks(RayTable::NORTH_WEST, square, _occupied) |
-    _raytable.getPositiveAttacks(RayTable::NORTH_EAST, square, _occupied) |
-    _raytable.getNegativeAttacks(RayTable::SOUTH_WEST, square, _occupied) |
-    _raytable.getNegativeAttacks(RayTable::SOUTH_EAST, square, _occupied);
+  U64 moves = RayTable::getPositiveAttacks(RayTable::NORTH_WEST, square, _occupied) |
+    RayTable::getPositiveAttacks(RayTable::NORTH_EAST, square, _occupied) |
+    RayTable::getNegativeAttacks(RayTable::SOUTH_WEST, square, _occupied) |
+    RayTable::getNegativeAttacks(RayTable::SOUTH_EAST, square, _occupied);
 
   return moves & (~own);
 }
 
 U64 Board::_getRookAttacksForSquare(int square, U64 own) const {
-  U64 moves = _raytable.getPositiveAttacks(RayTable::NORTH, square, _occupied) |
-    _raytable.getPositiveAttacks(RayTable::EAST, square, _occupied) |
-    _raytable.getNegativeAttacks(RayTable::SOUTH, square, _occupied) |
-    _raytable.getNegativeAttacks(RayTable::WEST, square, _occupied);
+  U64 moves = RayTable::getPositiveAttacks(RayTable::NORTH, square, _occupied) |
+    RayTable::getPositiveAttacks(RayTable::EAST, square, _occupied) |
+    RayTable::getNegativeAttacks(RayTable::SOUTH, square, _occupied) |
+    RayTable::getNegativeAttacks(RayTable::WEST, square, _occupied);
 
   return moves & (~own);
 }

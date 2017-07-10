@@ -1,38 +1,71 @@
+/**
+ * @file
+ *
+ * Contains global constants and functions used in many classes / functions.
+ *
+ */
+
 #ifndef DEFS_H
 #define DEFS_H
 
+/**
+ * An unsigned 64 bit integer (A bitboard).
+ */
 typedef unsigned long long U64;
 
-const U64 RANK_1 = 255ull;
-const U64 RANK_2 = 65280ull;
-const U64 RANK_3 = 16711680ull;
-const U64 RANK_4 = 4278190080ull;
-const U64 RANK_5 = 1095216660480ull;
-const U64 RANK_6 = 280375465082880ull;
-const U64 RANK_7 = 71776119061217280ull;
-const U64 RANK_8 = 18374686479671623680ull;
+/**
+ * @name Rank bitboards
+ *
+ * @{
+ */
+const U64 RANK_1 = 0xffull;
+const U64 RANK_2 = 0xff00ull;
+const U64 RANK_3 = 0xff0000ull;
+const U64 RANK_4 = 0xff000000ull;
+const U64 RANK_5 = 0xff00000000ull;
+const U64 RANK_6 = 0xff0000000000ull;
+const U64 RANK_7 = 0xff000000000000ull;
+const U64 RANK_8 = 0xff00000000000000ull;
+/**@}*/
 
-const U64 FILE_H = 9259542123273814144ull;
-const U64 FILE_G = 4629771061636907072ull;
-const U64 FILE_F = 2314885530818453536ull;
-const U64 FILE_E = 1157442765409226768ull;
-const U64 FILE_D = 578721382704613384ull;
-const U64 FILE_C = 289360691352306692ull;
-const U64 FILE_B = 144680345676153346ull;
-const U64 FILE_A = 72340172838076673ull;
+/**
+ * @name File bitboards
+ *
+ * @{
+ */
+const U64 FILE_H = 0x8080808080808080ull;
+const U64 FILE_G = 0x4040404040404040ull;
+const U64 FILE_F = 0x2020202020202020ull;
+const U64 FILE_E = 0x1010101010101010ull;
+const U64 FILE_D = 0x808080808080808ull;
+const U64 FILE_C = 0x404040404040404ull;
+const U64 FILE_B = 0x202020202020202ull;
+const U64 FILE_A = 0x101010101010101ull;
+/**@}*/
 
+/**
+ * @brief An empty bitboard. (ie. the number 0)
+ */
 const U64 ZERO = U64(0);
+
+/**
+ * @brief A bitboard containing only the square a1. (ie. the number 1)
+ */
 const U64 ONE = U64(1);
 
+/**
+ * @enum Color
+ * @brief Represents a color.
+ */
 enum Color {
   WHITE,
   BLACK
 };
 
-inline Color getOppositeColor(Color color) {
-  return color == WHITE ? BLACK : WHITE;
-}
-
+/**
+ * @enum PieceType
+ * @brief Represents a piece type.
+ */
 enum PieceType {
   PAWN,
   ROOK,
@@ -42,6 +75,20 @@ enum PieceType {
   KING
 };
 
+/**
+ * @brief Returns the opposite of the given color
+ * @param  color Color to get the opposite of
+ * @return WHITE if color == BLACK, BLACK otherwise
+ */
+inline Color getOppositeColor(Color color) {
+  return color == WHITE ? BLACK : WHITE;
+}
+
+/**
+ * @enum SquareIndex
+ *
+ * Little endian rank file mapping of each square.
+ */
 enum SquareIndex {
   a1, b1, c1, d1, e1, f1, g1, h1,
   a2, b2, c2, d2, e2, f2, g2, h2,

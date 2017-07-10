@@ -5,6 +5,7 @@
 TEST_CASE("Search works as expected") {
   PSquareTable::init();
   ZKey::init();
+  RayTable::init();
 
   SECTION("Search works as expected after PSquareTable and ZKey are initialized") {
     Board board;
