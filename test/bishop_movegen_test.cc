@@ -63,7 +63,7 @@ TEST_CASE("Bishop move generation is correct") {
     movegen.setBoard(board);
     REQUIRE(movegen.getMoves().size() == 24);
 
-    board.setToFen("b6b/8/8/8/8/8/8/b6b b- -");
+    board.setToFen("b6b/8/8/8/8/8/8/b6b b - -");
     movegen.setBoard(board);
     REQUIRE(movegen.getMoves().size() == 24);
   }
