@@ -41,6 +41,8 @@ void ZKey::init() {
 
 ZKey::ZKey() {
   _key = ZERO;
+  _whiteKs = false, _whiteQs = false, _blackKs = false, _blackQs = false;
+  _enPassantFile = -1;
 }
 
 ZKey::ZKey(Board board) {
