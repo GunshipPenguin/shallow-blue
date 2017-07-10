@@ -173,6 +173,8 @@ class Board {
     /**
      * @brief Returns the type of the piece at the given square. Color must be provided.
      *
+     * Throws an std::logic_error if no piece of the given color exists at the square.
+     *
      * @param  color        Color of piece to lookup type.
      * @param  squareIndex  Little endian rank file index of square to lookup.
      * @return The PieceType at the specified square.
