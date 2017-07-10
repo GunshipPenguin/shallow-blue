@@ -45,7 +45,7 @@ ZKey::ZKey() {
   _enPassantFile = -1;
 }
 
-ZKey::ZKey(Board board) {
+ZKey::ZKey(const Board& board) {
   _key = ZERO;
 
   if (board.getActivePlayer() == WHITE) {
