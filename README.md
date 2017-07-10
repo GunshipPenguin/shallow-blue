@@ -52,6 +52,7 @@ These commands can be useful for debugging.
   - Opening book support
   - Magic bitboards
   - Unmake move function
+  - Opening book support
 - Evaluation
   - King safety
   - Pawn structure
