@@ -13,7 +13,7 @@ class Board;
 class ZKey {
 public:
   /**
-   * @brief Constructs a new Zkey from an empty board.
+   * @brief Constructs a new empty ZKey.
    */
   ZKey();
 
