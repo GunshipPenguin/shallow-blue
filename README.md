@@ -1,6 +1,6 @@
 # Shallow Blue
 
-[![Travis](https://img.shields.io/travis/GunshipPenguin/shallow-blue.svg)]()
+[![Travis](https://img.shields.io/travis/GunshipPenguin/shallow-blue.svg)](https://travis-ci.org/GunshipPenguin/shallow-blue)
 
 (Not [Deep Blue]( https://en.wikipedia.org/wiki/Deep_Blue_(chess_computer)))
 
