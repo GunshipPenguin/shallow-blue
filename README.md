@@ -1,4 +1,7 @@
 # Shallow Blue
+
+[![Travis](https://img.shields.io/travis/GunshipPenguin/shallow-blue.svg)]()
+
 (Not [Deep Blue]( https://en.wikipedia.org/wiki/Deep_Blue_(chess_computer)))
 
 A UCI Chess engine written in C++11.
