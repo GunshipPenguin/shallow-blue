@@ -21,7 +21,7 @@ public:
    * @brief Constructs a new ZKey from the given board.
    * @param board Board to construct this ZKey from
    */
-  ZKey(Board);
+  ZKey(const Board& board);
 
   /**
    * @brief Initialize the pseudo-random values used to generate a ZKey.

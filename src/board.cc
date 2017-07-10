@@ -7,6 +7,7 @@
 #include <sstream>
 #include <iostream>
 #include <string.h>
+#include <stdexcept>
 
 Board::Board() {
   setToFen("8/8/8/8/8/8/8/8 w - -");
@@ -354,12 +355,15 @@ PieceType Board::getPieceAtSquare(Color color, int squareIndex) const {
   U64 square = ONE << squareIndex;
 
   PieceType piece;
+
   if (square & _pieces[color][PAWN]) piece = PAWN;
   else if (square & _pieces[color][ROOK]) piece = ROOK;
   else if (square & _pieces[color][KNIGHT]) piece = KNIGHT;
   else if (square & _pieces[color][BISHOP]) piece = BISHOP;
   else if (square & _pieces[color][KING]) piece = KING;
   else if (square & _pieces[color][QUEEN]) piece = QUEEN;
+  else throw std::logic_error((color == WHITE ? std::string("White") : std::string("Black")) +
+      " piece at square " + std::to_string(squareIndex) + " does not exist");
 
   return piece;
 }

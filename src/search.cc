@@ -12,6 +12,7 @@
 Search::Search(const Board& board, bool logUci) {
   _logUci = logUci;
   _board = board;
+  _bestScore = 0;
 }
 
 void Search::perform(int depth) {

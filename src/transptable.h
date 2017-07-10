@@ -10,7 +10,7 @@
  *
  * Each entry is mapped to by a ZKey and contains a score, depth and flag which
  * indicates if the stored score is an upper bound, lower bound or exact score.
- * 
+ *
  */
 class TranspTable {
 public:
@@ -34,7 +34,7 @@ public:
    * @param depth  Depth of entry
    * @param flag Type of entry
    */
-  void set(ZKey, int, int, Flag);
+  void set(const ZKey&, int, int, Flag);
 
   /**
    * @brief Returns true if the transposition table contains the given ZKey.

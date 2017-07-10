@@ -1,7 +1,7 @@
 #include "transptable.h"
 #include <iostream>
 
-void TranspTable::set(ZKey key, int score, int depth, Flag flag) {
+void TranspTable::set(const ZKey& key, int score, int depth, Flag flag) {
   _table[key.getValue()] = std::tuple<int, int, TranspTable::Flag>(score, depth, flag);
 }
 
