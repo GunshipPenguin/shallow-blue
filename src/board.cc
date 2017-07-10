@@ -10,7 +10,8 @@
 #include <stdexcept>
 
 Board::Board() {
-  setToFen("8/8/8/8/8/8/8/8 w - -");
+  _clearBitBoards();
+
 }
 
 U64 Board::getPieces(Color color, PieceType pieceType) const {
