@@ -15,7 +15,7 @@ MoveGen::MoveGen() {
 
 void MoveGen::setBoard(const Board& board) {
   _moves = MoveList();
-  _legalMoves = MoveBoardList();
+  _legalMoves = MoveList();
   _genMoves(board);
 }
 
@@ -26,7 +26,7 @@ void MoveGen::_genLegalMoves(const Board& board) {
 
     // Skip adding this move if it results in moving into check
     if (!tempBoard.colorIsInCheck(tempBoard.getInactivePlayer())) {
-      _legalMoves.push_back(MoveBoard(move, tempBoard));
+      _legalMoves.push_back(move);
     }
   }
 }
@@ -35,7 +35,7 @@ MoveList MoveGen::getMoves() {
   return _moves;
 }
 
-MoveBoardList MoveGen::getLegalMoves() {
+MoveList MoveGen::getLegalMoves() {
   return _legalMoves;
 }
 

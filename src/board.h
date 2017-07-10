@@ -22,7 +22,11 @@ class Move;
 class Board {
   public:
     /**
-     * @brief Constructs a new empty chess board.
+     * @brief Constructs a new board with no pieces, white to move, and no castling rights.
+     *
+     * Note that this constructor constructs a totally empty board quickly and
+     * is meant to be used before either calling setToFen() or constructing a new
+     * board as a copy.
      */
     Board();
 
@@ -289,8 +293,8 @@ class Board {
      * in _checks has already been calculated and cached or needs to be calculated.
      * @{
      */
-    mutable bool _checks[2];
-    mutable bool _checksCalculated[2];
+    mutable bool _checks[2] = {false, false};
+    mutable bool _checksCalculated[2] = {false, false};
     /**@}*/
 
     /**
@@ -316,7 +320,7 @@ class Board {
     /**
      * @brief Player whose turn it is to move.
      */
-    Color _activePlayer;
+    Color _activePlayer = WHITE;
 
     /**
      * @brief Zobrist key for this board in its current state.
@@ -332,10 +336,10 @@ class Board {
      * @name Castling right booleans.
      * @{
      */
-    bool _whiteCanCastleKs;
-    bool _whiteCanCastleQs;
-    bool _blackCanCastleKs;
-    bool _blackCanCastleQs;
+    bool _whiteCanCastleKs = false;
+    bool _whiteCanCastleQs = false;
+    bool _blackCanCastleKs = false;
+    bool _blackCanCastleQs = false;
     /**@}*/
 
     /**

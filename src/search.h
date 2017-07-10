@@ -111,7 +111,7 @@ private:
   int _qSearch(const Board&, int=-INF, int=INF);
 
   /**
-   * @brief Orders a MoveBoardList for negamax search.
+   * @brief Orders a MoveList for negamax search.
    *
    * Move ordering is as follows:
    * 1. Best moves from Transposition Table (PV is implicitly placed first by this)
@@ -119,43 +119,44 @@ private:
    * 3. Promotions sorted by value
    * 4. All other moves
    *
-   * @param moveBoardList MoveBoardList to sort
+   * @param board Board that moves apply to
+   * @param moveList MoveList to sort
    */
-  void _orderMoves(MoveBoardList&);
+  void _orderMoves(const Board&, MoveList&);
 
   /**
-   * @brief Orders a MoveBoardList for quiescence search
+   * @brief Orders a MoveList for quiescence search
    *
    * Places captures first sorted by MVV/LVA and non captures after.
    *
-   * @param moveBoardList MoveBoardList to sort
+   * @param moveList MoveList to sort
    */
-  void _orderMovesQSearch(MoveBoardList&);
+  void _orderMovesQSearch(MoveList&);
 
   /**
-   * @brief Transposition table comparison function for moves
+   * @brief Transposition table comparision function for moves.
    *
-   * Returns true if a is a worse better than b according to the transposition table.
+   * Returns true if a is a better move than b according to the Transposition
+   * table, false otherwise.
    *
-   * If a or b are not in the transposition table, returns false or true respectively.
-   * If a and b are both not in the transposition table, returns false.
-   *
-   * @param  a First MoveBoard to compare
-   * @param  b Second MoveBoard to compare
-   * @return true if a is a better move than b according to the transposition table.
+   * @param board Board that moves apply to (needed to lookup tt entries)
+   * @param a First move to compare
+   * @param b Second move to compare
+   * @return true if a is a better move than b according to the Transposition
+   * table, false otherwise.
    */
-  bool _compareMovesTt(MoveBoard, MoveBoard);
+  bool _compareMovesTt(Board, Move, Move);
 
   /**
    * @brief MVV/LVA comparison function for moves
    *
    * Returns true if a is a better move than b according to MVV/LVA.
    *
-   * @param  a First MoveBoard to compare
-   * @param  b Second MoveBoard to compare
+   * @param  a First Move to compare
+   * @param  b Second Move to compare
    * @return true if a is a better move than b according to MVV/LVA, false otherwise
    */
-  bool _compareMovesMvvLva(MoveBoard, MoveBoard);
+  bool _compareMovesMvvLva(Move, Move);
 
   /**
    * @brief Promotion comparison function for moves.
@@ -163,21 +164,21 @@ private:
    * Returns true if a is a better promotion than b according to the value of the
    * promotion piece.
    *
-   * @param  a First moveboard to compare
-   * @param  b Second moveboard to compare.
+   * @param  a First Move to compare
+   * @param  b Second Move to compare.
    * @return true if a is a better move than b according to promotion piece value.
    */
-  bool _compareMovesPromotionValue(MoveBoard, MoveBoard);
+  bool _compareMovesPromotionValue(Move, Move);
 
   /**
    * @brief Logs info about a search according to the UCI protocol.
    *
-   * @param pv        MoveBoardList representing the Principal Variation (first moves at index 0)
+   * @param pv        MoveList representing the Principal Variation (first moves at index 0)
    * @param depth     Depth of search
    * @param bestMove  Best move obtained from search
    * @param bestScore Score corresponding to the best move
    */
-  void _logUciInfo(const MoveBoardList&, int, Move, int);
+  void _logUciInfo(const MoveList&, int, Move, int);
 
   /**
    * @brief Returns the value of a pieceType that can be used for comparisons.
@@ -194,9 +195,9 @@ private:
    *
    * @param  board Initial board used in the last search
    * @param  depth Depth of the last search
-   * @return       MoveBoardList representing the Principal Variation of the last search
+   * @return MoveList representing the Principal Variation of the last search
    */
-  MoveBoardList _getPv(const Board&, int);
+  MoveList _getPv(const Board&, int);
 };
 
 #endif

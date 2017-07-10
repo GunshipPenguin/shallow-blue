@@ -10,16 +10,6 @@
 typedef std::vector<Move> MoveList;
 
 /**
- * @brief Pair consisting of a move and board that it has just been applied to.
- */
-typedef std::pair<Move, Board> MoveBoard;
-
-/**
- * @brief Vector of MoveBoard pairs.
- */
-typedef std::vector<MoveBoard> MoveBoardList;
-
-/**
  * @brief Pseudo-legal move generator.
  */
 class MoveGen {
@@ -51,11 +41,11 @@ public:
   MoveList getMoves();
 
   /**
-   * @brief Returns the subset of pseudo-legal moves that are legal and the boards that they correspond to.
+   * @brief Returns the subset of pseudo-legal moves that are legal.
    *
-   * @return A MoveBoardList of all legal moves that have been generated for the current board and the boards they correspond to
+   * @return A MoveList of all legal moves that have been generated for the current board.
    */
-  MoveBoardList getLegalMoves();
+  MoveList getLegalMoves();
 
 private:
   /**
@@ -64,9 +54,9 @@ private:
   MoveList _moves;
 
   /**
-   * @brief MoveBoardList of legal moves and their boards.
+   * @brief MoveList of legal moves.
    */
-  MoveBoardList _legalMoves;
+  MoveList _legalMoves;
 
   /**
    * @brief Generates pseudo-legal moves for the active player of the given board
