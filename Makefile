@@ -6,7 +6,7 @@ TEST_CPP_FILES = $(filter-out src/main.cc, $(sort $(CPP_FILES) $(wildcard test/*
 OBJ_FILES = $(addprefix obj/,$(notdir $(CPP_FILES:.cc=.o)))
 TEST_OBJ_FILES = $(addprefix obj/,$(notdir $(TEST_CPP_FILES:.cc=.o)))
 
-LD_FLAGS = -fopenmp -flto
+LD_FLAGS = -fopenmp -pthread -flto
 CC_FLAGS = -Wall -std=c++11 -O3 -march=native -flto -D_GLIBCXX_PARALLEL -pthread
 
 # Debug compile and linker flags (remove optimizations and add debugging symbols)
