@@ -1,15 +1,17 @@
 language: cpp
 compiler: gcc
 
+dist: trusty
+sudo: required
+
 before_install:
 - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
 - sudo apt-get update -qq
 
 install:
-  # Install gcc 6 (Needed for C++11 support)
-  - sudo apt-get install -qq g++-6
-  - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-6 90
-  - g++ --version
+  # Install valgrind
+  - sudo apt-get install valgrind
+  - valgrind --version
 
 before_script:
   - cat /proc/cpuinfo
@@ -19,3 +21,4 @@ before_script:
 script:
   - make
   - make test
+  - valgrind --leak-check=full --error-exitcode=1  ./shallowbluetest exclude:[perft]
