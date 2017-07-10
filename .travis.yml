@@ -6,7 +6,9 @@ before_install:
 - sudo apt-get update -qq
 
 install:
+  # Install gcc 6 (Needed for C++11 support)
   - sudo apt-get install -qq g++-6
+  - g++ --version
   - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-6 90
 
 before_script:
