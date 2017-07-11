@@ -22,7 +22,7 @@ int perft(int depth, const Board& board) {
   return nodes;
 }
 
-TEST_CASE("Perft is correct") {
+TEST_CASE("Perft is correct", "[perft]") {
   Board board;
 
   SECTION("Perft is correct from the starting position") {
