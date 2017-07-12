@@ -179,12 +179,17 @@ bool Search::_compareMovesMvvLva(Move a, Move b) {
   } else if (bIsCapture && !aIsCapture) {
     return false;
   } else { // Both captures
-    int aPieceValue = _getPieceValue(a.getPieceType());
-    int bPieceValue = _getPieceValue(b.getPieceType());
     int aCaptureValue = _getPieceValue(a.getCapturedPieceType());
     int bCaptureValue = _getPieceValue(b.getCapturedPieceType());
 
-    return (aCaptureValue - aPieceValue) > (bCaptureValue - bPieceValue);
+    if (aCaptureValue != bCaptureValue) {
+      return aCaptureValue > bCaptureValue;
+    } else { // Captured piece type value is the same, order by attacker value
+      int aPieceValue = _getPieceValue(a.getPieceType());
+      int bPieceValue = _getPieceValue(b.getPieceType());
+
+      return aPieceValue < bPieceValue;
+    }
   }
 }
 
