@@ -59,6 +59,14 @@ private:
   MoveList _legalMoves;
 
   /**
+   * @brief Size of _moves to pre-reserve before generating moves.
+   *
+   * At the current time 218 seems to be an upper bound on the maximum number
+   * of moves from any one position.
+   */
+  static const int MOVELIST_RESERVE_SIZE = 218;
+
+  /**
    * @brief Generates pseudo-legal moves for the active player of the given board
    *
    * Generated pseudo-legal moves are stored in the _moves vector.

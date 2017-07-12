@@ -20,6 +20,7 @@ void MoveGen::setBoard(const Board& board) {
 }
 
 void MoveGen::_genLegalMoves(const Board& board) {
+  _legalMoves.reserve(_moves.size());
   for (auto move : _moves) {
     Board tempBoard = board;
     tempBoard.doMove(move);
@@ -40,6 +41,7 @@ MoveList MoveGen::getLegalMoves() {
 }
 
 void MoveGen::_genMoves(const Board& board) {
+  _moves.reserve(MOVELIST_RESERVE_SIZE);
   switch(board.getActivePlayer()) {
     case WHITE: _genWhiteMoves(board);
       break;
