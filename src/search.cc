@@ -330,12 +330,12 @@ int Search::_qSearch(const Board& board, int alpha, int beta) {
 
   Board movedBoard;
   for (auto move : legalMoves) {
-    movedBoard = board;
-    movedBoard.doMove(move);
-
     if ((move.getFlags() & Move::CAPTURE) == 0) {
       break;
     }
+
+    movedBoard = board;
+    movedBoard.doMove(move);
 
     int score = -_qSearch(movedBoard, -beta, -alpha);
 
