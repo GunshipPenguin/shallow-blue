@@ -424,7 +424,7 @@ void Board::doMove(Move move) {
   _resetChecks();
 
   // Handle move depending on what type of move it is
-  if (move.getFlags() == 0) {
+  if (!flags) {
     // No flags set, not a special move
     _movePiece(_activePlayer, move.getPieceType(), move.getFrom(), move.getTo());
   } else if ((flags & Move::CAPTURE) && (flags & Move::PROMOTION)) { // Capture promotion special case
