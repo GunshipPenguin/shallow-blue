@@ -15,8 +15,6 @@ install:
 
 before_script:
   - cat /proc/cpuinfo
-  # Needed since OpenMP detects the number of cores on the hosting hardware rather than the VM
-  - export OMP_NUM_THREADS=4
 
 script:
   - make
