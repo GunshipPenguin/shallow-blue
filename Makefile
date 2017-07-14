@@ -1,3 +1,5 @@
+CXX ?= g++
+
 SRC_DIR = $(shell pwd)/src
 
 CPP_FILES = $(wildcard src/*.cc)
@@ -26,16 +28,16 @@ test: $(OBJ_DIR) $(TEST_BIN_NAME)
 	./$(TEST_BIN_NAME)
 
 $(BIN_NAME): $(OBJ_FILES)
-	g++ $(LD_FLAGS) -o $@ $^
+	$(CXX) $(LD_FLAGS) -o $@ $^
 
 $(TEST_BIN_NAME): $(TEST_OBJ_FILES)
-	g++ $(LD_FLAGS) -o $@ $^
+	$(CXX) $(LD_FLAGS) -o $@ $^
 
 obj/%.o: src/%.cc
-	g++ $(CC_FLAGS) -c -o $@ $<
+	$(CXX) $(CC_FLAGS) -c -o $@ $<
 
 obj/%.o: test/%.cc
-	g++ $(CC_FLAGS) -I $(SRC_DIR) -c -o $@ $<
+	$(CXX) $(CC_FLAGS) -I $(SRC_DIR) -c -o $@ $<
 
 $(OBJ_DIR):
 	mkdir $(OBJ_DIR)
