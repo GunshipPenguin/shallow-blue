@@ -70,6 +70,10 @@ void Uci::start() {
   std::cout << " by Rhys Rustad-Elliott";
   std::cout << " (built " << __DATE__ << " " << __TIME__ << ")" << std::endl;
 
+  #ifdef __DEBUG__
+    std::cout << "***DEBUG BUILD (This will be slow)***" << std::endl;
+  #endif
+
   _board.setToStartPos();
 
   std::string line;

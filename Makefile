@@ -10,7 +10,7 @@ LD_FLAGS = -pthread -flto
 CC_FLAGS = -Wall -std=c++11 -O3 -march=native -flto -pthread
 
 # Debug compile and linker flags (remove optimizations and add debugging symbols)
-debug: CC_FLAGS = -Wall -std=c++11 -g
+debug: CC_FLAGS = -Wall -std=c++11 -g -D__DEBUG__
 debug: LD_FLAGS = -pthread
 
 OBJ_DIR = obj
