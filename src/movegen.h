@@ -38,14 +38,14 @@ public:
    *
    * @return A MoveList of all pseudo-legal moves that have been generated for the current board.
    */
-  MoveList getMoves();
+  const MoveList& getMoves();
 
   /**
    * @brief Returns the subset of pseudo-legal moves that are legal.
    *
    * @return A MoveList of all legal moves that have been generated for the current board.
    */
-  MoveList getLegalMoves();
+  const MoveList& getLegalMoves();
 
 private:
   /**

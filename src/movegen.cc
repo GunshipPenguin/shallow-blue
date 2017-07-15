@@ -32,11 +32,11 @@ void MoveGen::_genLegalMoves(const Board& board) {
   }
 }
 
-MoveList MoveGen::getMoves() {
+const MoveList& MoveGen::getMoves() {
   return _moves;
 }
 
-MoveList MoveGen::getLegalMoves() {
+const MoveList& MoveGen::getLegalMoves() {
   return _legalMoves;
 }
 
