@@ -99,7 +99,7 @@ void Uci::_perftDivide(int depth) {
     int perftRes = _perft(movedBoard, depth-1);
     total += perftRes;
 
-    std::cout << move.getNotation() << " " << perftRes << std::endl;
+    std::cout << move.getNotation() << ": " << perftRes << std::endl;
   }
   auto end = std::chrono::steady_clock::now();
   std::chrono::duration<double> elapsed = end-start;
