@@ -40,6 +40,8 @@ documentation use:
 
 These commands can be useful for debugging.
 
+- `perft <depth>`
+  - Prints the perft value for each move on the current board to the specified depth
 - `printboard`
     - Pretty prints the current state of the game board
 - `printmoves`

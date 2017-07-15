@@ -8,6 +8,7 @@
 #include <iostream>
 #include <thread>
 #include <sstream>
+#include <chrono>
 
 void Uci::_uciNewGame(){
   _board.setToStartPos();
@@ -65,6 +66,51 @@ void Uci::_go(std::istringstream& is) {
   searchThread.detach();
 }
 
+int Uci::_perft(const Board& board, int depth) {
+  if (depth == 0) {
+    return 1;
+  }
+
+  MoveGen movegen(board);
+  Board movedBoard;
+
+  int nodes = 0;
+  for (auto move : movegen.getLegalMoves()) {
+    movedBoard = board;
+    movedBoard.doMove(move);
+
+    nodes += _perft(movedBoard, depth-1);
+  }
+
+  return nodes;
+}
+
+void Uci::_perftDivide(int depth) {
+  int total = 0;
+
+  MoveGen movegen(_board);
+
+  std::cout << std::endl;
+  auto start = std::chrono::steady_clock::now();
+  for (auto move : movegen.getLegalMoves()) {
+    Board movedBoard = _board;
+    movedBoard.doMove(move);
+
+    int perftRes = _perft(movedBoard, depth-1);
+    total += perftRes;
+
+    std::cout << move.getNotation() << " " << perftRes << std::endl;
+  }
+  auto end = std::chrono::steady_clock::now();
+  std::chrono::duration<double> elapsed = end-start;
+
+  std::cout << std::endl << "========" << std::endl;
+  std::cout << "Total nodes: " << total << std::endl;
+  std::cout << "Time elapsed (ms): " << elapsed.count() * 1000 << std::endl;
+  std::cout << "Nodes per second: " << static_cast<int>(total / elapsed.count()) << std::endl;
+
+}
+
 void Uci::start() {
   std::cout << "Shallow Blue " << VER_MAJ << "." << VER_MIN << "." << VER_PATCH;
   std::cout << " by Rhys Rustad-Elliott";
@@ -106,6 +152,10 @@ void Uci::start() {
       for (auto move : MoveGen(_board).getLegalMoves()) {
         std::cout << move.getNotation() << std::endl;
       }
+    } else if (token == "perft") {
+      int depth;
+      is >> depth;
+      _perftDivide(depth);
     }
 
     else {

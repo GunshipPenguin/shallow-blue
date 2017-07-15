@@ -57,6 +57,22 @@ private:
    * @param maxDepth Depth to search to
    */
   void _pickBestMove(int);
+
+  /**
+   * @brief Calculates perft for each legal move of the current board and prints each perft value.
+   *
+   * @param depth Depth to run perft to
+   */
+  void _perftDivide(int);
+
+  /**
+   * @brief Returns the perft value for the given board to the given depth.
+   *
+   * @param  board Board to calculate perft of
+   * @param  depth   Depth to search to
+   * @return The perft of the board for the given depth
+   */
+  int _perft(const Board&, int);
 };
 
 #endif
