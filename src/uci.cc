@@ -86,7 +86,7 @@ int Uci::_perft(const Board& board, int depth) {
 }
 
 void Uci::_perftDivide(int depth) {
-  int total = 0;
+  unsigned long long total = 0;
 
   MoveGen movegen(_board);
 
