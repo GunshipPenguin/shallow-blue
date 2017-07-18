@@ -72,7 +72,7 @@ private:
    * @param  depth   Depth to search to
    * @return The perft of the board for the given depth
    */
-  int _perft(const Board&, int);
+  unsigned long long _perft(const Board&, int);
 };
 
 #endif

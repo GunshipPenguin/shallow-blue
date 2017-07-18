@@ -66,7 +66,7 @@ void Uci::_go(std::istringstream& is) {
   searchThread.detach();
 }
 
-int Uci::_perft(const Board& board, int depth) {
+unsigned long long Uci::_perft(const Board& board, int depth) {
   if (depth == 0) {
     return 1;
   }
@@ -74,7 +74,7 @@ int Uci::_perft(const Board& board, int depth) {
   MoveGen movegen(board);
   Board movedBoard;
 
-  int nodes = 0;
+  unsigned long long nodes = 0;
   for (auto move : movegen.getLegalMoves()) {
     movedBoard = board;
     movedBoard.doMove(move);
@@ -96,7 +96,7 @@ void Uci::_perftDivide(int depth) {
     Board movedBoard = _board;
     movedBoard.doMove(move);
 
-    int perftRes = _perft(movedBoard, depth-1);
+    unsigned long long perftRes = _perft(movedBoard, depth-1);
     total += perftRes;
 
     std::cout << move.getNotation() << ": " << perftRes << std::endl;
