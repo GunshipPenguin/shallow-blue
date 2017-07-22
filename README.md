@@ -1,8 +1,14 @@
-# Shallow Blue
+<p align="center">
+  <img src="logo.png" height="250" width="250">
+</p>
 
-[![Travis](https://img.shields.io/travis/GunshipPenguin/shallow-blue/master.svg)](https://travis-ci.org/GunshipPenguin/shallow-blue)
 
-(Not [Deep Blue](https://en.wikipedia.org/wiki/Deep_Blue_(chess_computer)))
+<h1 align="center">Shallow Blue</h1>
+<p align="center">Not <a href="https://en.wikipedia.org/wiki/Deep_Blue_(chess_computer)">Deep Blue</a></p>
+
+<p align="center">
+  <a href="https://travis-ci.org/GunshipPenguin/shallow-blue"><img src="https://img.shields.io/travis/GunshipPenguin/shallow-blue/master.svg"></a>
+</p>
 
 A UCI Chess engine written in C++11.
 
