@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="logo.png" height="220" width="220">
+  <img src="logos/logo.png" height="220" width="220">
 </p>
 
 <h1 align="center">Shallow Blue</h1>
