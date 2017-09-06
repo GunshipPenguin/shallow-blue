@@ -167,7 +167,7 @@ bool Search::_compareMovesTt(Board board, Move a, Move b) {
   int aScore = _tt.contains(aBoard.getZKey()) ? _tt.getScore(aBoard.getZKey()) : -INF;
   int bScore = _tt.contains(bBoard.getZKey()) ? _tt.getScore(bBoard.getZKey()) : -INF;
 
-  return aScore < bScore;
+  return aScore > bScore;
 }
 
 bool Search::_compareMovesMvvLva(Move a, Move b) {
