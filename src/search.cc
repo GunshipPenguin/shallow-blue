@@ -239,15 +239,15 @@ int Search::_negaMax(const Board& board, int depth, int alpha, int beta) {
       case TranspTable::EXACT:
         return _tt.getScore(zKey);
       case TranspTable::UPPER_BOUND:
-        alpha = std::max(alpha, _tt.getScore(zKey));
+        if (_tt.getScore(zKey) <= alpha) {
+          return alpha;
+        }
         break;
       case TranspTable::LOWER_BOUND:
-        beta = std::min(beta, _tt.getScore(zKey));
+        if (_tt.getScore(zKey) >= beta) {
+          return beta;
+        }
         break;
-    }
-
-    if (alpha > beta) {
-      return _tt.getScore(zKey);
     }
   }
 
