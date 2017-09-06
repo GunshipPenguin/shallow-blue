@@ -205,7 +205,7 @@ bool Search::_compareMovesPromotionValue(Move a, Move b) {
     int aPromotionValue = _getPieceValue(a.getPromotionPieceType());
     int bPromotionValue = _getPieceValue(b.getPromotionPieceType());
 
-    return aPromotionValue < bPromotionValue;
+    return aPromotionValue > bPromotionValue;
   }
 }
 
