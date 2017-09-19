@@ -25,7 +25,7 @@ private:
   /**
    * @brief Default depth to search to upon receiving the go command.
    */
-  static const int DEFAULT_DEPTH = 4;
+  static const int DEFAULT_DEPTH = 5;
 
   /**
    * @brief Handles the ucinewgame command
