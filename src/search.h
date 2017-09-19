@@ -55,6 +55,11 @@ private:
   MoveList _pv;
 
   /**
+   * @brief Number of nodes searched in the last search.
+   */
+  int _nodes;
+
+  /**
    * @brief Initial board being used in this search.
    */
   Board _board;
@@ -183,8 +188,9 @@ private:
    * @param depth     Depth of search
    * @param bestMove  Best move obtained from search
    * @param bestScore Score corresponding to the best move
+   * @param nodes     Number of nodes searched
    */
-  void _logUciInfo(const MoveList&, int, Move, int);
+  void _logUciInfo(const MoveList&, int, Move, int, int);
 
   /**
    * @brief Returns the value of a pieceType that can be used for comparisons.

@@ -19,11 +19,11 @@ void Search::perform(int depth) {
   _rootMax(_board, depth);
 
   if (_logUci) {
-    _logUciInfo(_pv, depth, _bestMove, _bestScore);
+    _logUciInfo(_pv, depth, _bestMove, _bestScore, _nodes);
   }
 }
 
-void Search::_logUciInfo(const MoveList& pv, int depth, Move bestMove, int bestScore) {
+void Search::_logUciInfo(const MoveList& pv, int depth, Move bestMove, int bestScore, int nodes) {
   std::string pvString;
   for(auto move : pv) {
     pvString += move.getNotation() + " ";
@@ -39,6 +39,7 @@ void Search::_logUciInfo(const MoveList& pv, int depth, Move bestMove, int bestS
   }
 
   std::cout << "info depth " + std::to_string(depth) + " ";
+  std::cout << "nodes " + std::to_string(nodes) + " ";
   std::cout << "score " + scoreString + " ";
   std::cout << "pv " + pvString;
   std::cout << std::endl;
@@ -56,6 +57,8 @@ void Search::_rootMax(const Board& board, int depth) {
   MoveGen movegen(board);
   MoveList legalMoves = movegen.getLegalMoves();
   _orderMoves(board, legalMoves);
+
+  _nodes = 0;
 
   _pv = MoveList();
   MoveList pv;
@@ -209,6 +212,7 @@ int Search::_getPieceValue(PieceType pieceType) {
 }
 
 int Search::_negaMax(const Board& board, int depth, int alpha, int beta, MoveList &ppv) {
+  _nodes ++;
   int alphaOrig = alpha;
 
   ZKey zKey = board.getZKey();
