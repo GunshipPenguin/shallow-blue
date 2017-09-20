@@ -146,10 +146,23 @@ bool Search::_compareMovesTt(Board board, Move a, Move b) {
   aBoard.doMove(a);
   bBoard.doMove(b);
 
-  int aScore = _tt.contains(aBoard.getZKey()) ? _tt.getScore(aBoard.getZKey()) : -INF;
-  int bScore = _tt.contains(bBoard.getZKey()) ? _tt.getScore(bBoard.getZKey()) : -INF;
+  ZKey aKey = aBoard.getZKey();
+  ZKey bKey = bBoard.getZKey();
 
-  return aScore > bScore;
+  int aScore = -INF;
+  int bScore = -INF;
+
+  // Get A score
+  if (_tt.contains(aKey) && _tt.getFlag(aKey) == TranspTable::EXACT) {
+    aScore = _tt.getScore(aKey);
+  }
+
+  // Get B score
+  if (_tt.contains(bKey) && _tt.getFlag(bKey) == TranspTable::EXACT) {
+    bScore = _tt.getScore(bKey);
+  }
+
+  return aScore < bScore;
 }
 
 bool Search::_compareMovesMvvLva(Move a, Move b) {
