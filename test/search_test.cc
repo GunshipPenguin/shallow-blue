@@ -9,7 +9,7 @@ TEST_CASE("Search works as expected") {
 
   SECTION("Search works as expected after PSquareTable and ZKey are initialized") {
     Board board;
-
+    
     SECTION("Search finds a checkmate on next move") {
       // Fool's mate
       board.setToFen("rnbqkbnr/pppp1ppp/4p3/8/6P1/5P2/PPPPP2P/RNBQKBNR b KQkq -");
@@ -47,9 +47,6 @@ TEST_CASE("Search works as expected") {
       REQUIRE(search.getBestMove().getNotation() == "a5d5");
 
       search.perform(2);
-      REQUIRE(search.getBestMove().getNotation() == "a5d5");
-
-      search.perform(3);
       REQUIRE(search.getBestMove().getNotation() == "a5d5");
     }
   }

@@ -50,6 +50,16 @@ private:
   static const int INF = std::numeric_limits<int>::max();
 
   /**
+   * @brief Principal variation of the last search performed.
+   */
+  MoveList _pv;
+
+  /**
+   * @brief Number of nodes searched in the last search.
+   */
+  int _nodes;
+
+  /**
    * @brief Initial board being used in this search.
    */
   Board _board;
@@ -93,9 +103,10 @@ private:
    * @param  depth Plys remaining to search
    * @param  alpha Alpha value
    * @param  beta  Beta value
+   * @param  ppv   Reference to principal variation 1 ply up (passed recursively)
    * @return The score of the given board
    */
-  int _negaMax(const Board&, int, int, int);
+  int _negaMax(const Board&, int, int, int, MoveList&);
 
   /**
    * @brief Performs a quiescence search
@@ -177,8 +188,9 @@ private:
    * @param depth     Depth of search
    * @param bestMove  Best move obtained from search
    * @param bestScore Score corresponding to the best move
+   * @param nodes     Number of nodes searched
    */
-  void _logUciInfo(const MoveList&, int, Move, int);
+  void _logUciInfo(const MoveList&, int, Move, int, int);
 
   /**
    * @brief Returns the value of a pieceType that can be used for comparisons.
@@ -187,17 +199,6 @@ private:
    * @return Value of the given piece type.
    */
   int _getPieceValue(PieceType);
-
-  /**
-   * @brief Extracts and returns the principal variation of the last search from the transposition table
-   *
-   * Can only be called after a search has been called via _rootMax().
-   *
-   * @param  board Initial board used in the last search
-   * @param  depth Depth of the last search
-   * @return MoveList representing the Principal Variation of the last search
-   */
-  MoveList _getPv(const Board&, int);
 };
 
 #endif
