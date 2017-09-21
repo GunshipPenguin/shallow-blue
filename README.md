@@ -26,6 +26,10 @@ You can build with debugging symbols and no optimizations using:
 
 `make debug`
 
+If you have Mingw-w64 installed, you can cross compile for Windows on Linux with:
+
+`./build_windows.sh`
+
 ## Tests
 
 [Catch](https://github.com/philsquared/Catch) unit tests are located in the `test` directory.
