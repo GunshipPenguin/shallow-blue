@@ -307,6 +307,7 @@ int Search::_negaMax(const Board& board, int depth, int alpha, int beta, MoveLis
 }
 
 int Search::_qSearch(const Board& board, int alpha, int beta) {
+  _nodes ++;
   MoveGen movegen(board);
   MoveList legalMoves = movegen.getLegalMoves();
 
