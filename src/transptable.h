@@ -3,6 +3,7 @@
 
 #include "board.h"
 #include "zkey.h"
+#include "transptable_entry.h"
 #include <unordered_map>
 
 /**
@@ -34,44 +35,9 @@ public:
    * @param depth  Depth of entry
    * @param flag Type of entry
    */
-  void set(const ZKey&, int, int, Flag);
+  void set(const ZKey&, TranspTableEntry);
 
-  /**
-   * @brief Returns true if the transposition table contains the given ZKey.
-   * @param  key ZKey to lookup
-   * @return true if there is an entry in the transposition table with the ZKey, false otherwise
-   */
-  bool contains(const ZKey&) const;
-
-  /**
-   * @brief Returns the score of the entry with the given ZKey in the transposition table.
-   *
-   * Throws an exception if the entry does not exist.
-   *
-   * @param  key ZKey of the entry to get the score of
-   * @return The score of the entry with the given ZKey
-   */
-  int getScore(const ZKey&) const;
-
-  /**
-   * @brief Returns the depth of the entry with the given ZKey in the transposition table.
-   *
-   * Throws an exception if the entry does not exist.
-   *
-   * @param  key ZKey of the entry to get the depth of
-   * @return The depth of the entry with the given ZKey
-   */
-  int getDepth(const ZKey&) const;
-
-  /**
-   * @brief Returns the flag of the entry with the given ZKey in the transposition table.
-   *
-   * Throws an exception if the entry does not exist.
-   *
-   * @param  key ZKey of the entry to get the flag of
-   * @return The flag of the entry with the given ZKey
-   */
-  Flag getFlag(const ZKey&) const;
+  const TranspTableEntry* getEntry(const ZKey&) const;
 
   /**
    * @brief Removes all entries from the transposition table.
@@ -84,7 +50,7 @@ private:
    *
    * A map of ZKeys to a tuple of (score, depth, flag).
    */
-  std::unordered_map<U64, std::tuple<int, int, Flag> > _table;
+  std::unordered_map<U64, TranspTableEntry> _table;
 };
 
 #endif

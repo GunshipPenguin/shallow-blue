@@ -95,6 +95,12 @@ public:
    */
   void setPromotionPieceType(PieceType);
 
+  int getValue();
+
+  void setValue(int);
+
+  bool operator==(Move) const;
+
   /**
    * @brief Return the square that this move is from.
    *
@@ -162,6 +168,8 @@ private:
    * Moves are stored as a packed integer consisting of 28 bits total.
    */
   unsigned int _move;
+
+  int _value;
 
   /**
    * @name Rank and file characters in algebraic notation

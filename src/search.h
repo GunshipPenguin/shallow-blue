@@ -121,65 +121,11 @@ private:
    */
   int _qSearch(const Board&, int=-INF, int=INF);
 
-  /**
-   * @brief Orders a MoveList for negamax search.
-   *
-   * Move ordering is as follows:
-   * 1. Best moves from Transposition Table (PV is implicitly placed first by this)
-   * 2. Captures sorted by MVV/LVA
-   * 3. Promotions sorted by value
-   * 4. All other moves
-   *
-   * @param board Board that moves apply to
-   * @param moveList MoveList to sort
-   */
-  void _orderMoves(const Board&, MoveList&);
-
-  /**
-   * @brief Orders a MoveList for quiescence search
-   *
-   * Places captures first sorted by MVV/LVA and non captures after.
-   *
-   * @param moveList MoveList to sort
-   */
-  void _orderMovesQSearch(MoveList&);
-
-  /**
-   * @brief Transposition table comparision function for moves.
-   *
-   * Returns true if a is a better move than b according to the Transposition
-   * table, false otherwise.
-   *
-   * @param board Board that moves apply to (needed to lookup tt entries)
-   * @param a First move to compare
-   * @param b Second move to compare
-   * @return true if a is a better move than b according to the Transposition
-   * table, false otherwise.
-   */
-  bool _compareMovesTt(Board, Move, Move);
-
-  /**
-   * @brief MVV/LVA comparison function for moves
-   *
-   * Returns true if a is a better move than b according to MVV/LVA.
-   *
-   * @param  a First Move to compare
-   * @param  b Second Move to compare
-   * @return true if a is a better move than b according to MVV/LVA, false otherwise
-   */
-  bool _compareMovesMvvLva(Move, Move);
-
-  /**
-   * @brief Promotion comparison function for moves.
-   *
-   * Returns true if a is a better promotion than b according to the value of the
-   * promotion piece.
-   *
-   * @param  a First Move to compare
-   * @param  b Second Move to compare.
-   * @return true if a is a better move than b according to promotion piece value.
-   */
-  bool _compareMovesPromotionValue(Move, Move);
+  // TODO Document these
+  void _scoreMoves(const Board&, MoveList&);
+  void _scoreMovesQsearch(MoveList&);
+  bool _compareMovesValue(Move, Move);
+  void _sortMovesByValue(MoveList&);
 
   /**
    * @brief Logs info about a search according to the UCI protocol.

@@ -9,10 +9,12 @@ const char Move::FILES[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
 
 Move::Move() {
   _move = ((NULL_MOVE & 0x7f) << 21);
+  _value = 0;
 }
 
 Move::Move(unsigned int from, unsigned int to, PieceType piece, unsigned int flags) {
   _move = ((flags & 0x7f) << 21) | ((to & 0x3f) << 15) | ((from & 0x3f) << 9) | (piece & 0x7);
+  _value = 0;
 }
 
 PieceType Move::getPieceType() const {
@@ -35,6 +37,14 @@ PieceType Move::getPromotionPieceType() const {
 void Move::setPromotionPieceType(PieceType pieceType) {
   unsigned int mask = 0x7 << 3;
   _move = (_move & ~mask) | ((pieceType << 3) & mask);
+}
+
+int Move::getValue() {
+  return _value;
+}
+
+void Move::setValue(int value) {
+  _value = value;
 }
 
 unsigned int Move::getFrom() const {
@@ -75,6 +85,10 @@ std::string Move::getNotation() const {
   }
 
   return moveNotation;
+}
+
+bool Move::operator==(const Move other) const {
+  return other._move == _move;
 }
 
 std::string Move::indexToNotation (int index) {
