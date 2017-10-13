@@ -135,10 +135,10 @@ void Search::_scoreMoves(const Board& board, MoveList& moveList) {
       bool hasStaticTraits = move.getFlags() & (Move::PROMOTION | Move::CAPTURE);
       int value = 0;
       if (move.getFlags() & Move::PROMOTION) {
-        value += _getPieceValue(move.getPromotionPieceType()) - _getPieceValue(PAWN);
+        value += Eval::getMaterialValue(move.getPromotionPieceType()) - Eval::getMaterialValue(PAWN);
       }
       if (move.getFlags() & Move::CAPTURE) {
-        value += _getPieceValue(move.getCapturedPieceType()) - _getPieceValue(move.getPieceType());
+        value += Eval::getMaterialValue(move.getCapturedPieceType()) - Eval::getMaterialValue(move.getPieceType());
       }
 
       if (hasStaticTraits) {
@@ -153,7 +153,7 @@ void Search::_scoreMoves(const Board& board, MoveList& moveList) {
 void Search::_scoreMovesQsearch(MoveList& moveList) {
   for (auto &move : moveList) {
     if (move.getFlags() & Move::CAPTURE) {
-      move.setValue(_getPieceValue(move.getCapturedPieceType()) - _getPieceValue(move.getPieceType()));
+      move.setValue(Eval::getMaterialValue(move.getCapturedPieceType()) - Eval::getMaterialValue(move.getPieceType()));
     } else {
       move.setValue(-INF);
     }
@@ -168,26 +168,6 @@ void Search::_sortMovesByValue(MoveList& moveList) {
 
 bool Search::_compareMovesValue(Move a, Move b) {
   return a.getValue() > b.getValue();
-}
-
-int Search::_getPieceValue(PieceType pieceType) {
-  int score = 0;
-
-  switch(pieceType) {
-    case PAWN: score = 100;
-      break;
-    case KNIGHT: score = 320;
-      break;
-    case BISHOP: score = 330;
-      break;
-    case ROOK: score = 500;
-      break;
-    case QUEEN: score = 900;
-      break;
-    default: break;
-  }
-
-  return score;
 }
 
 int Search::_negaMax(const Board& board, int depth, int alpha, int beta, MoveList &ppv) {

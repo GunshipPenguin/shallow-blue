@@ -137,14 +137,6 @@ private:
    * @param nodes     Number of nodes searched
    */
   void _logUciInfo(const MoveList&, int, Move, int, int);
-
-  /**
-   * @brief Returns the value of a pieceType that can be used for comparisons.
-   *
-   * @param  pieceType PieceType to get value for
-   * @return Value of the given piece type.
-   */
-  int _getPieceValue(PieceType);
 };
 
 #endif

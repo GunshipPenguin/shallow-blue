@@ -11,6 +11,25 @@ int Eval::getScore() {
   return _score;
 }
 
+int Eval::getMaterialValue(PieceType pieceType) {
+  int value = 0;
+  switch (pieceType) {
+    case PAWN: value = PAWN_VALUE;
+      break;
+    case KNIGHT: value = KNIGHT_VALUE;
+      break;
+    case BISHOP: value = BISHOP_VALUE;
+      break;
+    case ROOK: value = ROOK_VALUE;
+      break;
+    case QUEEN: value = QUEEN_VALUE;
+      break;
+    default: value = 0;
+      break;
+  }
+  return value;
+}
+
 void Eval::_doEval(const Board& board, Color color) {
   _score = 0;
 

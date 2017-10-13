@@ -28,6 +28,8 @@ public:
    */
   int getScore();
 
+  static int getMaterialValue(PieceType);
+
 private:
   /**
    * @name Piece material value constants.
