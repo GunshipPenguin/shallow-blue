@@ -95,10 +95,25 @@ public:
    */
   void setPromotionPieceType(PieceType);
 
+  /**
+   * @brief Get the value of this move
+   *
+   * @return The value of this move
+   */
   int getValue();
 
+  /**
+   * @brief Set the value of this move
+   *
+   * @param value Value to set this move's value to
+   */
   void setValue(int);
 
+  /**
+   * @brief Compare moves
+   *
+   * @return true if the moves are exactly the same, false otherwise
+   */
   bool operator==(Move) const;
 
   /**
@@ -169,6 +184,7 @@ private:
    */
   unsigned int _move;
 
+  /** @brief Value of this move */
   int _value;
 
   /**

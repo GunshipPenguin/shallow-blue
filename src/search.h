@@ -47,6 +47,7 @@ public:
   int getBestScore();
 
 private:
+  /** @brief Positive infinity to be used during search (eg. as a return value for winning) */
   static const int INF = std::numeric_limits<int>::max();
 
   /**
@@ -121,10 +122,48 @@ private:
    */
   int _qSearch(const Board&, int=-INF, int=INF);
 
-  // TODO Document these
+  /**
+   * @brief Assign a value to each move in the MoveList for move ordering during search.
+   *
+   * This method assigns each move a value using Move::setValue. Values are
+   * assigned according to the following:
+   * - Transposition table information
+   * - Capture values (MVV/LVA)
+   * - Promotion values
+   *
+   * Moves without any scoreable quantities are assigned a value of negative infinity.
+   *
+   * @param board Board that moves in the given MoveList correspond to
+   * @param moveList List of moves to score
+   */
   void _scoreMoves(const Board&, MoveList&);
+
+  /**
+   * @brief Assign a value to each move in the MoveList for move ordering during quiescence search.
+   *
+   * This method assigns each move a value using Move::setValue. Values are
+   * assigned according to Capture values (MVV/LVA)
+   *
+   * Non capture moves are assigned a value of negative infinity.
+   *
+   * @param moveList List of moves to score
+   */
   void _scoreMovesQsearch(MoveList&);
+
+  /**
+   * @brief Compare the value of two moves.
+   *
+   * @param  a Move a to compare
+   * @param  b Move b to compare
+   * @return true if a has a higher score than b, false otherwise
+   */
   bool _compareMovesValue(Move, Move);
+
+  /**
+   * @brief Sorts a movelist high to low by move value.
+   *
+   * @param moveList MoveList to sort
+   */
   void _sortMovesByValue(MoveList&);
 
   /**

@@ -31,12 +31,17 @@ public:
    * If the entry already exists, it will be overwritten.
    *
    * @param key Zobrist key of the board
-   * @param score  Score of position
-   * @param depth  Depth of entry
-   * @param flag Type of entry
+   * @param entry Entry to store
    */
   void set(const ZKey&, TranspTableEntry);
 
+  /**
+   * @brief Get the entry in the transposition table for the given ZKey
+   * returns nullptr if no entry exists for the given ZKey.
+   *
+   * @param key ZKey to lookup entry for
+   * @return The transposition table entry corresponding to the given ZKey, or nullptr if it does not exist
+   */
   const TranspTableEntry* getEntry(const ZKey&) const;
 
   /**
