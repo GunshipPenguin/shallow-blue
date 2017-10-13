@@ -127,7 +127,7 @@ void Search::_scoreMoves(const Board& board, MoveList& moveList) {
 
     // Transposition table lookups considered second (dynamic move ordering)
     const TranspTableEntry *ttEntry = _tt.getEntry(tempBoard.getZKey());
-    if (ttEntry && (ttEntry->getFlag() == TranspTableEntry::EXACT)) {
+    if (ttEntry && ((ttEntry->getFlag() == TranspTableEntry::EXACT) || (ttEntry->getFlag() == TranspTableEntry::LOWER_BOUND))) {
       // Score is negated since score is for opponent
       move.setValue(-ttEntry->getScore());
     } else {
