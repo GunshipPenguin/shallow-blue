@@ -47,6 +47,7 @@ public:
   int getBestScore();
 
 private:
+  /** @brief Positive infinity to be used during search (eg. as a return value for winning) */
   static const int INF = std::numeric_limits<int>::max();
 
   /**
@@ -122,64 +123,48 @@ private:
   int _qSearch(const Board&, int=-INF, int=INF);
 
   /**
-   * @brief Orders a MoveList for negamax search.
+   * @brief Assign a value to each move in the MoveList for move ordering during search.
    *
-   * Move ordering is as follows:
-   * 1. Best moves from Transposition Table (PV is implicitly placed first by this)
-   * 2. Captures sorted by MVV/LVA
-   * 3. Promotions sorted by value
-   * 4. All other moves
+   * This method assigns each move a value using Move::setValue. Values are
+   * assigned according to the following:
+   * - Transposition table information
+   * - Capture values (MVV/LVA)
+   * - Promotion values
    *
-   * @param board Board that moves apply to
+   * Moves without any scoreable quantities are assigned a value of negative infinity.
+   *
+   * @param board Board that moves in the given MoveList correspond to
+   * @param moveList List of moves to score
+   */
+  void _scoreMoves(const Board&, MoveList&);
+
+  /**
+   * @brief Assign a value to each move in the MoveList for move ordering during quiescence search.
+   *
+   * This method assigns each move a value using Move::setValue. Values are
+   * assigned according to Capture values (MVV/LVA)
+   *
+   * Non capture moves are assigned a value of negative infinity.
+   *
+   * @param moveList List of moves to score
+   */
+  void _scoreMovesQsearch(MoveList&);
+
+  /**
+   * @brief Compare the value of two moves.
+   *
+   * @param  a Move a to compare
+   * @param  b Move b to compare
+   * @return true if a has a higher score than b, false otherwise
+   */
+  bool _compareMovesValue(Move, Move);
+
+  /**
+   * @brief Sorts a movelist high to low by move value.
+   *
    * @param moveList MoveList to sort
    */
-  void _orderMoves(const Board&, MoveList&);
-
-  /**
-   * @brief Orders a MoveList for quiescence search
-   *
-   * Places captures first sorted by MVV/LVA and non captures after.
-   *
-   * @param moveList MoveList to sort
-   */
-  void _orderMovesQSearch(MoveList&);
-
-  /**
-   * @brief Transposition table comparision function for moves.
-   *
-   * Returns true if a is a better move than b according to the Transposition
-   * table, false otherwise.
-   *
-   * @param board Board that moves apply to (needed to lookup tt entries)
-   * @param a First move to compare
-   * @param b Second move to compare
-   * @return true if a is a better move than b according to the Transposition
-   * table, false otherwise.
-   */
-  bool _compareMovesTt(Board, Move, Move);
-
-  /**
-   * @brief MVV/LVA comparison function for moves
-   *
-   * Returns true if a is a better move than b according to MVV/LVA.
-   *
-   * @param  a First Move to compare
-   * @param  b Second Move to compare
-   * @return true if a is a better move than b according to MVV/LVA, false otherwise
-   */
-  bool _compareMovesMvvLva(Move, Move);
-
-  /**
-   * @brief Promotion comparison function for moves.
-   *
-   * Returns true if a is a better promotion than b according to the value of the
-   * promotion piece.
-   *
-   * @param  a First Move to compare
-   * @param  b Second Move to compare.
-   * @return true if a is a better move than b according to promotion piece value.
-   */
-  bool _compareMovesPromotionValue(Move, Move);
+  void _sortMovesByValue(MoveList&);
 
   /**
    * @brief Logs info about a search according to the UCI protocol.
@@ -191,14 +176,6 @@ private:
    * @param nodes     Number of nodes searched
    */
   void _logUciInfo(const MoveList&, int, Move, int, int);
-
-  /**
-   * @brief Returns the value of a pieceType that can be used for comparisons.
-   *
-   * @param  pieceType PieceType to get value for
-   * @return Value of the given piece type.
-   */
-  int _getPieceValue(PieceType);
 };
 
 #endif

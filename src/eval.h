@@ -28,6 +28,14 @@ public:
    */
   int getScore();
 
+  /**
+   * @brief Get the material value score of the given piece (in centipawns) used for evaluation purposes.
+   *
+   * @param  pieceType Piece type to get material value score of
+   * @return The material value score of the given piece in centipawns
+   */
+  static int getMaterialValue(PieceType);
+
 private:
   /**
    * @name Piece material value constants.
@@ -46,7 +54,11 @@ private:
    */
   static const int MOBILITY_VALUE = 1;
 
+  /**
+   * @brief Score of the board this Eval object was constructed with
+   */
   int _score;
+
   /**
    * @brief Evaluates the given board for the given color and updates this evaluation's state appropriately.
    */

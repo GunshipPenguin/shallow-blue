@@ -96,6 +96,27 @@ public:
   void setPromotionPieceType(PieceType);
 
   /**
+   * @brief Get the value of this move
+   *
+   * @return The value of this move
+   */
+  int getValue();
+
+  /**
+   * @brief Set the value of this move
+   *
+   * @param value Value to set this move's value to
+   */
+  void setValue(int);
+
+  /**
+   * @brief Compare moves
+   *
+   * @return true if the moves are exactly the same, false otherwise
+   */
+  bool operator==(Move) const;
+
+  /**
    * @brief Return the square that this move is from.
    *
    * Returned value is is 0 indexed little endian rank-file mapping.
@@ -162,6 +183,9 @@ private:
    * Moves are stored as a packed integer consisting of 28 bits total.
    */
   unsigned int _move;
+
+  /** @brief Value of this move */
+  int _value;
 
   /**
    * @name Rank and file characters in algebraic notation
