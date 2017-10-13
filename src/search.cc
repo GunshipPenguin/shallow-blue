@@ -222,7 +222,7 @@ int Search::_negaMax(const Board& board, int depth, int alpha, int beta, MoveLis
     int score = -_negaMax(movedBoard, depth-1, -beta, -alpha, pv);
 
     if (score >= beta) {
-      TranspTableEntry newTTEntry(alpha, depth, TranspTableEntry::LOWER_BOUND, bestMove);
+      TranspTableEntry newTTEntry(score, depth, TranspTableEntry::LOWER_BOUND, move);
       _tt.set(board.getZKey(), newTTEntry);
       return beta;
     }
