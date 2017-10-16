@@ -195,6 +195,9 @@ private:
   const static char RANKS[];
   const static char FILES[];
   /**@}*/
+
+  /** @brief Notation that should be used to represent a null move */
+  const static std::string NULL_MOVE_NOTATION;
 };
 
 #endif
