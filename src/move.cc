@@ -6,6 +6,7 @@
 
 const char Move::RANKS[] = {'1', '2', '3', '4', '5', '6', '7', '8'};
 const char Move::FILES[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
+const std::string Move::NULL_MOVE_NOTATION = "(none)";
 
 Move::Move() {
   _move = ((NULL_MOVE & 0x7f) << 21);
@@ -64,6 +65,11 @@ void Move::setFlag(Flag flag) {
 }
 
 std::string Move::getNotation() const {
+  // Special case for null moves
+  if (getFlags() & NULL_MOVE) {
+    return NULL_MOVE_NOTATION;
+  }
+
   int fromIndex = getFrom();
   int toIndex = getTo();
 

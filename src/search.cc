@@ -56,10 +56,17 @@ int Search::getBestScore() {
 void Search::_rootMax(const Board& board, int depth) {
   MoveGen movegen(board);
   MoveList legalMoves = movegen.getLegalMoves();
+  _nodes = 0;
+
+  // If no legal moves are avaliable, just return, setting bestmove to a null move
+  if (legalMoves.size() == 0) {
+    _bestMove = Move();
+    _bestScore = -INF;
+    return;
+  }
+
   _scoreMoves(board, legalMoves);
   _sortMovesByValue(legalMoves);
-
-  _nodes = 0;
 
   _pv = MoveList();
   MoveList pv;
@@ -77,7 +84,8 @@ void Search::_rootMax(const Board& board, int depth) {
 
     currScore = -_negaMax(movedBoard, depth-1, -beta, -alpha, pv);
 
-    if (currScore > alpha) {
+    // If the current score is better than alpha, or this is the first move in the loop
+    if (currScore > alpha || (alpha == -INF)) {
       bestMove = move;
       alpha = currScore;
 
@@ -94,11 +102,6 @@ void Search::_rootMax(const Board& board, int depth) {
         break;
       }
     }
-  }
-
-  // If we couldn't find a path other than checkmate, just pick the first legal move
-  if (bestMove.getFlags() & Move::NULL_MOVE) {
-    bestMove = legalMoves.at(0);
   }
 
   TranspTableEntry ttEntry(alpha, depth, TranspTableEntry::EXACT, bestMove);
