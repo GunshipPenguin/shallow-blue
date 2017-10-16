@@ -1,20 +1,27 @@
 '''
-Pretty prints a bitboard to the console given its hex or decimal value.
+Pretty prints a bitboard to the console given its hex or decimal value from
+argv or stdin.
 '''
 import sys, textwrap
+
+FULL_BITBOARD = 0xFFFFFFFFFFFFFFFF # 64 set bits
 
 def print_bb(bb_str):
     # Handle hex/decimal bitboards
     if bb_str.startswith('0x'):
-        bb = bin(int(bb_str, 16))
+        base = 16
     else:
-        bb = bin(int(bb_str, 10))
+        base = 10
+
+    if int(bb_str, base).bit_length() > 64:
+        print 'WARNING: Bit length is greater than 64, taking lowest 64 bits'
+    bb = bin(int(bb_str, base) & FULL_BITBOARD)
 
     # Slice off the '0b'
     bb = bb[2:]
 
     bb = bb.replace('0', '.')
-    bb = bb.replace('1', '#')
+    bb = bb.replace('1', '1')
 
     if len(bb) < 64:
         bb = '.' * (64-len(bb)) + bb
