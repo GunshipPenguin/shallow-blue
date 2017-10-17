@@ -1,6 +1,6 @@
 PROJECT_NAME   = "Shallow Blue"
 PROJECT_BRIEF  = "UCI Chess Engine"
-PROJECT_NUMBER = 1.0.3
+PROJECT_NUMBER = 1.0.4
 
 INPUT = src README.md
 
