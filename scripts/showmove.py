@@ -17,12 +17,12 @@ FLAGS = {
     1<<6: 'PROMOTION'
 }
 PIECE_TYPES = {
-  0: 'PAWN',
-  1: 'ROOK',
-  2: 'KNIGHT',
-  3: 'BISHOP',
-  4: 'QUEEN',
-  5: 'KING'
+    0: 'PAWN',
+    1: 'ROOK',
+    2: 'KNIGHT',
+    3: 'BISHOP',
+    4: 'QUEEN',
+    5: 'KING'
 }
 
 def print_move(moveStr):
