@@ -282,27 +282,6 @@ class Board {
     U64 _attackable[2];
 
     /**
-     * @name Check information
-     *
-     * Calculating checks is an expensive process, so they are calculated on demand
-     * and the result is cached until a move has been made.
-     *
-     * _checks is an array indexed by color indicating if a color is in check.
-     *
-     * _checksCalculated is an array indexed by color indicating if the information
-     * in _checks has already been calculated and cached or needs to be calculated.
-     * @{
-     */
-    mutable bool _checks[2] = {false, false};
-    mutable bool _checksCalculated[2] = {false, false};
-    /**@}*/
-
-    /**
-     * @brief Resets all check information.
-     */
-    void _resetChecks();
-
-    /**
      * @brief Bitboard containing all occupied squares.
      */
     U64 _occupied;

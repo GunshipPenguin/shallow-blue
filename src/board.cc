@@ -87,18 +87,6 @@ bool Board::colorIsInCheck(Color color) const {
   int kingSquare = _bitscanForward(getPieces(color, KING));
 
   return _squareUnderAttack(getOppositeColor(color), kingSquare);
-  if (_checksCalculated[color]) {
-    return _checks[color];
-  } else {
-    int kingSquare = _bitscanForward(getPieces(color, KING));
-
-    bool isInCheck = _squareUnderAttack(getOppositeColor(color), kingSquare);
-
-    _checks[color] = isInCheck;
-    _checksCalculated[color] = true;
-
-    return isInCheck;
-  }
 }
 
 bool Board::whiteCanCastleKs() const {
@@ -324,8 +312,6 @@ void Board::setToFen(std::string fenString) {
     _enPassant = static_cast<U64>(1) << enPasIndex;
   }
 
-  _resetChecks();
-
   _updateNonPieceBitBoards();
   _zKey = ZKey(*this);
   _pst = PSquareTable(*this);
@@ -408,20 +394,12 @@ void Board::_addPiece(Color color, PieceType pieceType, int squareIndex) {
   _pst.addPiece(color, pieceType, squareIndex);
 }
 
-void Board::_resetChecks() {
-  _checksCalculated[WHITE] = 0, _checksCalculated[BLACK] = 0;
-  _checks[WHITE] = 0, _checks[BLACK] = 0;
-}
-
 void Board::doMove(Move move) {
   unsigned int flags = move.getFlags();
 
   // En passant always cleared after a move
   _zKey.clearEnPassant();
   _enPassant = ZERO;
-
-  // Checks always cleared after a move
-  _resetChecks();
 
   // Handle move depending on what type of move it is
   if (!flags) {
