@@ -123,7 +123,7 @@ void ZKey::updateCastlingRights(bool whiteKs, bool whiteQs, bool blackKs, bool b
     _blackKs = false;
     _flipKsCastle(BLACK);
   }
-  if (whiteQs != _blackQs) {
+  if (blackQs != _blackQs) {
     _blackQs = false;
     _flipQsCastle(BLACK);
   }
