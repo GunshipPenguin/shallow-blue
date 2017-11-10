@@ -15,6 +15,9 @@ public:
   void deincrementPly();
   int getPly() const;
 
+  void incrementHistory(Color, int, int, int);
+  int getHistory(Color, int, int) const;
+
   void updateKillers(int, Move);
 
   const TranspTable* getTt() const;
@@ -28,6 +31,8 @@ private:
   Move _killer1[50];
   Move _killer2[50];
   int _ply;
+
+  int _history[2][64][64];
 
   void _scoreMoves(const Board&, int, MoveList&);
 };

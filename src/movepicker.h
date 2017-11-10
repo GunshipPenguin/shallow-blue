@@ -21,7 +21,6 @@ private:
   const Board* _board;
   MoveList* _moves;
 
-  static const int _centerDistance[];
   static int _mvvLvaTable[5][6];
 
   static const int CAPTURE_BONUS = 100000;

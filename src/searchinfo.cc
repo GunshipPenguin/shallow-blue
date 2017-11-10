@@ -1,15 +1,26 @@
 #include "searchinfo.h"
 #include "defs.h"
 #include "eval.h"
+#include <cstring>
 
 SearchInfo::SearchInfo() {
   _tt = nullptr;
   _ply = 0;
+  std::memset(_history, 0, sizeof(_history));
 }
 
 SearchInfo::SearchInfo(const TranspTable* tt) {
   _tt = tt;
   _ply = 0;
+  std::memset(_history, 0, sizeof(_history));
+}
+
+void SearchInfo::incrementHistory(Color color, int from, int to, int depth) {
+  _history[color][from][to] += depth^2;
+}
+
+int SearchInfo::getHistory(Color color, int from, int to) const {
+  return _history[color][from][to];
 }
 
 void SearchInfo::incrementPly() {

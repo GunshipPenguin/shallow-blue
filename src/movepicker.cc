@@ -2,17 +2,6 @@
 #include "eval.h"
 #include "defs.h"
 
-const int MovePicker::_centerDistance[] = {
-  3, 3, 3, 3, 3, 3, 3, 3,
-  3, 2, 2, 2, 2, 2, 2, 3,
-  3, 2, 1, 1, 1, 1, 2, 3,
-  3, 2, 1, 0, 0, 1, 2, 3,
-  3, 2, 1, 0, 0, 1, 2, 3,
-  3, 2, 1, 1, 1, 1, 2, 3,
-  3, 2, 2, 2, 2, 2, 2, 3,
-  3, 3, 3, 3, 3, 3, 3, 3
-};
-
 // Indexed by [victimValue][attackerValue]
 int MovePicker::_mvvLvaTable[5][6];
 
@@ -61,7 +50,7 @@ void MovePicker::_scoreMoves() {
     } else if (move == _searchInfo->getKiller2(_searchInfo->getPly())) {
       move.setValue(KILLER2_BONUS);
     } else { // Quiet
-      move.setValue(QUIET_BONUS + -_centerDistance[move.getTo()]);
+      move.setValue(QUIET_BONUS + _searchInfo->getHistory(_board->getActivePlayer(), move.getFrom(), move.getTo()));
     }
   }
 }

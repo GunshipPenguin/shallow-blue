@@ -168,8 +168,15 @@ int Search::_negaMax(const Board& board, int depth, int alpha, int beta, MoveLis
     int score = -_negaMax(movedBoard, depth-1, -beta, -alpha, pv);
     _searchInfo.deincrementPly();
     
+    // Beta cutoff
     if (score >= beta) {
+      // Add this move as a new killer move and update history if move is quiet
       _searchInfo.updateKillers(_searchInfo.getPly(), move);
+      if (!(move.getFlags() & Move::CAPTURE)) {
+        _searchInfo.incrementHistory(_board.getActivePlayer(), move.getFrom(), move.getTo(), depth);
+      }
+
+      // Add a new tt entry for this node
       TranspTableEntry newTTEntry(score, depth, TranspTableEntry::LOWER_BOUND, move);
       _tt.set(board.getZKey(), newTTEntry);
       return beta;
