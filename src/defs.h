@@ -8,6 +8,8 @@
 #ifndef DEFS_H
 #define DEFS_H
 
+#include <limits>
+
 /**
  * An unsigned 64 bit integer (A bitboard).
  */
@@ -52,6 +54,9 @@ const U64 ZERO = U64(0);
  * @brief A bitboard containing only the square a1. (ie. the number 1)
  */
 const U64 ONE = U64(1);
+
+/** @brief Positive infinity to be used during search (eg. as a return value for winning) */
+const int INF = std::numeric_limits<int>::max();
 
 /**
  * @enum Color

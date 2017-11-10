@@ -5,7 +5,7 @@
 #include "defs.h"
 #include "movegen.h"
 #include "transptable.h"
-#include <limits>
+#include "searchinfo.h"
 
 /**
  * @brief Represents a search through a minmax tree.
@@ -47,9 +47,6 @@ public:
   int getBestScore();
 
 private:
-  /** @brief Positive infinity to be used during search (eg. as a return value for winning) */
-  static const int INF = std::numeric_limits<int>::max();
-
   /**
    * @brief Principal variation of the last search performed.
    */
@@ -108,6 +105,9 @@ private:
    * @return The score of the given board
    */
   int _negaMax(const Board&, int, int, int, MoveList&);
+
+  int _ply;
+  SearchInfo _searchInfo;
 
   /**
    * @brief Performs a quiescence search
