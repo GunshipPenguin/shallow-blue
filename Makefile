@@ -1,4 +1,4 @@
-CXX ?= x86_64-w64-mingw32-g++-posix
+CXX ?= g++
 
 SRC_DIR = $(shell pwd)/src
 
