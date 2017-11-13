@@ -2,6 +2,8 @@
 #include "movegen.h"
 #include "defs.h"
 #include "catch.hpp"
+#include "raytable.h"
+#include "attacktable.h"
 
 int perft(int depth, const Board& board) {
   if (depth == 0) {
@@ -24,6 +26,8 @@ int perft(int depth, const Board& board) {
 
 TEST_CASE("Perft is correct", "[perft]") {
   Board board;
+  RayTable::init();
+  AttackTable::init();
 
   SECTION("Perft is correct from the starting position") {
     board.setToStartPos();

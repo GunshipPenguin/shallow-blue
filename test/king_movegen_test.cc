@@ -1,11 +1,14 @@
 #include "board.h"
 #include "defs.h"
 #include "movegen.h"
+#include "attacktable.h"
 #include "catch.hpp"
 
 TEST_CASE("King move generation is correct") {
   Board board;
   MoveGen movegen;
+  RayTable::init();
+  AttackTable::init();
 
   SECTION("Kings can move to all possible squares on an empty board") {
     board.setToFen("8/8/8/8/3K4/8/8/8 w - -");
