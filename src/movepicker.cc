@@ -14,8 +14,7 @@ void MovePicker::init() {
   for (auto victim : victimsLoToHi) {
     // Iterate over attackers (high to low)
     for (auto attacker : attackersHiToLo) {
-      _mvvLvaTable[victim][attacker] = currScore;
-      currScore ++;
+      _mvvLvaTable[victim][attacker] = currScore++;
     }
   }
 }
@@ -71,6 +70,5 @@ Move MovePicker::getNext() {
   }
 
   std::swap(_moves->at(_currHead), _moves->at(bestIndex));
-  _currHead ++;
-  return _moves->at(_currHead-1);
+  return _moves->at(_currHead++);
 }
