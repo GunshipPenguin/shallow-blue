@@ -1,5 +1,5 @@
-#ifndef MOVEORDERING_H
-#define MOVEORDERING_H
+#ifndef ORDERINGINFO_H
+#define ORDERINGINFO_H
 
 #include "transptable.h"
 #include "defs.h"
