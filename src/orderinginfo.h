@@ -10,20 +10,20 @@
  * @brief Contains information related to a search in progress
  * for move ordering purposes.
  */
-class SearchInfo {
+class OrderingInfo {
 public:
 
   /**
-   * @brief Construct a new SearchInfo with no Transposition Table
+   * @brief Construct a new OrderingInfo with no Transposition Table
    */
-  SearchInfo();
+  OrderingInfo();
 
   /**
-   * @brief Construct a new SearchInfo with the provided transposition table
+   * @brief Construct a new OrderingInfo with the provided transposition table
    * 
    * @param tt Transposition table of search
    */
-  SearchInfo(const TranspTable*);
+  OrderingInfo(const TranspTable*);
 
   /**
    * @brief Increment the ply number of this search by one.

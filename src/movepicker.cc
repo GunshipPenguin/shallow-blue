@@ -20,8 +20,8 @@ void MovePicker::init() {
   }
 }
 
-MovePicker::MovePicker(const SearchInfo* searchInfo, const Board* board, MoveList* moveList) {
-  _searchInfo = searchInfo;
+MovePicker::MovePicker(const OrderingInfo* orderingInfo, const Board* board, MoveList* moveList) {
+  _orderingInfo = orderingInfo;
   _moves = moveList;
   _board = board;
   _currHead = 0;  
@@ -29,7 +29,7 @@ MovePicker::MovePicker(const SearchInfo* searchInfo, const Board* board, MoveLis
 }
 
 void MovePicker::_scoreMoves() {
-  const TranspTableEntry* ttEntry = _searchInfo->getTt()->getEntry(_board->getZKey());
+  const TranspTableEntry* ttEntry = _orderingInfo->getTt()->getEntry(_board->getZKey());
   Move pvMove;
   if (ttEntry) {
     pvMove = ttEntry->getBestMove();
@@ -45,12 +45,12 @@ void MovePicker::_scoreMoves() {
       move.setValue(CAPTURE_BONUS + _mvvLvaTable[move.getCapturedPieceType()][move.getPieceType()]);
     } else if (move.getFlags() & Move::PROMOTION) {
       move.setValue(PROMOTION_BONUS + Eval::getMaterialValue(move.getPromotionPieceType()));
-    } else if (move == _searchInfo->getKiller1(_searchInfo->getPly())) {
+    } else if (move == _orderingInfo->getKiller1(_orderingInfo->getPly())) {
       move.setValue(KILLER1_BONUS);
-    } else if (move == _searchInfo->getKiller2(_searchInfo->getPly())) {
+    } else if (move == _orderingInfo->getKiller2(_orderingInfo->getPly())) {
       move.setValue(KILLER2_BONUS);
     } else { // Quiet
-      move.setValue(QUIET_BONUS + _searchInfo->getHistory(_board->getActivePlayer(), move.getFrom(), move.getTo()));
+      move.setValue(QUIET_BONUS + _orderingInfo->getHistory(_board->getActivePlayer(), move.getFrom(), move.getTo()));
     }
   }
 }

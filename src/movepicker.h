@@ -2,11 +2,11 @@
 #define MOVEPICKER_H
 
 #include "board.h"
-#include "searchinfo.h"
+#include "orderinginfo.h"
 
 class MovePicker {
 public:
-  MovePicker(const SearchInfo* searchInfo, const Board* board, MoveList*);
+  MovePicker(const OrderingInfo* _orderingInfo, const Board* board, MoveList*);
   
   Move getNext();
   bool hasNext() const;
@@ -17,7 +17,7 @@ private:
 
   size_t _currHead;
 
-  const SearchInfo* _searchInfo;
+  const OrderingInfo* _orderingInfo;
   const Board* _board;
   MoveList* _moves;
 

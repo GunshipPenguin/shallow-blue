@@ -13,7 +13,7 @@ Search::Search(const Board& board, bool logUci) {
   _logUci = logUci;
   _board = board;
   _bestScore = 0;
-  _searchInfo = SearchInfo(const_cast<TranspTable*>(&_tt));
+  _orderingInfo = OrderingInfo(const_cast<TranspTable*>(&_tt));
 }
 
 void Search::perform(int depth) {
@@ -66,7 +66,7 @@ void Search::_rootMax(const Board& board, int depth) {
     return;
   }
 
-  MovePicker movePicker(const_cast<SearchInfo*>(&_searchInfo), const_cast<Board*>(&board), const_cast<MoveList*>(&legalMoves));
+  MovePicker movePicker(const_cast<OrderingInfo*>(&_orderingInfo), const_cast<Board*>(&board), const_cast<MoveList*>(&legalMoves));
 
   _pv = MoveList();
   MoveList pv;
@@ -83,9 +83,9 @@ void Search::_rootMax(const Board& board, int depth) {
     movedBoard = board;
     movedBoard.doMove(move);
 
-    _searchInfo.incrementPly();
+    _orderingInfo.incrementPly();
     currScore = -_negaMax(movedBoard, depth-1, -beta, -alpha, pv);
-    _searchInfo.deincrementPly();
+    _orderingInfo.deincrementPly();
 
     // If the current score is better than alpha, or this is the first move in the loop
     if (currScore > alpha || (alpha == -INF)) {
@@ -154,7 +154,7 @@ int Search::_negaMax(const Board& board, int depth, int alpha, int beta, MoveLis
   }
 
   MoveList pv;
-  MovePicker movePicker(const_cast<SearchInfo*>(&_searchInfo), const_cast<Board*>(&board), const_cast<MoveList*>(&legalMoves));
+  MovePicker movePicker(const_cast<OrderingInfo*>(&_orderingInfo), const_cast<Board*>(&board), const_cast<MoveList*>(&legalMoves));
   
   Move bestMove;
   Board movedBoard;
@@ -164,16 +164,16 @@ int Search::_negaMax(const Board& board, int depth, int alpha, int beta, MoveLis
     movedBoard = board;
     movedBoard.doMove(move);
 
-    _searchInfo.incrementPly();
+    _orderingInfo.incrementPly();
     int score = -_negaMax(movedBoard, depth-1, -beta, -alpha, pv);
-    _searchInfo.deincrementPly();
+    _orderingInfo.deincrementPly();
     
     // Beta cutoff
     if (score >= beta) {
       // Add this move as a new killer move and update history if move is quiet
-      _searchInfo.updateKillers(_searchInfo.getPly(), move);
+      _orderingInfo.updateKillers(_orderingInfo.getPly(), move);
       if (!(move.getFlags() & Move::CAPTURE)) {
-        _searchInfo.incrementHistory(_board.getActivePlayer(), move.getFrom(), move.getTo(), depth);
+        _orderingInfo.incrementHistory(_board.getActivePlayer(), move.getFrom(), move.getTo(), depth);
       }
 
       // Add a new tt entry for this node

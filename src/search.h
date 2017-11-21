@@ -5,7 +5,7 @@
 #include "defs.h"
 #include "movegen.h"
 #include "transptable.h"
-#include "searchinfo.h"
+#include "orderinginfo.h"
 
 /**
  * @brief Represents a search through a minmax tree.
@@ -106,8 +106,7 @@ private:
    */
   int _negaMax(const Board&, int, int, int, MoveList&);
 
-  int _ply;
-  SearchInfo _searchInfo;
+  OrderingInfo _orderingInfo;
 
   /**
    * @brief Performs a quiescence search
