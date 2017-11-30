@@ -18,7 +18,7 @@ public:
   /**
    * @brief Constructs a new MovePicker with the given MoveList.
    * 
-   * @param MoveList list of moves to pick from.
+   * @param moveList list of moves to pick from.
    */
   MovePicker(MoveList*);
   
