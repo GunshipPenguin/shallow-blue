@@ -4,6 +4,8 @@
 #include "movegen.h"
 #include "transptable.h"
 #include "movepicker.h"
+#include "generalmovepicker.h"
+#include "capturemovepicker.h"
 #include <string>
 #include <algorithm>
 #include <time.h>
@@ -66,7 +68,7 @@ void Search::_rootMax(const Board& board, int depth) {
     return;
   }
 
-  MovePicker movePicker(const_cast<OrderingInfo*>(&_orderingInfo), const_cast<Board*>(&board), const_cast<MoveList*>(&legalMoves));
+  GeneralMovePicker movePicker(const_cast<OrderingInfo*>(&_orderingInfo), const_cast<Board*>(&board), const_cast<MoveList*>(&legalMoves));
 
   _pv = MoveList();
   MoveList pv;
@@ -154,7 +156,7 @@ int Search::_negaMax(const Board& board, int depth, int alpha, int beta, MoveLis
   }
 
   MoveList pv;
-  MovePicker movePicker(const_cast<OrderingInfo*>(&_orderingInfo), const_cast<Board*>(&board), const_cast<MoveList*>(&legalMoves));
+  GeneralMovePicker movePicker(const_cast<OrderingInfo*>(&_orderingInfo), const_cast<Board*>(&board), const_cast<MoveList*>(&legalMoves));
   
   Move bestMove;
   Board movedBoard;
@@ -225,8 +227,10 @@ int Search::_qSearch(const Board& board, int alpha, int beta) {
   int standPat = Eval(board, board.getActivePlayer()).getScore();
   _nodes ++;
 
+  CaptureMovePicker movePicker(const_cast<MoveList*>(&legalMoves));
+
   // If node is quiet, just return eval
-  if (!(legalMoves.at(0).getFlags() & Move::CAPTURE)) {
+  if (!movePicker.hasNext()) {
     return standPat;
   }
 
@@ -238,10 +242,8 @@ int Search::_qSearch(const Board& board, int alpha, int beta) {
   }
 
   Board movedBoard;
-  for (auto move : legalMoves) {
-    if ((move.getFlags() & Move::CAPTURE) == 0) {
-      continue;
-    }
+  while (movePicker.hasNext()) {
+    Move move = movePicker.getNext();
 
     movedBoard = board;
     movedBoard.doMove(move);

@@ -3,31 +3,25 @@
 
 #include "board.h"
 #include "orderinginfo.h"
+#include <cmath>
 
 class MovePicker {
 public:
-  MovePicker(const OrderingInfo* _orderingInfo, const Board* board, MoveList*);
+  MovePicker(MoveList*);
   
-  Move getNext();
-  bool hasNext() const;
+  virtual Move getNext() = 0;
+  virtual bool hasNext() const = 0;
 
   static void init();
-private:
-  void _scoreMoves();
-
-  size_t _currHead;
-
-  const OrderingInfo* _orderingInfo;
-  const Board* _board;
+protected:
   MoveList* _moves;
 
   static int _mvvLvaTable[5][6];
-
-  static const int CAPTURE_BONUS = 100000;
-  static const int PROMOTION_BONUS = 10000;
-  static const int KILLER1_BONUS = 1000;
-  static const int KILLER2_BONUS = 100;
-  static const int QUIET_BONUS = 10;
+  static constexpr int CAPTURE_BONUS = std::pow(10, 5);
+  static constexpr int PROMOTION_BONUS = std::pow(10, 4);
+  static constexpr int KILLER1_BONUS = std::pow(10, 3);
+  static constexpr int KILLER2_BONUS = std::pow(10, 2);
+  static constexpr int QUIET_BONUS = std::pow(10, 1);
 };
 
 #endif
