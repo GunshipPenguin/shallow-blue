@@ -1,3 +1,6 @@
+#ifndef TRANSPTABLEENTRY_H
+#define TRANSPTABLEENTRY_H
+
 #include "move.h"
 
 /**
@@ -70,3 +73,5 @@ private:
   /** @brief Best move of this transposition table entry */
   Move _bestMove;
 };
+
+#endif
