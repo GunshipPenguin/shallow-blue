@@ -14,7 +14,7 @@ public:
   /**
    * @brief Constructs a new CaptureMovePicker for the given MoveList
    * 
-   * @param moves MoveList to pick moves from
+   * @param moveList MoveList to pick moves from
    */
   CaptureMovePicker(MoveList*);
   
