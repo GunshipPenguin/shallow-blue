@@ -6,7 +6,14 @@
 #include "board.h"
 
 /**
- * @brief MovePicker that returns moves in an optimal order for negamax search
+ * @brief MovePicker that returns moves in an optimal order for negamax search.
+ * 
+ * Specifically, the GeneralMovePicker returns moves in the following order:
+ * - Hash move from the transposition table (if it exists)
+ * - Captures sorted by MVV/LVA
+ * - Promotions
+ * - Killer moves
+ * - Quiet moves sorted by the history heuristic
  */
 class GeneralMovePicker : MovePicker {
 public:
