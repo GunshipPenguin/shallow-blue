@@ -3,12 +3,6 @@
 #include "eval.h"
 #include <cstring>
 
-OrderingInfo::OrderingInfo() {
-  _tt = nullptr;
-  _ply = 0;
-  std::memset(_history, 0, sizeof(_history));
-}
-
 OrderingInfo::OrderingInfo(const TranspTable* tt) {
   _tt = tt;
   _ply = 0;

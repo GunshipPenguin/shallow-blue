@@ -12,12 +12,6 @@
  */
 class OrderingInfo {
 public:
-
-  /**
-   * @brief Construct a new OrderingInfo with no Transposition Table
-   */
-  OrderingInfo();
-
   /**
    * @brief Construct a new OrderingInfo with the provided transposition table
    * 

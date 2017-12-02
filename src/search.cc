@@ -11,7 +11,7 @@
 #include <time.h>
 #include <iostream>
 
-Search::Search(const Board& board, bool logUci) {
+Search::Search(const Board& board, bool logUci) : _orderingInfo(OrderingInfo(const_cast<TranspTable*>(&_tt))) {
   _logUci = logUci;
   _board = board;
   _bestScore = 0;
