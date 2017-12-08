@@ -22,8 +22,23 @@ void Search::perform(int depth) {
   _rootMax(_board, depth);
 
   if (_logUci) {
-    _logUciInfo(_pv, depth, _bestMove, _bestScore, _nodes);
+    _logUciInfo(_getPv(), depth, _bestMove, _bestScore, _nodes);
   }
+}
+
+MoveList Search::_getPv() {
+  MoveList pv;
+  Board currBoard = _board;
+  const TranspTableEntry* currEntry;
+
+  while ((currEntry = _tt.getEntry(currBoard.getZKey())) != nullptr) {
+    if (currEntry->getFlag() == TranspTableEntry::EXACT) {
+      pv.push_back(currEntry->getBestMove());
+      currBoard.doMove(currEntry->getBestMove());
+    }
+  }
+
+  return pv;
 }
 
 void Search::_logUciInfo(const MoveList& pv, int depth, Move bestMove, int bestScore, int nodes) {
@@ -70,9 +85,6 @@ void Search::_rootMax(const Board& board, int depth) {
 
   GeneralMovePicker movePicker(const_cast<OrderingInfo*>(&_orderingInfo), const_cast<Board*>(&board), const_cast<MoveList*>(&legalMoves));
 
-  _pv = MoveList();
-  MoveList pv;
-
   int alpha = -INF;
   int beta = INF;
 
@@ -86,21 +98,13 @@ void Search::_rootMax(const Board& board, int depth) {
     movedBoard.doMove(move);
 
     _orderingInfo.incrementPly();
-    currScore = -_negaMax(movedBoard, depth-1, -beta, -alpha, pv);
+    currScore = -_negaMax(movedBoard, depth-1, -beta, -alpha);
     _orderingInfo.deincrementPly();
 
     // If the current score is better than alpha, or this is the first move in the loop
     if (currScore > alpha || (alpha == -INF)) {
       bestMove = move;
       alpha = currScore;
-
-      MoveList newMoves;
-      newMoves.push_back(move);
-
-      for (auto move : pv) {
-        newMoves.push_back(move);
-      }
-      _pv = newMoves;
 
       // Break if we've found a checkmate
       if (currScore == INF) {
@@ -116,7 +120,7 @@ void Search::_rootMax(const Board& board, int depth) {
   _bestScore = alpha;
 }
 
-int Search::_negaMax(const Board& board, int depth, int alpha, int beta, MoveList &ppv) {
+int Search::_negaMax(const Board& board, int depth, int alpha, int beta) {
   int alphaOrig = alpha;
 
   const TranspTableEntry* ttEntry = _tt.getEntry(board.getZKey());
@@ -144,18 +148,15 @@ int Search::_negaMax(const Board& board, int depth, int alpha, int beta, MoveLis
 
   // Check for checkmate and stalemate
   if (legalMoves.size() == 0) {
-    ppv.clear();
     int score = board.colorIsInCheck(board.getActivePlayer()) ? -INF : 0; // -INF = checkmate, 0 = stalemate (draw)
     return score;
   }
 
   // Eval if depth is 0
   if (depth == 0) {
-    ppv.clear();
     return _qSearch(board, alpha, beta);
   }
 
-  MoveList pv;
   GeneralMovePicker movePicker(const_cast<OrderingInfo*>(&_orderingInfo), const_cast<Board*>(&board), const_cast<MoveList*>(&legalMoves));
   
   Move bestMove;
@@ -167,7 +168,7 @@ int Search::_negaMax(const Board& board, int depth, int alpha, int beta, MoveLis
     movedBoard.doMove(move);
 
     _orderingInfo.incrementPly();
-    int score = -_negaMax(movedBoard, depth-1, -beta, -alpha, pv);
+    int score = -_negaMax(movedBoard, depth-1, -beta, -alpha);
     _orderingInfo.deincrementPly();
     
     // Beta cutoff
@@ -188,13 +189,6 @@ int Search::_negaMax(const Board& board, int depth, int alpha, int beta, MoveLis
     if (score > alpha) {
       alpha = score;
       bestMove = move;
-      // Copy PV data (if alpha raised then we're on a new PV node)
-      MoveList newMoves;
-      newMoves.push_back(move);
-      for (auto move : pv) {
-        newMoves.push_back(move);
-      }
-      ppv = newMoves;
     }
   }
 

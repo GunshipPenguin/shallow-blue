@@ -104,7 +104,7 @@ private:
    * @param  ppv   Reference to principal variation 1 ply up (passed recursively)
    * @return The score of the given board
    */
-  int _negaMax(const Board&, int, int, int, MoveList&);
+  int _negaMax(const Board&, int, int, int);
 
   /**
    * @brief OrderingInfo object containing information about the current state
@@ -135,6 +135,16 @@ private:
    * @param nodes     Number of nodes searched
    */
   void _logUciInfo(const MoveList&, int, Move, int, int);
+
+  /**
+   * @brief Returns the principal variation for the last performed search.
+   * 
+   * Internally, this method probes the transposition table for the PV of the last
+   * performed search.
+   * 
+   * @return MoveList The principal variation for the last performed search
+   */
+  MoveList _getPv();
 };
 
 #endif
