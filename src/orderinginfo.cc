@@ -10,7 +10,7 @@ OrderingInfo::OrderingInfo(const TranspTable* tt) {
 }
 
 void OrderingInfo::incrementHistory(Color color, int from, int to, int depth) {
-  _history[color][from][to] += depth^2;
+  _history[color][from][to] += depth*depth;
 }
 
 int OrderingInfo::getHistory(Color color, int from, int to) const {
