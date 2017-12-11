@@ -101,7 +101,6 @@ private:
    * @param  depth Plys remaining to search
    * @param  alpha Alpha value
    * @param  beta  Beta value
-   * @param  ppv   Reference to principal variation 1 ply up (passed recursively)
    * @return The score of the given board
    */
   int _negaMax(const Board&, int, int, int);
