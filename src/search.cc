@@ -22,19 +22,22 @@ void Search::perform(int depth) {
   _rootMax(_board, depth);
 
   if (_logUci) {
-    _logUciInfo(_getPv(), depth, _bestMove, _bestScore, _nodes);
+    _logUciInfo(_getPv(depth), depth, _bestMove, _bestScore, _nodes);
   }
 }
 
-MoveList Search::_getPv() {
+MoveList Search::_getPv(int length) {
   MoveList pv;
   Board currBoard = _board;
   const TranspTableEntry* currEntry;
+  int currLength = 0;
 
-  while ((currEntry = _tt.getEntry(currBoard.getZKey())) != nullptr) {
+  while (currLength++ < length && (currEntry = _tt.getEntry(currBoard.getZKey()))) {
     if (currEntry->getFlag() == TranspTableEntry::EXACT) {
       pv.push_back(currEntry->getBestMove());
       currBoard.doMove(currEntry->getBestMove());
+    } else {
+      break;
     }
   }
 

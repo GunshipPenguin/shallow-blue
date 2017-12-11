@@ -142,9 +142,10 @@ private:
    * Internally, this method probes the transposition table for the PV of the last
    * performed search.
    * 
+   * @param length Length of the principal variation
    * @return MoveList The principal variation for the last performed search
    */
-  MoveList _getPv();
+  MoveList _getPv(int);
 };
 
 #endif
