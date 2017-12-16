@@ -3,7 +3,6 @@
 
 #include "board.h"
 #include "orderinginfo.h"
-#include <cmath>
 
 /**
  * @brief Abstract base class for an object that picks moves from a move list in an optimal order.
@@ -58,11 +57,11 @@ protected:
    * @brief Bonuses applied to specific move types.
    * @{
    */
-  static constexpr int CAPTURE_BONUS = std::pow(10, 5);
-  static constexpr int PROMOTION_BONUS = std::pow(10, 4);
-  static constexpr int KILLER1_BONUS = std::pow(10, 3);
-  static constexpr int KILLER2_BONUS = std::pow(10, 2);
-  static constexpr int QUIET_BONUS = std::pow(10, 1);
+  static const int CAPTURE_BONUS   = 4000;
+  static const int PROMOTION_BONUS = 3000;
+  static const int KILLER1_BONUS   = 2000;
+  static const int KILLER2_BONUS   = 1000;
+  static const int QUIET_BONUS     = 0;
   /**@}*/
 };
 
