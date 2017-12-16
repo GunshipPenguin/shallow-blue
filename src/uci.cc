@@ -46,19 +46,12 @@ void Uci::_setPosition(std::istringstream& is) {
 }
 
 void Uci::_pickBestMove(int maxDepth) {
-  auto start = std::chrono::steady_clock::now();
-  
   Search search(_board);
-
+  
   for (int currDepth=1;currDepth<=maxDepth;currDepth++) {
     search.perform(currDepth);
   }
 
-  auto end = std::chrono::steady_clock::now();
-  std::chrono::duration<double> elapsed = end-start;
-
-  std::cout << "Time elapsed (ms): " << elapsed.count() * 1000 << std::endl;
-  
   std::cout << "bestmove " << search.getBestMove().getNotation() << std::endl;
 }
 
@@ -115,7 +108,6 @@ void Uci::_perftDivide(int depth) {
   std::cout << "Total nodes: " << total << std::endl;
   std::cout << "Time elapsed (ms): " << elapsed.count() * 1000 << std::endl;
   std::cout << "Nodes per second: " << static_cast<int>(total / elapsed.count()) << std::endl;
-
 }
 
 void Uci::start() {
