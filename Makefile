@@ -27,6 +27,9 @@ debug: all
 test: $(OBJ_DIR) $(TEST_BIN_NAME)
 	./$(TEST_BIN_NAME)
 
+test-noperft: $(OBJ_DIR) $(TEST_BIN_NAME)
+	./$(TEST_BIN_NAME) exclude:[perft]
+
 $(BIN_NAME): $(OBJ_FILES)
 	$(CXX) $(LD_FLAGS) -o $@ $^
 

@@ -38,6 +38,10 @@ To build and run the unit tests, use:
 
 `make test`
 
+To build and run the unit tests, skipping perft tests (these take a while to run), use:
+
+`make test-noperft`
+
 ## Documentation
 
 Shallow Blue's code is extensively documented with Doxygen. To generate HTML
