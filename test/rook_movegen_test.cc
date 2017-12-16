@@ -3,11 +3,13 @@
 #include "board.h"
 #include "defs.h"
 #include "raytable.h"
+#include "attacktable.h"
 
 TEST_CASE("Rook move generation is correct") {
   Board board;
   MoveGen movegen;
   RayTable::init();
+  AttackTable::init();
 
   SECTION("Rook move generation is correct in the middle of an empty board") {
     board.setToFen("8/8/8/3R4/8/8/8/8 w - -");
