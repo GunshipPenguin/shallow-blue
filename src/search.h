@@ -19,6 +19,21 @@
 class Search {
 public:
   /**
+   * @brief Represents limits imposed on a search through the UCI protocol.
+   */
+  struct Limits {
+    /**
+     * @brief Maximum depth to search to
+     */
+    int depth;
+
+    /**
+     * @brief Maximum number of nodes to search
+     */
+    int nodes;
+  };
+
+  /**
    * @brief Constructs a new Search for the given board.
    *
    * @param board The board to search
@@ -28,11 +43,11 @@ public:
   Search(const Board&, bool=true);
 
   /**
-   * @brief Performs a search to the given depth.
+   * @brief Performs an iterative deepening search within the constraints of the given limits.
    *
-   * @param depth Depth to search to
+   * @param limits Limits object describing search limitations
    */
-  void perform(int);
+  void iterDeep(Search::Limits);
 
   /**
    * @brief Returns the best move obtained through the last search performed.
@@ -89,21 +104,23 @@ private:
    * with alpha-beta pruning.
    *
    * @param board Board to search through
-   * @param depth Maximum depth to search to
+   * @param limits Limits on the search
+   * @param depth Depth to search to
    */
-  void _rootMax(const Board&, int);
+  void _rootMax(const Board&, Search::Limits, int);
 
   /**
    * @brief Non root negamax function, should only be called by _rootMax()
    *
    *
    * @param  board Board to search
+   * @param  limits Limits on the search
    * @param  depth Plys remaining to search
    * @param  alpha Alpha value
    * @param  beta  Beta value
    * @return The score of the given board
    */
-  int _negaMax(const Board&, int, int, int);
+  int _negaMax(const Board&, Search::Limits, int, int, int);
 
   /**
    * @brief OrderingInfo object containing information about the current state
@@ -132,8 +149,9 @@ private:
    * @param bestMove  Best move obtained from search
    * @param bestScore Score corresponding to the best move
    * @param nodes     Number of nodes searched
+   * @param elapsed   Time taken to complete the search in milliseconds
    */
-  void _logUciInfo(const MoveList&, int, Move, int, int);
+  void _logUciInfo(const MoveList&, int, Move, int, int, int);
 
   /**
    * @brief Returns the principal variation for the last performed search.

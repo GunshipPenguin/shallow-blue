@@ -8,7 +8,6 @@
 #include <iostream>
 #include <thread>
 #include <sstream>
-#include <chrono>
 
 void Uci::_uciNewGame(){
   _board.setToStartPos();
@@ -45,24 +44,23 @@ void Uci::_setPosition(std::istringstream& is) {
   }
 }
 
-void Uci::_pickBestMove(int maxDepth) {
+void Uci::_pickBestMove(Search::Limits limits) {
   Search search(_board);
-  
-  for (int currDepth=1;currDepth<=maxDepth;currDepth++) {
-    search.perform(currDepth);
-  }
-
+  search.iterDeep(limits);
   std::cout << "bestmove " << search.getBestMove().getNotation() << std::endl;
 }
 
 void Uci::_go(std::istringstream& is) {
   std::string token;
-  int depth = DEFAULT_DEPTH;
+  Search::Limits limits;
+  limits.depth = DEFAULT_DEPTH;
+
   while (is >> token) {
-    if (token == "depth") is >> depth;
+    if (token == "depth") is >> limits.depth;
+    else if (token == "nodes") is >> limits.nodes;
   }
 
-  std::thread searchThread(&Uci::_pickBestMove, this, depth);
+  std::thread searchThread(&Uci::_pickBestMove, this, limits);
   searchThread.detach();
 }
 
