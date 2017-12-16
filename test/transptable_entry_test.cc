@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "transptable_entry.h"
+#include "transptableentry.h"
 #include "defs.h"
 
 TEST_CASE("Transposition table entries work as expected") {

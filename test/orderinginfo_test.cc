@@ -1,7 +1,7 @@
 #include "catch.hpp"
 #include "orderinginfo.h"
 #include "transptable.h"
-#include "transptable_entry.h"
+#include "transptableentry.h"
 
 TEST_CASE("OrderingInfo class works correctly") {
   // Empty transposition table to use in OrderingInfo constructor when a TT is not required

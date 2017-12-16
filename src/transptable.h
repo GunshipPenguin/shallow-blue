@@ -3,7 +3,7 @@
 
 #include "board.h"
 #include "zkey.h"
-#include "transptable_entry.h"
+#include "transptableentry.h"
 #include <unordered_map>
 
 /**

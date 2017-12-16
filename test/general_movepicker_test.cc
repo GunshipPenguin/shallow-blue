@@ -1,6 +1,6 @@
 #include "catch.hpp"
 #include "generalmovepicker.h"
-#include "transptable_entry.h"
+#include "transptableentry.h"
 
 TEST_CASE("GeneralMovePicker works as expected") {
   MovePicker::init();
