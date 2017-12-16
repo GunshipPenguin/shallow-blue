@@ -3,24 +3,45 @@
 #include "eval.h"
 #include "movegen.h"
 #include "transptable.h"
+#include "movepicker.h"
+#include "generalmovepicker.h"
+#include "capturemovepicker.h"
 #include <string>
 #include <algorithm>
 #include <time.h>
 #include <iostream>
-#include <functional>
 
-Search::Search(const Board& board, bool logUci) {
+Search::Search(const Board& board, bool logUci) : _orderingInfo(OrderingInfo(const_cast<TranspTable*>(&_tt))) {
   _logUci = logUci;
   _board = board;
   _bestScore = 0;
+  _orderingInfo = OrderingInfo(const_cast<TranspTable*>(&_tt));
 }
 
 void Search::perform(int depth) {
   _rootMax(_board, depth);
 
   if (_logUci) {
-    _logUciInfo(_pv, depth, _bestMove, _bestScore, _nodes);
+    _logUciInfo(_getPv(depth), depth, _bestMove, _bestScore, _nodes);
   }
+}
+
+MoveList Search::_getPv(int length) {
+  MoveList pv;
+  Board currBoard = _board;
+  const TranspTableEntry* currEntry;
+  int currLength = 0;
+
+  while (currLength++ < length && (currEntry = _tt.getEntry(currBoard.getZKey()))) {
+    if (currEntry->getFlag() == TranspTableEntry::EXACT) {
+      pv.push_back(currEntry->getBestMove());
+      currBoard.doMove(currEntry->getBestMove());
+    } else {
+      break;
+    }
+  }
+
+  return pv;
 }
 
 void Search::_logUciInfo(const MoveList& pv, int depth, Move bestMove, int bestScore, int nodes) {
@@ -65,11 +86,7 @@ void Search::_rootMax(const Board& board, int depth) {
     return;
   }
 
-  _scoreMoves(board, legalMoves);
-  _sortMovesByValue(legalMoves);
-
-  _pv = MoveList();
-  MoveList pv;
+  GeneralMovePicker movePicker(const_cast<OrderingInfo*>(&_orderingInfo), const_cast<Board*>(&board), const_cast<MoveList*>(&legalMoves));
 
   int alpha = -INF;
   int beta = INF;
@@ -78,24 +95,19 @@ void Search::_rootMax(const Board& board, int depth) {
 
   Move bestMove;
   Board movedBoard;
-  for (auto move : legalMoves) {
+  while (movePicker.hasNext()) {
+    Move move = movePicker.getNext();
     movedBoard = board;
     movedBoard.doMove(move);
 
-    currScore = -_negaMax(movedBoard, depth-1, -beta, -alpha, pv);
+    _orderingInfo.incrementPly();
+    currScore = -_negaMax(movedBoard, depth-1, -beta, -alpha);
+    _orderingInfo.deincrementPly();
 
     // If the current score is better than alpha, or this is the first move in the loop
     if (currScore > alpha || (alpha == -INF)) {
       bestMove = move;
       alpha = currScore;
-
-      MoveList newMoves;
-      newMoves.push_back(move);
-
-      for (auto move : pv) {
-        newMoves.push_back(move);
-      }
-      _pv = newMoves;
 
       // Break if we've found a checkmate
       if (currScore == INF) {
@@ -111,69 +123,7 @@ void Search::_rootMax(const Board& board, int depth) {
   _bestScore = alpha;
 }
 
-void Search::_scoreMoves(const Board& board, MoveList& moveList) {
-  const TranspTableEntry* ttEntry = _tt.getEntry(board.getZKey());
-  Move pvMove;
-  if (ttEntry) {
-    pvMove = ttEntry->getBestMove();
-  }
-
-  for (auto &move : moveList) {
-    Board tempBoard = board;
-    tempBoard.doMove(move);
-
-    // PV move always first
-    if (move == pvMove) {
-      move.setValue(INF);
-      continue;
-    }
-
-    // Transposition table lookups considered second (dynamic move ordering)
-    const TranspTableEntry *ttEntry = _tt.getEntry(tempBoard.getZKey());
-    if (ttEntry && ((ttEntry->getFlag() == TranspTableEntry::EXACT) || (ttEntry->getFlag() == TranspTableEntry::LOWER_BOUND))) {
-      // Score is negated since score is for opponent
-      move.setValue(-ttEntry->getScore());
-    } else {
-      // Static move ordering (considers promotions and MVV/LVA captures)
-      bool hasStaticTraits = move.getFlags() & (Move::PROMOTION | Move::CAPTURE);
-      int value = 0;
-      if (move.getFlags() & Move::PROMOTION) {
-        value += Eval::getMaterialValue(move.getPromotionPieceType()) - Eval::getMaterialValue(PAWN);
-      }
-      if (move.getFlags() & Move::CAPTURE) {
-        value += Eval::getMaterialValue(move.getCapturedPieceType()) - Eval::getMaterialValue(move.getPieceType());
-      }
-
-      if (hasStaticTraits) {
-        move.setValue(value);
-      } else {
-        move.setValue(-INF);
-      }
-    }
-  }
-}
-
-void Search::_scoreMovesQsearch(MoveList& moveList) {
-  for (auto &move : moveList) {
-    if (move.getFlags() & Move::CAPTURE) {
-      move.setValue(Eval::getMaterialValue(move.getCapturedPieceType()) - Eval::getMaterialValue(move.getPieceType()));
-    } else {
-      move.setValue(-INF);
-    }
-  }
-  _sortMovesByValue(moveList);
-}
-
-void Search::_sortMovesByValue(MoveList& moveList) {
-  std::sort(moveList.begin(), moveList.end(),
-    std::bind(&Search::_compareMovesValue, this, std::placeholders::_1, std::placeholders::_2));
-}
-
-bool Search::_compareMovesValue(Move a, Move b) {
-  return a.getValue() > b.getValue();
-}
-
-int Search::_negaMax(const Board& board, int depth, int alpha, int beta, MoveList &ppv) {
+int Search::_negaMax(const Board& board, int depth, int alpha, int beta) {
   int alphaOrig = alpha;
 
   const TranspTableEntry* ttEntry = _tt.getEntry(board.getZKey());
@@ -201,30 +151,38 @@ int Search::_negaMax(const Board& board, int depth, int alpha, int beta, MoveLis
 
   // Check for checkmate and stalemate
   if (legalMoves.size() == 0) {
-    ppv.clear();
     int score = board.colorIsInCheck(board.getActivePlayer()) ? -INF : 0; // -INF = checkmate, 0 = stalemate (draw)
     return score;
   }
 
   // Eval if depth is 0
   if (depth == 0) {
-    ppv.clear();
     return _qSearch(board, alpha, beta);
   }
 
-  MoveList pv;
-  _scoreMoves(board, legalMoves);
-  _sortMovesByValue(legalMoves);
-
+  GeneralMovePicker movePicker(const_cast<OrderingInfo*>(&_orderingInfo), const_cast<Board*>(&board), const_cast<MoveList*>(&legalMoves));
+  
   Move bestMove;
   Board movedBoard;
-  for (auto move : legalMoves) {
+  while (movePicker.hasNext()) {
+    Move move = movePicker.getNext();
+
     movedBoard = board;
     movedBoard.doMove(move);
 
-    int score = -_negaMax(movedBoard, depth-1, -beta, -alpha, pv);
-
+    _orderingInfo.incrementPly();
+    int score = -_negaMax(movedBoard, depth-1, -beta, -alpha);
+    _orderingInfo.deincrementPly();
+    
+    // Beta cutoff
     if (score >= beta) {
+      // Add this move as a new killer move and update history if move is quiet
+      _orderingInfo.updateKillers(_orderingInfo.getPly(), move);
+      if (!(move.getFlags() & Move::CAPTURE)) {
+        _orderingInfo.incrementHistory(_board.getActivePlayer(), move.getFrom(), move.getTo(), depth);
+      }
+
+      // Add a new tt entry for this node
       TranspTableEntry newTTEntry(score, depth, TranspTableEntry::LOWER_BOUND, move);
       _tt.set(board.getZKey(), newTTEntry);
       return beta;
@@ -234,13 +192,6 @@ int Search::_negaMax(const Board& board, int depth, int alpha, int beta, MoveLis
     if (score > alpha) {
       alpha = score;
       bestMove = move;
-      // Copy PV data (if alpha raised then we're on a new PV node)
-      MoveList newMoves;
-      newMoves.push_back(move);
-      for (auto move : pv) {
-        newMoves.push_back(move);
-      }
-      ppv = newMoves;
     }
   }
 
@@ -270,14 +221,13 @@ int Search::_qSearch(const Board& board, int alpha, int beta) {
     }
   }
 
-  _scoreMovesQsearch(legalMoves);
-  _sortMovesByValue(legalMoves);
-
   int standPat = Eval(board, board.getActivePlayer()).getScore();
   _nodes ++;
 
+  CaptureMovePicker movePicker(const_cast<MoveList*>(&legalMoves));
+
   // If node is quiet, just return eval
-  if (!(legalMoves.at(0).getFlags() & Move::CAPTURE)) {
+  if (!movePicker.hasNext()) {
     return standPat;
   }
 
@@ -289,10 +239,8 @@ int Search::_qSearch(const Board& board, int alpha, int beta) {
   }
 
   Board movedBoard;
-  for (auto move : legalMoves) {
-    if ((move.getFlags() & Move::CAPTURE) == 0) {
-      break;
-    }
+  while (movePicker.hasNext()) {
+    Move move = movePicker.getNext();
 
     movedBoard = board;
     movedBoard.doMove(move);

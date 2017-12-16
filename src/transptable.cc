@@ -3,7 +3,12 @@
 #include <utility>
 
 void TranspTable::set(const ZKey& key, TranspTableEntry entry) {
-  _table.insert(std::make_pair(key.getValue(), entry));
+  auto insertResult = _table.insert(std::make_pair(key.getValue(), entry));
+  
+  // If insertion was prevented due to the key already existing, overwrite the value
+  if (!insertResult.second) {
+    insertResult.first->second = entry;
+  }
 }
 
 void TranspTable::clear() {
