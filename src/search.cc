@@ -91,7 +91,6 @@ void Search::_rootMax(const Board& board, int depth) {
 
   Move bestMove;
   Board movedBoard;
-  bool first = true;
   while (movePicker.hasNext()) {
     Move move = movePicker.getNext();
     movedBoard = board;
@@ -102,7 +101,7 @@ void Search::_rootMax(const Board& board, int depth) {
     _orderingInfo.deincrementPly();
 
     // If the current score is better than alpha, or this is the first move in the loop
-    if (currScore > alpha || (first)) {
+    if (currScore > alpha) {
       bestMove = move;
       alpha = currScore;
 
@@ -111,8 +110,14 @@ void Search::_rootMax(const Board& board, int depth) {
         break;
       }
     }
+  }
 
-    first = false;
+  // If the best move was not set in the main search loop
+  // alpha was not raised at any point, just pick the first move
+  // avaliable (arbitrary) to avoid putting a null move in the
+  // transposition table
+  if (bestMove.getFlags() & Move::NULL_MOVE) {
+    bestMove = legalMoves.at(0);
   }
 
   TranspTableEntry ttEntry(alpha, depth, TranspTableEntry::EXACT, bestMove);
