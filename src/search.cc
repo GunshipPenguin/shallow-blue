@@ -33,12 +33,8 @@ MoveList Search::_getPv(int length) {
   int currLength = 0;
 
   while (currLength++ < length && (currEntry = _tt.getEntry(currBoard.getZKey()))) {
-    if (currEntry->getFlag() == TranspTableEntry::EXACT) {
-      pv.push_back(currEntry->getBestMove());
-      currBoard.doMove(currEntry->getBestMove());
-    } else {
-      break;
-    }
+    pv.push_back(currEntry->getBestMove());
+    currBoard.doMove(currEntry->getBestMove());
   }
 
   return pv;
@@ -95,6 +91,7 @@ void Search::_rootMax(const Board& board, int depth) {
 
   Move bestMove;
   Board movedBoard;
+  bool first = true;
   while (movePicker.hasNext()) {
     Move move = movePicker.getNext();
     movedBoard = board;
@@ -105,7 +102,7 @@ void Search::_rootMax(const Board& board, int depth) {
     _orderingInfo.deincrementPly();
 
     // If the current score is better than alpha, or this is the first move in the loop
-    if (currScore > alpha || (alpha == -INF)) {
+    if (currScore > alpha || (first)) {
       bestMove = move;
       alpha = currScore;
 
@@ -114,6 +111,8 @@ void Search::_rootMax(const Board& board, int depth) {
         break;
       }
     }
+
+    first = false;
   }
 
   TranspTableEntry ttEntry(alpha, depth, TranspTableEntry::EXACT, bestMove);
@@ -193,6 +192,14 @@ int Search::_negaMax(const Board& board, int depth, int alpha, int beta) {
       alpha = score;
       bestMove = move;
     }
+  }
+
+  // If the best move was not set in the main search loop
+  // alpha was not raised at any point, just pick the first move
+  // avaliable (arbitrary) to avoid putting a null move in the
+  // transposition table
+  if (bestMove.getFlags() & Move::NULL_MOVE) {
+    bestMove = legalMoves.at(0);
   }
 
   // Store bestScore in transposition table
