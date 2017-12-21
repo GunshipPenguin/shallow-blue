@@ -45,8 +45,7 @@ void Uci::_setPosition(std::istringstream& is) {
 }
 
 void Uci::_pickBestMove(Search::Limits limits) {
-  Search search(_board, limits);
-  search.iterDeep();
+  _search->iterDeep();
 }
 
 void Uci::_go(std::istringstream& is) {
@@ -62,6 +61,8 @@ void Uci::_go(std::istringstream& is) {
     else if (token == "binc") is >> limits.increment[BLACK];
     else if (token == "movestogo") is >> limits.movesToGo;
   }
+
+  _search = std::shared_ptr<Search>(new Search(_board, limits));
 
   std::thread searchThread(&Uci::_pickBestMove, this, limits);
   searchThread.detach();
@@ -137,9 +138,12 @@ void Uci::start() {
       _uciNewGame();
     } else if (token == "isready") {
       std::cout << "readyok" << std::endl;
+    } else if (token == "stop") {
+      if (_search) _search->stop();  
     } else if (token == "go") {
       _go(is);
     } else if (token == "quit") {
+      if (_search) _search->stop();  
       return;
     } else if (token == "position") {
       _setPosition(is);

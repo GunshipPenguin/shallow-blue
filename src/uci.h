@@ -6,6 +6,7 @@
 #include "search.h"
 #include <sstream>
 #include <fstream>
+#include <memory>
 
 /**
  * @brief Class for handling UCI input/output.
@@ -22,6 +23,12 @@ private:
    * @brief Current board being used.
    */
   Board _board;
+
+  /**
+   * @brief Search object for the current or last search that has taken place.
+   * Is a nullptr if no search has yet taken place.
+   */
+  std::shared_ptr<Search> _search;
 
   /**
    * @brief Default depth to search to upon receiving the go command.

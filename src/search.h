@@ -7,6 +7,7 @@
 #include "transptable.h"
 #include "orderinginfo.h"
 #include <chrono>
+#include <atomic>
 
 /**
  * @brief Represents a search through a minmax tree.
@@ -131,7 +132,7 @@ private:
    * @brief If this flag is set, calls to _negaMax() and _rootMax() will end as soon
    * as possible and calls to _rootMax will not set the best move and best score.
    */
-  bool _stop;
+  std::atomic<bool> _stop;
 
   /**
    * @brief time_point object representing the exact moment this search was started.
