@@ -14,11 +14,7 @@ TEST_CASE("Search works as expected") {
 
   Board board;
   Search::Limits limits;
-  limits.time[WHITE] = 300000; 
-  limits.time[BLACK] = 300000;
-  limits.increment[WHITE] = 5000;
-  limits.increment[BLACK] = 5000;
-  limits.movesToGo = 50;
+  limits.depth = 8;
 
   SECTION("Search finds the fool's mate checkmakte on the next move") {
     board.setToFen("rnbqkbnr/pppp1ppp/4p3/8/6P1/5P2/PPPPP2P/RNBQKBNR b KQkq -");
