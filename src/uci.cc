@@ -54,6 +54,7 @@ void Uci::_go(std::istringstream& is) {
 
   while (is >> token) {
     if (token == "depth") is >> limits.depth;
+    if (token == "infinite") limits.infinite = true;
     else if (token == "nodes") is >> limits.nodes;
     else if (token == "wtime") is >> limits.time[WHITE];
     else if (token == "btime") is >> limits.time[BLACK];

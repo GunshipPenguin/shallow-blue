@@ -21,14 +21,13 @@ Search::Search(const Board& board, Limits limits, bool logUci) :
   _limitCheckCount(0),
   _bestScore(0) {
 
-  // Special case no limits being specified
-  if (_limits.depth == 0 && _limits.time[_board.getActivePlayer()] == 0) {
-    _searchDepth = DEFAULT_SEARCH_DEPTH;
+  if (_limits.infinite) { // Infinite search
+    _searchDepth = INF;
     _timeAllocated = INF;
-  } if (_limits.depth != 0) { // Depth search
+  } else if (_limits.depth != 0) { // Depth search
     _searchDepth = _limits.depth;
     _timeAllocated = INF;
-  } if (_limits.time[_board.getActivePlayer()] != 0) { // Time search
+  } else if (_limits.time[_board.getActivePlayer()] != 0) { // Time search
     int timeRemaining = _limits.time[_board.getActivePlayer()] + _limits.increment[_board.getActivePlayer()];
 
     // If movestogo not specified, sudden death, assume 30 moves
@@ -36,6 +35,9 @@ Search::Search(const Board& board, Limits limits, bool logUci) :
 
     // Depth is infinity in a timed search (ends when time runs out)
     _searchDepth = MAX_SEARCH_DEPTH;
+  } else { // No limits specified, use default depth
+      _searchDepth = DEFAULT_SEARCH_DEPTH;
+      _timeAllocated = INF;
   }
 }
 

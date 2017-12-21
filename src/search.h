@@ -25,12 +25,17 @@ public:
     /**
      * @brief Constructs a new Limits struct with all numerical limits set to 0.
      */
-    Limits() : depth(0), nodes(0), movesToGo(0), time{}, increment{} {};
+    Limits() : depth(0), infinite(false), nodes(0), movesToGo(0), time{}, increment{} {};
 
     /**
      * @brief Maximum depth to search to
      */
     int depth;
+
+    /**
+     * @brief If true, don't stop the search until the stop flag is set
+     */
+    bool infinite;
 
     /**
      * @brief Maximum number of nodes to search
