@@ -95,6 +95,14 @@ private:
    * @brief Default depth to search to if no limits are specified.
    */
   static const int DEFAULT_SEARCH_DEPTH = 7;
+
+  /**
+   * @brief Estimated number of moves left in the game when in sudden death
+   * that the Search class uses to calculate the time allocated to a sudden
+   * death search.
+   */
+  static const int SUDDEN_DEATH_MOVESTOGO = 30;
+
   /**
    * @brief Maximum depth to search to if depth is not explicitly specified
    * and time limits are imposed.
