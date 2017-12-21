@@ -29,12 +29,7 @@ private:
    * Is a nullptr if no search has yet taken place.
    */
   std::shared_ptr<Search> _search;
-
-  /**
-   * @brief Default depth to search to upon receiving the go command.
-   */
-  static const int DEFAULT_DEPTH = 6;
-
+  
   /**
    * @brief Handles the ucinewgame command
    *
