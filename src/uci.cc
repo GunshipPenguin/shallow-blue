@@ -45,19 +45,23 @@ void Uci::_setPosition(std::istringstream& is) {
 }
 
 void Uci::_pickBestMove(Search::Limits limits) {
-  Search search(_board);
-  search.iterDeep(limits);
+  Search search(_board, limits);
+  search.iterDeep();
   std::cout << "bestmove " << search.getBestMove().getNotation() << std::endl;
 }
 
 void Uci::_go(std::istringstream& is) {
   std::string token;
   Search::Limits limits;
-  limits.depth = DEFAULT_DEPTH;
 
   while (is >> token) {
     if (token == "depth") is >> limits.depth;
     else if (token == "nodes") is >> limits.nodes;
+    else if (token == "wtime") is >> limits.time[WHITE];
+    else if (token == "btime") is >> limits.time[BLACK];
+    else if (token == "winc") is >> limits.increment[WHITE];
+    else if (token == "binc") is >> limits.increment[BLACK];
+    else if (token == "movestogo") is >> limits.movesToGo;
   }
 
   std::thread searchThread(&Uci::_pickBestMove, this, limits);
@@ -122,7 +126,10 @@ void Uci::start() {
   std::string line;
   std::string token;
 
+  std::ofstream of("uci.out");
+
   while(std::getline(std::cin, line)) {
+    of << line << std::endl;
     std::istringstream is(line);
     is >> token;
 
@@ -159,4 +166,6 @@ void Uci::start() {
       std::cout << "what?" << std::endl;
     }
   }
+
+  of.close();
 }

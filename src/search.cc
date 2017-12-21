@@ -12,22 +12,50 @@
 #include <iostream>
 #include <chrono>
 
-Search::Search(const Board& board, bool logUci) : _orderingInfo(OrderingInfo(const_cast<TranspTable*>(&_tt))) {
-  _logUci = logUci;
-  _board = board;
-  _bestScore = 0;
-  _orderingInfo = OrderingInfo(const_cast<TranspTable*>(&_tt));
+Search::Search(const Board& board, Limits limits, bool logUci) : 
+  _orderingInfo(OrderingInfo(const_cast<TranspTable*>(&_tt))),
+  _limits(limits),
+  _board(board),
+  _logUci(logUci),
+  _stop(false),
+  _limitCheckCount(0),
+  _bestScore(0) {
+
+  // Special case no limits being specified
+  if (_limits.depth == 0 && _limits.time[_board.getActivePlayer()] == 0) {
+    _searchDepth = DEFAULT_SEARCH_DEPTH;
+    _timeAllocated = INF;
+  } if (_limits.depth != 0) { // Depth search
+    _searchDepth = _limits.depth;
+    _timeAllocated = INF;
+  } if (_limits.time[_board.getActivePlayer()] != 0) { // Time search
+    int timeRemaining = _limits.time[_board.getActivePlayer()] + _limits.increment[_board.getActivePlayer()];
+
+    // If movestogo not specified, sudden death, assume 30 moves
+    _timeAllocated = _limits.movesToGo == 0 ? timeRemaining / 30 : timeRemaining / _limits.movesToGo;
+
+    // Depth is infinity in a timed search (ends when time runs out)
+    _searchDepth = MAX_SEARCH_DEPTH;
+  }
 }
 
-void Search::iterDeep(Search::Limits limits) {
-  auto start = std::chrono::steady_clock::now();
-  for (int currDepth=1;currDepth<=limits.depth;currDepth++) {
-    _rootMax(_board, limits, currDepth);
+void Search::iterDeep() {
+  _start = std::chrono::steady_clock::now();
+
+  for (int currDepth=1;currDepth<=_searchDepth;currDepth++) {
+    _rootMax(_board, currDepth);
+
+    int elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-_start).count();
+
+    // If limits were exceeded in the search, break without logging UCI info (search was incomplete)
+    if (_stop) break;
 
     if (_logUci) {
-      int elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-start).count();
       _logUciInfo(_getPv(currDepth), currDepth, _bestMove, _bestScore, _nodes, elapsed);
     }
+
+    // If the last search has exceeded or hit 50% of the allocated time, stop searching
+    if (elapsed >= (_timeAllocated / 2)) break;
   }
 }
 
@@ -72,6 +100,10 @@ void Search::_logUciInfo(const MoveList& pv, int depth, Move bestMove, int bestS
   std::cout << std::endl;
 }
 
+void Search::stop() {
+  _stop = true;
+}
+
 Move Search::getBestMove() {
   return _bestMove;
 }
@@ -80,7 +112,22 @@ int Search::getBestScore() {
   return _bestScore;
 }
 
-void Search::_rootMax(const Board& board, Search::Limits limits, int depth) {
+bool Search::_checkLimits() {
+  if (--_limitCheckCount > 0) {
+    return false;
+  }
+
+  _limitCheckCount = 4096;
+
+  int elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-_start).count();
+
+  if (_limits.nodes != 0 && (_nodes >= _limits.nodes)) return true;
+  if (elapsed >= (_timeAllocated)) return true;
+
+  return false;
+}
+
+void Search::_rootMax(const Board& board, int depth) {
   MoveGen movegen(board);
   MoveList legalMoves = movegen.getLegalMoves();
   _nodes = 0;
@@ -108,8 +155,13 @@ void Search::_rootMax(const Board& board, Search::Limits limits, int depth) {
     movedBoard.doMove(move);
 
     _orderingInfo.incrementPly();
-    currScore = -_negaMax(movedBoard, limits, depth-1, -beta, -alpha);
+    currScore = -_negaMax(movedBoard, depth-1, -beta, -alpha);
     _orderingInfo.deincrementPly();
+
+    if (_stop || _checkLimits()) {
+      _stop = true;
+      break;
+    }
 
     // If the current score is better than alpha, or this is the first move in the loop
     if (currScore > alpha || (first)) {
@@ -125,14 +177,22 @@ void Search::_rootMax(const Board& board, Search::Limits limits, int depth) {
     first = false;
   }
 
-  TranspTableEntry ttEntry(alpha, depth, TranspTableEntry::EXACT, bestMove);
-  _tt.set(board.getZKey(), ttEntry);
+  if (!_stop) {
+    TranspTableEntry ttEntry(alpha, depth, TranspTableEntry::EXACT, bestMove);
+    _tt.set(board.getZKey(), ttEntry);
 
-  _bestMove = bestMove;
-  _bestScore = alpha;
+    _bestMove = bestMove;
+    _bestScore = alpha;
+  }
 }
 
-int Search::_negaMax(const Board& board, Search::Limits limits, int depth, int alpha, int beta) {
+int Search::_negaMax(const Board& board, int depth, int alpha, int beta) {
+  // Check search limits
+  if (_stop || _checkLimits()) {
+    _stop = true;
+    return 0;
+  }
+
   int alphaOrig = alpha;
 
   const TranspTableEntry* ttEntry = _tt.getEntry(board.getZKey());
@@ -180,7 +240,7 @@ int Search::_negaMax(const Board& board, Search::Limits limits, int depth, int a
     movedBoard.doMove(move);
 
     _orderingInfo.incrementPly();
-    int score = -_negaMax(movedBoard, limits, depth-1, -beta, -alpha);
+    int score = -_negaMax(movedBoard, depth-1, -beta, -alpha);
     _orderingInfo.deincrementPly();
     
     // Beta cutoff
@@ -226,6 +286,12 @@ int Search::_negaMax(const Board& board, Search::Limits limits, int depth, int a
 }
 
 int Search::_qSearch(const Board& board, int alpha, int beta) {
+  // Check search limits
+  if (_stop || _checkLimits()) {
+    _stop = true;
+    return 0;
+  }
+
   MoveGen movegen(board);
   MoveList legalMoves = movegen.getLegalMoves();
 
