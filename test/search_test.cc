@@ -5,7 +5,7 @@
 #include "board.h"
 #include "movepicker.h"
 
-TEST_CASE("Search works as expected", "[search]") {
+TEST_CASE("Search works as expected") {
   PSquareTable::init();
   ZKey::init();
   RayTable::init();
