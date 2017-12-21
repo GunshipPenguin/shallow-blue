@@ -152,7 +152,7 @@ void Uci::start() {
 
     // Non UCI commands
     else if (token == "printboard") {
-      std::cout << _board.getStringRep() << std::endl;
+      std::cout << std::endl << _board.getStringRep() << std::endl;
     } else if (token == "printmoves") {
       for (auto move : MoveGen(_board).getLegalMoves()) {
         std::cout << move.getNotation() << std::endl;

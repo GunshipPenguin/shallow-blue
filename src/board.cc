@@ -154,13 +154,14 @@ bool Board::blackQsCastlingRight() const {
 }
 
 std::string Board::getStringRep() const {
-  std::string stringRep;
-  U64 base = 1;
+  std::string stringRep = "8  ";
+  int rank = 8;
+
   U64 boardPos = 56; // Starts at a8, goes down rank by rank
   int squaresProcessed = 0;
 
   while (squaresProcessed < 64) {
-    U64 square = base << boardPos;
+    U64 square = ONE << boardPos;
     bool squareOccupied = (square & _occupied) != 0;
 
     if (squareOccupied) {
@@ -184,17 +185,17 @@ std::string Board::getStringRep() const {
     } else {
       stringRep += " . ";
     }
+    squaresProcessed++;
 
-    if ((squaresProcessed+1) % 8 == 0) {
-      stringRep += '\n';
+    if ((squaresProcessed % 8 == 0) && (squaresProcessed != 64)) {
+      stringRep += "\n" + std::to_string(--rank) + "  ";
       boardPos -= 16;
     }
 
     boardPos ++;
-    squaresProcessed ++;
   }
 
-  stringRep.pop_back();
+  stringRep += "\n\n    A  B  C  D  E  F  G  H";
   return stringRep;
 }
 
