@@ -105,10 +105,10 @@ void Uci::_perftDivide(int depth) {
   auto end = std::chrono::steady_clock::now();
   std::chrono::duration<double> elapsed = end-start;
 
-  std::cout << std::endl << "========" << std::endl;
-  std::cout << "Total nodes: " << total << std::endl;
-  std::cout << "Time elapsed (ms): " << elapsed.count() * 1000 << std::endl;
-  std::cout << "Nodes per second: " << static_cast<int>(total / elapsed.count()) << std::endl;
+  std::cout << std::endl << "==========================" << std::endl;
+  std::cout << "Total time (ms) : " << static_cast<int>(elapsed.count() * 1000) << std::endl;
+  std::cout << "Nodes searched  : " << total << std::endl;
+  std::cout << "Nodes / second  : " << static_cast<int>(total / elapsed.count()) << std::endl;
 }
 
 void Uci::start() {
