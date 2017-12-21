@@ -126,10 +126,7 @@ void Uci::start() {
   std::string line;
   std::string token;
 
-  std::ofstream of("uci.out");
-
   while(std::getline(std::cin, line)) {
-    of << line << std::endl;
     std::istringstream is(line);
     is >> token;
 
@@ -166,6 +163,4 @@ void Uci::start() {
       std::cout << "what?" << std::endl;
     }
   }
-
-  of.close();
 }
