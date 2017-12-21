@@ -154,6 +154,7 @@ void Uci::start() {
     else if (token == "printboard") {
       std::cout << std::endl << _board.getStringRep() << std::endl;
     } else if (token == "printmoves") {
+      std::cout << std::endl << "Legal moves:" << std::endl;
       for (auto move : MoveGen(_board).getLegalMoves()) {
         std::cout << move.getNotation() << std::endl;
       }
