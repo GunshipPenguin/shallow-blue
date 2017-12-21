@@ -57,6 +57,8 @@ void Search::iterDeep() {
     // If the last search has exceeded or hit 50% of the allocated time, stop searching
     if (elapsed >= (_timeAllocated / 2)) break;
   }
+
+  if (_logUci) std::cout << "bestmove " << getBestMove().getNotation() << std::endl;
 }
 
 MoveList Search::_getPv(int length) {

@@ -47,7 +47,6 @@ void Uci::_setPosition(std::istringstream& is) {
 void Uci::_pickBestMove(Search::Limits limits) {
   Search search(_board, limits);
   search.iterDeep();
-  std::cout << "bestmove " << search.getBestMove().getNotation() << std::endl;
 }
 
 void Uci::_go(std::istringstream& is) {
