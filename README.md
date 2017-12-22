@@ -73,11 +73,6 @@ These commands can be useful for debugging.
 - Search
   - Switch search algorithm to Principal Variation Search
   - Use a capture-only move generator for quiescence search
-- UCI
-  - Support more of the UCI protocol
-    - Support timers (wtime / btime)
-    - `stop` command
-    - `go infinite`
 
 # License
 
