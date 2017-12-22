@@ -152,13 +152,19 @@ void Search::_rootMax(const Board& board, int depth) {
 
   Move bestMove;
   Board movedBoard;
+  bool fullWindow = true;
   while (movePicker.hasNext()) {
     Move move = movePicker.getNext();
     movedBoard = board;
     movedBoard.doMove(move);
 
     _orderingInfo.incrementPly();
-    currScore = -_negaMax(movedBoard, depth-1, -beta, -alpha);
+    if (fullWindow) {
+      currScore = -_negaMax(movedBoard, depth-1, -beta, -alpha);
+    } else {
+      currScore = -_negaMax(movedBoard, depth-1, -alpha-1, -alpha);
+      if (currScore > alpha) currScore = -_negaMax(movedBoard, depth-1, -beta, -alpha);
+    }
     _orderingInfo.deincrementPly();
 
     if (_stop || _checkLimits()) {
@@ -168,6 +174,7 @@ void Search::_rootMax(const Board& board, int depth) {
 
     // If the current score is better than alpha, or this is the first move in the loop
     if (currScore > alpha) {
+      fullWindow = false;
       bestMove = move;
       alpha = currScore;
 
@@ -242,14 +249,21 @@ int Search::_negaMax(const Board& board, int depth, int alpha, int beta) {
   
   Move bestMove;
   Board movedBoard;
+  bool fullWindow = true;
   while (movePicker.hasNext()) {
     Move move = movePicker.getNext();
 
     movedBoard = board;
     movedBoard.doMove(move);
 
+    int score;
     _orderingInfo.incrementPly();
-    int score = -_negaMax(movedBoard, depth-1, -beta, -alpha);
+    if (fullWindow) {
+      score = -_negaMax(movedBoard, depth-1, -beta, -alpha);
+    } else {
+      score = -_negaMax(movedBoard, depth-1, -alpha-1, -alpha);
+      if (score > alpha) score = -_negaMax(movedBoard, depth-1, -beta, -alpha);
+    }
     _orderingInfo.deincrementPly();
     
     // Beta cutoff
@@ -268,6 +282,7 @@ int Search::_negaMax(const Board& board, int depth, int alpha, int beta) {
 
     // Check if alpha raised (new best move)
     if (score > alpha) {
+      fullWindow = false;
       alpha = score;
       bestMove = move;
     }
