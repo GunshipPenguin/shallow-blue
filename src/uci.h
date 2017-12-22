@@ -3,8 +3,10 @@
 
 #include "board.h"
 #include "move.h"
+#include "search.h"
 #include <sstream>
 #include <fstream>
+#include <memory>
 
 /**
  * @brief Class for handling UCI input/output.
@@ -23,10 +25,11 @@ private:
   Board _board;
 
   /**
-   * @brief Default depth to search to upon receiving the go command.
+   * @brief Search object for the current or last search that has taken place.
+   * Is a nullptr if no search has yet taken place.
    */
-  static const int DEFAULT_DEPTH = 6;
-
+  std::shared_ptr<Search> _search;
+  
   /**
    * @brief Handles the ucinewgame command
    *
@@ -54,9 +57,9 @@ private:
 
   /**
    * @brief Performs a search to the given depth and outputs the best move.
-   * @param maxDepth Depth to search to
+   * @param limits limits on the search
    */
-  void _pickBestMove(int);
+  void _pickBestMove(Search::Limits);
 
   /**
    * @brief Calculates perft for each legal move of the current board and prints each perft value.

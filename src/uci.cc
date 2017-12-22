@@ -8,7 +8,6 @@
 #include <iostream>
 #include <thread>
 #include <sstream>
-#include <chrono>
 
 void Uci::_uciNewGame(){
   _board.setToStartPos();
@@ -45,24 +44,28 @@ void Uci::_setPosition(std::istringstream& is) {
   }
 }
 
-void Uci::_pickBestMove(int maxDepth) {
-  Search search(_board);
-  
-  for (int currDepth=1;currDepth<=maxDepth;currDepth++) {
-    search.perform(currDepth);
-  }
-
-  std::cout << "bestmove " << search.getBestMove().getNotation() << std::endl;
+void Uci::_pickBestMove(Search::Limits limits) {
+  _search->iterDeep();
 }
 
 void Uci::_go(std::istringstream& is) {
   std::string token;
-  int depth = DEFAULT_DEPTH;
+  Search::Limits limits;
+
   while (is >> token) {
-    if (token == "depth") is >> depth;
+    if (token == "depth") is >> limits.depth;
+    if (token == "infinite") limits.infinite = true;
+    else if (token == "nodes") is >> limits.nodes;
+    else if (token == "wtime") is >> limits.time[WHITE];
+    else if (token == "btime") is >> limits.time[BLACK];
+    else if (token == "winc") is >> limits.increment[WHITE];
+    else if (token == "binc") is >> limits.increment[BLACK];
+    else if (token == "movestogo") is >> limits.movesToGo;
   }
 
-  std::thread searchThread(&Uci::_pickBestMove, this, depth);
+  _search = std::shared_ptr<Search>(new Search(_board, limits));
+
+  std::thread searchThread(&Uci::_pickBestMove, this, limits);
   searchThread.detach();
 }
 
@@ -104,10 +107,10 @@ void Uci::_perftDivide(int depth) {
   auto end = std::chrono::steady_clock::now();
   std::chrono::duration<double> elapsed = end-start;
 
-  std::cout << std::endl << "========" << std::endl;
-  std::cout << "Total nodes: " << total << std::endl;
-  std::cout << "Time elapsed (ms): " << elapsed.count() * 1000 << std::endl;
-  std::cout << "Nodes per second: " << static_cast<int>(total / elapsed.count()) << std::endl;
+  std::cout << std::endl << "==========================" << std::endl;
+  std::cout << "Total time (ms) : " << static_cast<int>(elapsed.count() * 1000) << std::endl;
+  std::cout << "Nodes searched  : " << total << std::endl;
+  std::cout << "Nodes / second  : " << static_cast<int>(total / elapsed.count()) << std::endl;
 }
 
 void Uci::start() {
@@ -136,9 +139,12 @@ void Uci::start() {
       _uciNewGame();
     } else if (token == "isready") {
       std::cout << "readyok" << std::endl;
+    } else if (token == "stop") {
+      if (_search) _search->stop();  
     } else if (token == "go") {
       _go(is);
     } else if (token == "quit") {
+      if (_search) _search->stop();  
       return;
     } else if (token == "position") {
       _setPosition(is);
@@ -146,8 +152,9 @@ void Uci::start() {
 
     // Non UCI commands
     else if (token == "printboard") {
-      std::cout << _board.getStringRep() << std::endl;
+      std::cout << std::endl << _board.getStringRep() << std::endl;
     } else if (token == "printmoves") {
+      std::cout << std::endl << "Legal moves:" << std::endl;
       for (auto move : MoveGen(_board).getLegalMoves()) {
         std::cout << move.getNotation() << std::endl;
       }

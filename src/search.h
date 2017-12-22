@@ -6,33 +6,72 @@
 #include "movegen.h"
 #include "transptable.h"
 #include "orderinginfo.h"
+#include <chrono>
+#include <atomic>
 
 /**
  * @brief Represents a search through a minmax tree.
  *
- * Searches are performed using recursive alpha-beta search, followed by a
- * quiescence search. The Search class contains no iterative deepening
- * functionality, that must be implemented by the caller via multiple calls
- * to perform().
- *
+ * Searches are performed using recursive alpha-beta search (invoked initially
+ * through a call to the _rootMax() method, which in turn calls _negaMax().
+ * This search is followed by a quiescence search at leaf nodes.
  */
 class Search {
 public:
   /**
+   * @brief Represents limits imposed on a search through the UCI protocol.
+   */
+  struct Limits {
+    /**
+     * @brief Constructs a new Limits struct with all numerical limits set to 0.
+     */
+    Limits() : depth(0), infinite(false), nodes(0), movesToGo(0), time{}, increment{} {};
+
+    /**
+     * @brief Maximum depth to search to
+     */
+    int depth;
+
+    /**
+     * @brief If true, don't stop the search until the stop flag is set
+     */
+    bool infinite;
+
+    /**
+     * @brief Maximum number of nodes to search
+     */
+    int nodes;
+
+    /**
+     * @brief Moves left in the game.
+     */
+    int movesToGo;
+
+    /**
+     * @brief Array indexed by [color] of time left on the clock for black and white.
+     */
+    int time[2];
+
+    /**
+     * @brief Array indexed by [color] of increment per move for black and white.
+     */
+    int increment[2];
+  };
+
+  /**
    * @brief Constructs a new Search for the given board.
    *
    * @param board The board to search
+   * @param limits limits imposed on this search
    * @param logUci If logUci is set, UCI info commands about the search will be printed
-   * to standard output in real time.
+   * to standard output in real time.k
    */
-  Search(const Board&, bool=true);
+  Search(const Board&, Limits, bool=true);
 
   /**
-   * @brief Performs a search to the given depth.
-   *
-   * @param depth Depth to search to
+   * @brief Performs an iterative deepening search within the constraints of the given limits.
    */
-  void perform(int);
+  void iterDeep();
 
   /**
    * @brief Returns the best move obtained through the last search performed.
@@ -46,7 +85,89 @@ public:
    */
   int getBestScore();
 
+  /**
+   * @brief Instructs this Search to stop as soon as possible.
+   */
+  void stop();
+
 private:
+  /**
+   * @brief Default depth to search to if no limits are specified.
+   */
+  static const int DEFAULT_SEARCH_DEPTH = 7;
+
+  /**
+   * @brief Estimated number of moves left in the game when in sudden death
+   * that the Search class uses to calculate the time allocated to a sudden
+   * death search.
+   */
+  static const int SUDDEN_DEATH_MOVESTOGO = 30;
+
+  /**
+   * @brief Maximum depth to search to if depth is not explicitly specified
+   * and time limits are imposed.
+   */
+  static const int MAX_SEARCH_DEPTH = 20;
+
+  /**
+   * @brief OrderingInfo object containing information about the current state
+   * of this search
+   */
+  OrderingInfo _orderingInfo;
+
+  /**
+   * @brief Limits object representing limits imposed on this search.
+   * 
+   */
+  Limits _limits;
+
+  /**
+   * @brief Initial board being used in this search.
+   */
+  Board _board;
+
+  /**
+   * @brief True if UCI will be logged to standard output during the search.
+   */
+  bool _logUci;
+
+  /**
+   * @brief Time allocated for this search in ms
+   */
+  int _timeAllocated;
+
+  /**
+   * @brief Depth of this search in plys
+   */
+  int _searchDepth;
+
+  /**
+   * @brief If this flag is set, calls to _negaMax() and _rootMax() will end as soon
+   * as possible and calls to _rootMax will not set the best move and best score.
+   */
+  std::atomic<bool> _stop;
+
+  /**
+   * @brief time_point object representing the exact moment this search was started.
+   */
+  std::chrono::time_point<std::chrono::steady_clock> _start;
+
+  /**
+   * @brief Returns True if this search has exceeded its given limits 
+   * 
+   * Note that to avoid a needless amount of computation, limits are only
+   * checked every 4096 calls to _checkLimits() (using the Search::_limitCheckCount property).
+   * If Search::_limitCheckCount is not 0, false will be returned.
+   * 
+   * @return True if this search has exceed its limits, true otherwise
+   */
+  bool _checkLimits();
+
+  /**
+   * @brief Number of calls remaining to _checkLimits()
+   */
+  int _limitCheckCount;
+
   /**
    * @brief Principal variation of the last search performed.
    */
@@ -56,16 +177,6 @@ private:
    * @brief Number of nodes searched in the last search.
    */
   int _nodes;
-
-  /**
-   * @brief Initial board being used in this search.
-   */
-  Board _board;
-
-  /**
-   * @brief True if UCI output should be logged.
-   */
-  bool _logUci;
 
   /**
    * @brief Transposition Table used while searching.
@@ -89,7 +200,7 @@ private:
    * with alpha-beta pruning.
    *
    * @param board Board to search through
-   * @param depth Maximum depth to search to
+   * @param depth Depth to search to
    */
   void _rootMax(const Board&, int);
 
@@ -104,12 +215,6 @@ private:
    * @return The score of the given board
    */
   int _negaMax(const Board&, int, int, int);
-
-  /**
-   * @brief OrderingInfo object containing information about the current state
-   * of this search
-   */
-  OrderingInfo _orderingInfo;
 
   /**
    * @brief Performs a quiescence search
@@ -132,8 +237,9 @@ private:
    * @param bestMove  Best move obtained from search
    * @param bestScore Score corresponding to the best move
    * @param nodes     Number of nodes searched
+   * @param elapsed   Time taken to complete the search in milliseconds
    */
-  void _logUciInfo(const MoveList&, int, Move, int, int);
+  void _logUciInfo(const MoveList&, int, Move, int, int, int);
 
   /**
    * @brief Returns the principal variation for the last performed search.
