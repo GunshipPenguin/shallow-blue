@@ -3,20 +3,31 @@
 </p>
 
 <h1 align="center">Shallow Blue</h1>
-<p align="center">(Not <a href="https://en.wikipedia.org/wiki/Deep_Blue_(chess_computer)">Deep Blue</a>)</p>
+<p align="center">(not <a href="https://en.wikipedia.org/wiki/Deep_Blue_(chess_computer)">Deep Blue</a>)</p>
 
 <p align="center">
   <a href="https://travis-ci.org/GunshipPenguin/shallow-blue"><img src="https://img.shields.io/travis/GunshipPenguin/shallow-blue/master.svg"></a>
 </p>
 
-A UCI Chess engine written in C++11.
+A UCI chess engine written in C++11
 
-Features:
-  - [Bitboard](https://en.wikipedia.org/wiki/Bitboard) board representation and move generation
-  - [Zobrist hashing](https://en.wikipedia.org/wiki/Zobrist_hashing) / [Transposition Table](https://en.wikipedia.org/wiki/Transposition_table)
-  - [Piece square tables](https://chessprogramming.wikispaces.com/Piece-Square+Tables) for evaluation
-  - [Iterative deepening](https://en.wikipedia.org/wiki/Iterative_deepening_depth-first_search) [Minimax Search](https://en.wikipedia.org/wiki/Minimax) with  [Alpha-Beta Pruning](https://en.wikipedia.org/wiki/Alpha%E2%80%93beta_pruning) and [Move Ordering](https://chessprogramming.wikispaces.com/Move+Ordering)
-  - [Quiescence search](https://en.wikipedia.org/wiki/Quiescence_search) with [MVV/LVA move ordering](https://chessprogramming.wikispaces.com/MVV-LVA)
+## Features
+
+  - Board representation
+    - [Bitboards](https://en.wikipedia.org/wiki/Bitboard)
+  - Search
+    - [Principal variation search](https://chessprogramming.wikispaces.com/Principal+Variation+Search)
+    - [Iterative deepening](https://en.wikipedia.org/wiki/Iterative_deepening_depth-first_search)
+    - [Quiescence search](https://en.wikipedia.org/wiki/Quiescence_search)
+  - Evaluation
+    - [Piece square tables](https://chessprogramming.wikispaces.com/Piece-Square+Tables)
+    - [Mobility](https://chessprogramming.wikispaces.com/Mobility)
+    - [Zobrist hashing](https://en.wikipedia.org/wiki/Zobrist_hashing) / [Transposition table](https://en.wikipedia.org/wiki/Transposition_table)
+  - Move ordering
+    - [Hash move](https://chessprogramming.wikispaces.com/Hash+Move)
+    - [MVV/LVA](https://chessprogramming.wikispaces.com/MVV-LVA)
+    - [Killer heuristic](https://chessprogramming.wikispaces.com/Killer+Heuristic)
+    - [History heuristic](https://chessprogramming.wikispaces.com/History+Heuristic)
 
 ## Building
 
@@ -71,9 +82,8 @@ These commands can be useful for debugging.
   - King safety
   - Pawn structure
 - Search
-  - Switch search algorithm to Principal Variation Search
   - Use a capture-only move generator for quiescence search
 
-# License
+## License
 
 [MIT](https://github.com/GunshipPenguin/shallow-blue/blob/master/LICENSE) © Rhys Rustad-Elliott
