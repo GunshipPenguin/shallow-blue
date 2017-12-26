@@ -72,9 +72,7 @@ int Eval::_calcMobility(const Board& board, Color color) {
     moves += _popCount(attacks);
   }
 
-  PieceType pieceTypes[5] = {ROOK, KNIGHT, BISHOP, QUEEN, KING};
-
-  for (auto pieceType : pieceTypes) {
+  for (auto pieceType : {ROOK, KNIGHT, BISHOP, QUEEN, KING}) {
     U64 pieces = board.getPieces(color, pieceType);
 
     while (pieces) {
