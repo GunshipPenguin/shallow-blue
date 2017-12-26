@@ -1,8 +1,10 @@
 #include "defs.h"
 #include "attacktable.h"
+#include "raytable.h"
 #include "catch.hpp"
 
 TEST_CASE("AttackTable output is correct") {
+  RayTable::init();
   AttackTable::init();
 
   SECTION("AttackTable values are correct for white and black pawns") {

@@ -26,6 +26,11 @@ public:
   };
 
   /**
+   * @brief Constructs a new empty transposition table.
+   */
+  TranspTable() {};
+
+  /**
    * @brief Creates a new entry in the transposition table.
    *
    * If the entry already exists, it will be overwritten.

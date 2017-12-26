@@ -1,20 +1,25 @@
 language: cpp
-compiler: gcc
+compiler:
+  - gcc
+  - clang
 
 dist: trusty
 sudo: required
 
 before_install:
-- sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
-- sudo apt-get update -qq
+  - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+  - sudo apt-get update -qq
 
 install:
-  # Install valgrind
   - sudo apt-get install valgrind
-  - valgrind --version
+
+  # Use binutils 2.26 if this is a clang build (needed for LTO)
+  - if [ $CXX == "clang++" ]; then sudo apt-get install binutils-2.26; fi
+  - if [ $CXX == "clang++" ]; then export PATH=/usr/lib/binutils-2.26/bin:${PATH}; fi
 
 before_script:
-  - cat /proc/cpuinfo
+  # Required with clang builds on Travis so that LLVM has access to LLVMgold.so
+  - if [ $CXX == "clang++" ]; then sudo ln -s /usr/lib/llvm-3.4/lib/LLVMgold.so /usr/local/clang-5.0.0/lib/LLVMgold.so; fi
 
 script:
   - make
