@@ -151,11 +151,11 @@ void Search::_rootMax(const Board& board, int depth) {
   int currScore;
 
   Move bestMove;
-  Board movedBoard;
   bool fullWindow = true;
   while (movePicker.hasNext()) {
     Move move = movePicker.getNext();
-    movedBoard = board;
+
+    Board movedBoard = board;
     movedBoard.doMove(move);
 
     _orderingInfo.incrementPly();
@@ -253,7 +253,7 @@ int Search::_negaMax(const Board& board, int depth, int alpha, int beta) {
   while (movePicker.hasNext()) {
     Move move = movePicker.getNext();
 
-    movedBoard = board;
+    Board movedBoard = board;
     movedBoard.doMove(move);
 
     int score;
@@ -345,11 +345,10 @@ int Search::_qSearch(const Board& board, int alpha, int beta) {
     alpha = standPat;
   }
 
-  Board movedBoard;
   while (movePicker.hasNext()) {
     Move move = movePicker.getNext();
 
-    movedBoard = board;
+    Board movedBoard = board;
     movedBoard.doMove(move);
 
     int score = -_qSearch(movedBoard, -beta, -alpha);
