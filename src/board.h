@@ -22,13 +22,16 @@ class Move;
 class Board {
   public:
     /**
-     * @brief Constructs a new board with no pieces, white to move, and no castling rights.
-     *
-     * Note that this constructor constructs a totally empty board quickly and
-     * is meant to be used before either calling setToFen() or constructing a new
-     * board as a copy.
+     * @brief Constructs a new board set to the starting position
      */
     Board();
+
+    /**
+     * @brief Constructs a new board set to the specified fen string
+     * 
+     * @param fen Fen string to set the board to
+     */
+    Board(std::string);
 
     /**
      * @brief Returns a pretty human readable string representation of this board.

@@ -11,8 +11,11 @@
 #include <stdexcept>
 
 Board::Board() {
-  _clearBitBoards();
+  setToFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+}
 
+Board::Board(std::string fen) {
+  setToFen(fen);
 }
 
 U64 Board::getPieces(Color color, PieceType pieceType) const {
