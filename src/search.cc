@@ -248,7 +248,6 @@ int Search::_negaMax(const Board& board, int depth, int alpha, int beta) {
   GeneralMovePicker movePicker(const_cast<OrderingInfo*>(&_orderingInfo), const_cast<Board*>(&board), const_cast<MoveList*>(&legalMoves));
   
   Move bestMove;
-  Board movedBoard;
   bool fullWindow = true;
   while (movePicker.hasNext()) {
     Move move = movePicker.getNext();
