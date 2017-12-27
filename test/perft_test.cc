@@ -11,11 +11,10 @@ int perft(int depth, const Board& board) {
   }
 
   MoveGen movegen(board);
-  Board movedBoard;
 
   int nodes = 0;
   for (auto move : movegen.getLegalMoves()) {
-    movedBoard = board;
+    Board movedBoard = board;
     movedBoard.doMove(move);
 
     nodes += perft(depth - 1, movedBoard);

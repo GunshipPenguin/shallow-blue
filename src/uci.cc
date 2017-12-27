@@ -75,11 +75,10 @@ unsigned long long Uci::_perft(const Board& board, int depth) {
   }
 
   MoveGen movegen(board);
-  Board movedBoard;
 
   unsigned long long nodes = 0;
   for (auto move : movegen.getLegalMoves()) {
-    movedBoard = board;
+    Board movedBoard = board;
     movedBoard.doMove(move);
 
     nodes += _perft(movedBoard, depth-1);
