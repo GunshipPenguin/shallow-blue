@@ -107,7 +107,9 @@ namespace Eval {
 
   /**
    * @brief Returns the number of pseudo-legal moves avaliable to the given color
-   * on the given board
+   * on the given board (with some omissions)
+   * 
+   * For the sake of speed, castles and promotions are not considered.
    * 
    * @param board Board to use when generating moves 
    * @param color Color to count pseudo-legal moves for 
