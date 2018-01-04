@@ -89,7 +89,7 @@ int Eval::rooksOnOpenFiles(const Board& board, Color color) {
   int numRooks = 0;
 
   for (U64 file : detail::FILES) {
-    if (_popCount(file & board.getPieces(color, ROOK) & board.getAllPieces(color)) == 1) {
+    if ((file & board.getPieces(color, ROOK)) && (file & board.getPieces(color, ROOK)) == (file & board.getOccupied())) {
       numRooks++;
     }
   }
