@@ -124,19 +124,20 @@ int Eval::isolatedPawns(const Board& board, Color color) {
 }
 
 int Eval::backwardPawns(const Board& board, Color color) {
-  // Pawns whose stop square is under attack by our opponent's pawns but not by our pawns
+  // Pawns whose stop square is under attack by our opponent's
+  // pawns but not by us are backward
   U64 pawns = board.getPieces(color, PAWN);
+  U64 opponentPawns = board.getPieces(getOppositeColor(color), PAWN);
 
-  U64 stopSquares = color == WHITE ? pawns << 8 : pawns >> 8;
-
-  U64 ownPawnAttacks;
-  U64 opponentPawnAttacks;
+  U64 stopSquares, ownPawnAttacks, opponentPawnAttacks;
   if (color == WHITE) {
+    stopSquares = (pawns << 8) & board.getNotOccupied();
     ownPawnAttacks = ((pawns << 7) & ~FILE_H) | ((pawns << 9) & ~FILE_A);
-    opponentPawnAttacks = ((pawns >> 7) & ~FILE_A) | ((pawns >> 9) & ~FILE_H);
+    opponentPawnAttacks = ((opponentPawns >> 7) & ~FILE_A) | ((opponentPawns >> 9) & ~FILE_H);
   } else {
+    stopSquares = (pawns >> 8) & board.getNotOccupied();
     ownPawnAttacks = ((pawns >> 7) & ~FILE_A) | ((pawns >> 9) & ~FILE_H);
-    opponentPawnAttacks = ((pawns << 7) & ~FILE_H) | ((pawns << 9) & ~FILE_A);
+    opponentPawnAttacks = ((opponentPawns << 7) & ~FILE_H) | ((opponentPawns << 9) & ~FILE_A);
   }
 
   return _popCount(stopSquares & ~ownPawnAttacks & opponentPawnAttacks);
