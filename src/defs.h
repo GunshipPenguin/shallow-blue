@@ -46,6 +46,13 @@ const U64 FILE_A = 0x101010101010101ull;
 /**@}*/
 
 /**
+ * @name Black and white squares
+ */
+const U64 BLACK_SQUARES = 0xAA55AA55AA55AA55;
+const U64 WHITE_SQUARES = 0x55AA55AA55AA55AA;
+/**@}*/
+
+/**
  * @brief An empty bitboard. (ie. the number 0)
  */
 const U64 ZERO = U64(0);

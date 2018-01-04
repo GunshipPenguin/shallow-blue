@@ -327,7 +327,7 @@ int Search::_qSearch(const Board& board, int alpha, int beta) {
     }
   }
 
-  int standPat = Eval(board, board.getActivePlayer()).getScore();
+  int standPat = Eval::evaluate(board, board.getActivePlayer());
   _nodes ++;
 
   CaptureMovePicker movePicker(const_cast<MoveList*>(&legalMoves));
