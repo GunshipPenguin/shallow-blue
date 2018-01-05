@@ -21,13 +21,20 @@ A UCI chess engine written in C++11
     - [Quiescence search](https://en.wikipedia.org/wiki/Quiescence_search)
   - Evaluation
     - [Piece square tables](https://chessprogramming.wikispaces.com/Piece-Square+Tables)
+    - [Pawn structure](https://chessprogramming.wikispaces.com/Pawn+Structure)
+    - [King safety](https://chessprogramming.wikispaces.com/King+Safety)
+    - [Bishop pairs](https://chessprogramming.wikispaces.com/Bishop+Pair)
+    - [Rooks on open files](https://chessprogramming.wikispaces.com/Rook+on+Open+File)
     - [Mobility](https://chessprogramming.wikispaces.com/Mobility)
-    - [Zobrist hashing](https://en.wikipedia.org/wiki/Zobrist_hashing) / [Transposition table](https://en.wikipedia.org/wiki/Transposition_table)
   - Move ordering
     - [Hash move](https://chessprogramming.wikispaces.com/Hash+Move)
     - [MVV/LVA](https://chessprogramming.wikispaces.com/MVV-LVA)
     - [Killer heuristic](https://chessprogramming.wikispaces.com/Killer+Heuristic)
     - [History heuristic](https://chessprogramming.wikispaces.com/History+Heuristic)
+  - Other
+    - [Zobrist hashing](https://en.wikipedia.org/wiki/Zobrist_hashing) / [Transposition table](https://en.wikipedia.org/wiki/Transposition_table)
+
+    
 
 ## Building
 
@@ -78,9 +85,6 @@ These commands can be useful for debugging.
   - Opening book support
   - Magic bitboards
   - Unmake move function
-- Evaluation
-  - King safety
-  - Pawn structure
 - Search
   - Use a capture-only move generator for quiescence search
 

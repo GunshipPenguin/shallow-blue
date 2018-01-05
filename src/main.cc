@@ -4,6 +4,7 @@
 #include "attacktable.h"
 #include "raytable.h"
 #include "movepicker.h"
+#include "eval.h"
 
 int main() {
   RayTable::init();
@@ -11,6 +12,7 @@ int main() {
   ZKey::init();
   MovePicker::init();
   AttackTable::init();
+  Eval::init();
 
   Uci uci;
   uci.start();
