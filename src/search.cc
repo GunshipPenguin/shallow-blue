@@ -28,11 +28,20 @@ Search::Search(const Board& board, Limits limits, bool logUci) :
     _searchDepth = _limits.depth;
     _timeAllocated = INF;
   } else if (_limits.time[_board.getActivePlayer()] != 0) { // Time search
-    int timeRemaining = _limits.time[_board.getActivePlayer()] + _limits.increment[_board.getActivePlayer()];
+    int timeRemaining = _limits.time[_board.getActivePlayer()];
 
-    // If movestogo not specified, sudden death, assume SUDDEN_DEATH_MOVESTOGO moves remaining
-    _timeAllocated = _limits.movesToGo == 0 ? timeRemaining / SUDDEN_DEATH_MOVESTOGO : timeRemaining / _limits.movesToGo;
+    // Divide up the remaining time (If movestogo not specified we are in sudden death)
+    if(_limits.movesToGo == 0) {
+      _timeAllocated = timeRemaining / SUDDEN_DEATH_MOVESTOGO;
+    } else {
+      // A small constant (3) is added to _limits.movesToGo when dividing to
+      // ensure we don't go over time when movesToGo is small
+      _timeAllocated = timeRemaining / (_limits.movesToGo + 3);
+    }
 
+    // Use all of the increment to think
+    _timeAllocated += _limits.increment[_board.getActivePlayer()];
+    
     // Depth is infinity in a timed search (ends when time runs out)
     _searchDepth = MAX_SEARCH_DEPTH;
   } else { // No limits specified, use default depth
