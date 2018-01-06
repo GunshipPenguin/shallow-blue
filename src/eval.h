@@ -40,12 +40,12 @@ namespace Eval {
   /**
    * @brief Bonus given to a player having a move avaliable
    */
-  const int MOBILITY_BONUS = 2;
+  const int MOBILITY_BONUS = 1;
   
   /**
    * @brief Bonus given to a player for each rook on an open file
    */
-  const int ROOK_OPEN_FILE_BONUS = 20;
+  const int ROOK_OPEN_FILE_BONUS = 15;
 
   /**
    * @brief Penalty given to a player for having a doubled pawn
@@ -70,7 +70,7 @@ namespace Eval {
   /**
    * @brief Bonus given to a player for each pawn shielding their king
    */
-  const int KING_PAWN_SHIELD_BONUS = 20;
+  const int KING_PAWN_SHIELD_BONUS = 15;
 
   /**
    * @brief Initializes all inner constants used by functions in the Eval namespace
