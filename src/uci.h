@@ -4,6 +4,8 @@
 #include "board.h"
 #include "move.h"
 #include "search.h"
+#include "option.h"
+#include "book.h"
 #include <sstream>
 #include <fstream>
 #include <memory>
@@ -11,25 +13,35 @@
 /**
  * @brief Class for handling UCI input/output.
  */
-class Uci {
-public:
+namespace Uci {
+  void init();
+
   /**
    * @brief Starts listening for UCI input and responds to it when received.
    */
   void start();
 
-private:
+  extern Book _book;
+
   /**
    * @brief Current board being used.
    */
-  Board _board;
+  extern Board _board;
 
   /**
    * @brief Search object for the current or last search that has taken place.
    * Is a nullptr if no search has yet taken place.
    */
-  std::shared_ptr<Search> _search;
+  extern std::shared_ptr<Search> _search;
   
+  void _initOptions();
+
+  void _loadBook();
+
+  void _printEngineInfo();
+
+  void _setOption(std::istringstream&);
+
   /**
    * @brief Handles the ucinewgame command
    *
@@ -76,6 +88,7 @@ private:
    * @return The perft of the board for the given depth
    */
   unsigned long long _perft(const Board&, int);
+
 };
 
 #endif

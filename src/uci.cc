@@ -4,10 +4,37 @@
 #include "move.h"
 #include "movegen.h"
 #include "search.h"
+#include "book.h"
 #include "version.h"
+#include "option.h"
 #include <iostream>
 #include <thread>
 #include <sstream>
+
+Book Uci::_book;
+std::shared_ptr<Search> Uci::_search;
+Board Uci::_board;
+
+void Uci::init() {
+  _initOptions();
+}
+
+void Uci::_initOptions() {
+  optionsMap["OwnBook"] = Option(false, true);
+  optionsMap["BookPath"] = Option("book.bin", &Uci::_loadBook);
+}
+
+void Uci::_loadBook() {
+  std::ifstream bookFile(optionsMap["BookPath"].getValue());
+  bool bookOk = bookFile.good();
+  bookFile.close();
+
+  if (bookOk) {
+    _book = Book(optionsMap["BookPath"].getValue());
+  } else {
+    std::cerr << optionsMap["BookPath"].getValue() << " is inaccessible or doesn't exist" << std::endl;
+  }
+}
 
 void Uci::_uciNewGame(){
   _board.setToStartPos();
@@ -45,7 +72,11 @@ void Uci::_setPosition(std::istringstream& is) {
 }
 
 void Uci::_pickBestMove(Search::Limits limits) {
-  _search->iterDeep();
+  if (optionsMap["OwnBook"].getValue() == "true" && _book.inBook(_board)) {
+    std::cout << "bestmove " << _book.getMove(_board).getNotation() << std::endl;
+  } else {
+    _search->iterDeep();
+  }
 }
 
 void Uci::_go(std::istringstream& is) {
@@ -65,7 +96,7 @@ void Uci::_go(std::istringstream& is) {
 
   _search = std::shared_ptr<Search>(new Search(_board, limits));
 
-  std::thread searchThread(&Uci::_pickBestMove, this, limits);
+  std::thread searchThread(&Uci::_pickBestMove, limits);
   searchThread.detach();
 }
 
@@ -112,6 +143,40 @@ void Uci::_perftDivide(int depth) {
   std::cout << "Nodes / second  : " << static_cast<int>(total / elapsed.count()) << std::endl;
 }
 
+void Uci::_printEngineInfo() {
+  std::cout << "id name Shallow Blue " << VER_MAJ << "." << VER_MIN << "." << VER_PATCH << std::endl;
+  std::cout << "id author Rhys Rustad-Elliott" << std::endl;
+  std::cout << std::endl;
+  
+  for (auto optionPair : optionsMap) {
+    std::cout << "option ";
+    std::cout << "name " << optionPair.first << " ";
+    std::cout << "type " << optionPair.second.getType() << " ";
+    std::cout << "default " << optionPair.second.getDefaultValue() << " ";
+
+    if (optionPair.second.getType() == "spin") {
+      std::cout << "min " << optionPair.second.getMin() << " ";
+      std::cout << "max " << optionPair.second.getMax(); 
+    }
+    std::cout << std::endl;
+  }
+  std::cout << "uciok" << std::endl;
+}
+
+void Uci::_setOption(std::istringstream& is) {
+  std::string token;
+  std::string optionName;
+
+  is >> token >> optionName; // Advance past "name"
+
+  if (optionsMap.find(optionName) != optionsMap.end()) {
+    is >> token >> token; // Advance past "value"
+    optionsMap[optionName].setValue(token);
+  } else {
+    std::cout << "Invalid option" << std::endl;
+  }
+}
+
 void Uci::start() {
   std::cout << "Shallow Blue " << VER_MAJ << "." << VER_MIN << "." << VER_PATCH;
   std::cout << " by Rhys Rustad-Elliott";
@@ -131,9 +196,7 @@ void Uci::start() {
     is >> token;
 
     if (token == "uci") {
-      std::cout << "id name Shallow Blue " << VER_MAJ << "." << VER_MIN << "." << VER_PATCH << std::endl;
-      std::cout << "id author Rhys Rustad-Elliott" << std::endl;
-      std::cout << "uciok" << std::endl;
+      _printEngineInfo();
     } else if (token == "ucinewgame") {
       _uciNewGame();
     } else if (token == "isready") {
@@ -147,6 +210,8 @@ void Uci::start() {
       return;
     } else if (token == "position") {
       _setPosition(is);
+    } else if (token == "setoption") {
+      _setOption(is);
     }
 
     // Non UCI commands
