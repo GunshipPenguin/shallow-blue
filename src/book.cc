@@ -257,9 +257,7 @@ bool Book::inBook(const Board& board) const {
 }
 
 Move Book::getMove(const Board& board) const {
-  U64 hash = hashBoard(board);
-
-  auto lookup = _content.find(hash);
+  auto lookup = _content.find(hashBoard(board));
   if (lookup != _content.end()) {
     // Pick move based on weighted random choice
     int weightSum;
