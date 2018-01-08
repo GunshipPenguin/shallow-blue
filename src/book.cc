@@ -272,7 +272,7 @@ Move Book::getMove(const Board& board) const {
 
     for (auto moveWeightPair : lookup->second) {
       weightSum -= moveWeightPair.second;
-      if (weightSum < randomTarget) {
+      if (weightSum <= randomTarget) {
         return decodeMove(board, moveWeightPair.first);
       }
     }
