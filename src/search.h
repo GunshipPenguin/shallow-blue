@@ -63,10 +63,12 @@ public:
    *
    * @param board The board to search
    * @param limits limits imposed on this search
+   * @param positionHistory Vector of ZKeys reprenting all positions that have
+   * occurred in the game
    * @param logUci If logUci is set, UCI info commands about the search will be printed
    * to standard output in real time.k
    */
-  Search(const Board&, Limits, bool=true);
+  Search(const Board&, Limits, std::vector<ZKey>, bool=true);
 
   /**
    * @brief Performs an iterative deepening search within the constraints of the given limits.
@@ -108,6 +110,13 @@ private:
    * and time limits are imposed.
    */
   static const int MAX_SEARCH_DEPTH = 20;
+
+  /**
+   * @brief Vector of ZKeys for each position that has occurred in the game
+   * 
+   * This is used to detect threefold repetitions.
+   */
+  std::vector<ZKey> _positionHistory;
 
   /**
    * @brief OrderingInfo object containing information about the current state

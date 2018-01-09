@@ -89,6 +89,14 @@ public:
    */
   void updateCastlingRights(bool, bool, bool, bool);
 
+  /**
+   * @brief Compare Zobrist keys 
+   * 
+   * @param other ZKey to compare
+   * @return true if the two ZKeys have the same value, false otherwise
+   */
+  bool operator==(const ZKey&);
+
 private:
   /**
    * @brief The current value of the Zobrist key.

@@ -12,7 +12,8 @@
 #include <iostream>
 #include <chrono>
 
-Search::Search(const Board& board, Limits limits, bool logUci) : 
+Search::Search(const Board& board, Limits limits, std::vector<ZKey> positionHistory, bool logUci) :
+  _positionHistory(positionHistory),
   _orderingInfo(OrderingInfo(const_cast<TranspTable*>(&_tt))),
   _limits(limits),
   _initialBoard(board),
@@ -218,8 +219,12 @@ int Search::_negaMax(const Board& board, int depth, int alpha, int beta) {
     return 0;
   }
 
-  int alphaOrig = alpha;
+  // Check for threefold repetition draws
+  if (std::find(_positionHistory.begin(), _positionHistory.end(), board.getZKey()) != _positionHistory.end()) {
+    return 0;
+  }
 
+  int alphaOrig = alpha;
   const TranspTableEntry* ttEntry = _tt.getEntry(board.getZKey());
   // Check transposition table cache
   if (ttEntry && (ttEntry->getDepth() >= depth)) {

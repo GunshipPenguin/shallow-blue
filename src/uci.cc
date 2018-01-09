@@ -15,6 +15,7 @@ namespace {
   Book book;
   std::shared_ptr<Search> search;
   Board board;
+  std::vector<ZKey> positionHistory;
 
   void loadBook() {
     std::ifstream bookFile(optionsMap["BookPath"].getValue());
@@ -62,6 +63,7 @@ namespace {
       for (auto move : movegen.getMoves()) {
         if (move.getNotation() == token) {
           board.doMove(move);
+          positionHistory.push_back(board.getZKey());
           break;
         }
       }
@@ -91,7 +93,7 @@ namespace {
       else if (token == "movestogo") is >> limits.movesToGo;
     }
 
-    search = std::shared_ptr<Search>(new Search(board, limits));
+    search = std::shared_ptr<Search>(new Search(board, limits, positionHistory));
 
     std::thread searchThread(&pickBestMove, limits);
     searchThread.detach();
