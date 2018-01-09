@@ -106,11 +106,10 @@ These commands can be useful for debugging.
 
 ## Future Improvements
 
-- General
-  - Magic bitboards
-  - Unmake move function
-- Search
-  - Use a capture-only move generator for quiescence search
+- Magic bitboard move generation
+- Staged move generation
+- Game phase based evaluation
+- More sophisticated king safety evaluation
 
 ## License
 
