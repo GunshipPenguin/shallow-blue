@@ -91,6 +91,10 @@ bool Board::colorIsInCheck(Color color) const {
   return _squareUnderAttack(getOppositeColor(color), kingSquare);
 }
 
+int Board::getHalfmoveClock() const {
+  return _halfmoveClock;
+}
+
 bool Board::whiteCanCastleKs() const {
   if (!_whiteCanCastleKs) {
     return false;
@@ -303,17 +307,18 @@ void Board::setToFen(std::string fenString) {
     }
   }
 
-  // Get en passant target square
+  // En passant target square
   std::string enPasSquare;
   fenStream >> enPasSquare;
-
-  // Set bitboards
   if (enPasSquare == "-") {
     _enPassant = 0;
   } else {
     int enPasIndex = Move::notationToIndex(enPasSquare);
     _enPassant = static_cast<U64>(1) << enPasIndex;
   }
+
+  // Halfmove clock
+  fenStream >> _halfmoveClock;
 
   _updateNonPieceBitBoards();
   _zKey = ZKey(*this);
@@ -469,6 +474,13 @@ void Board::doMove(Move move) {
     unsigned int enPasIndex = _activePlayer == WHITE ? move.getTo() - 8 : move.getTo() + 8;
     _enPassant = ONE << enPasIndex;
     _zKey.setEnPassantFile(enPasIndex % 8);
+  }
+
+  // Halfmove clock reset on pawn moves or captures, incremented otherwise
+  if (move.getPieceType() == PAWN || move.getFlags() & Move::CAPTURE) {
+    _halfmoveClock = 0;
+  } else {
+    _halfmoveClock++;
   }
 
   _updateCastlingRightsForMove(move);

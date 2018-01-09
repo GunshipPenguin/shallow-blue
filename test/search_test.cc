@@ -73,4 +73,13 @@ TEST_CASE("Search works as expected") {
 
     REQUIRE(search.getBestMove().getNotation() == "d1d2");
   }
+
+  SECTION("Search recognizes when a 50 move rule draw is the best option") {
+    board.setToFen("B6k/1r6/8/8/7q/8/PP6/K7 w - - 49");
+
+    Search search(board, limits, emptyPositionHistory, false);
+    search.iterDeep();
+
+    REQUIRE(search.getBestMove().getNotation() == "a1b1");
+  }
 }

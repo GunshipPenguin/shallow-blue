@@ -224,6 +224,11 @@ int Search::_negaMax(const Board& board, int depth, int alpha, int beta) {
     return 0;
   }
 
+  // Check for 50 move rule draws
+  if (board.getHalfmoveClock() >= 50) {
+    return 0;
+  }
+
   int alphaOrig = alpha;
   const TranspTableEntry* ttEntry = _tt.getEntry(board.getZKey());
   // Check transposition table cache
