@@ -150,6 +150,13 @@ class Board {
     bool colorIsInCheck(Color) const;
 
     /**
+     * @brief Gets the number of halfmoves since the last capture or pawn move
+     * 
+     * @return int the number of halfmoves since the last capture or pawn move 
+     */
+    int getHalfmoveClock() const;
+
+    /**
      * @brief Returns a bitboard containing all of the pieces of the specified
      * color and piece type.
      *
@@ -313,6 +320,11 @@ class Board {
      * @brief Piece Square table for this board in its current state.
      */
     PSquareTable _pst;
+
+    /**
+     * @brief Halfmove clock, used to determine draws by the 50 move rule
+     */
+    int _halfmoveClock;
 
     /**
      * @name Castling right booleans.

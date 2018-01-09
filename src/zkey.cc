@@ -152,3 +152,7 @@ void ZKey::_flipQsCastle(Color color) {
 void ZKey::flipActivePlayer() {
   _key ^= WHITE_TO_MOVE_KEY;
 }
+
+bool ZKey::operator==(const ZKey& other) {
+  return other.getValue() == _key;
+}

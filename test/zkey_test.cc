@@ -87,5 +87,22 @@ TEST_CASE("Zobrist hashing works properly") {
 
       REQUIRE(initValue != key.getValue());
     }
+
+    SECTION("std::find finds keys in a vector using the == operator") {
+      board.setToStartPos();
+      std::vector<ZKey> keys;
+
+      ZKey startPosKey = board.getZKey();
+      keys.push_back(startPosKey);
+      
+      Move b2c4(b2, c4, KNIGHT);
+      board.doMove(b2c4);
+
+      ZKey b2c4Key = board.getZKey();
+      keys.push_back(b2c4Key);
+
+      REQUIRE(std::find(keys.begin(), keys.end(), startPosKey) != keys.end());
+      REQUIRE(std::find(keys.begin(), keys.end(), b2c4Key) != keys.end());
+    }
   }
 }
