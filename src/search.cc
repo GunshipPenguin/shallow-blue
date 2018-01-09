@@ -15,7 +15,7 @@
 Search::Search(const Board& board, Limits limits, bool logUci) : 
   _orderingInfo(OrderingInfo(const_cast<TranspTable*>(&_tt))),
   _limits(limits),
-  _board(board),
+  _initialBoard(board),
   _logUci(logUci),
   _stop(false),
   _limitCheckCount(0),
@@ -27,8 +27,8 @@ Search::Search(const Board& board, Limits limits, bool logUci) :
   } else if (_limits.depth != 0) { // Depth search
     _searchDepth = _limits.depth;
     _timeAllocated = INF;
-  } else if (_limits.time[_board.getActivePlayer()] != 0) { // Time search
-    int timeRemaining = _limits.time[_board.getActivePlayer()];
+  } else if (_limits.time[_initialBoard.getActivePlayer()] != 0) { // Time search
+    int timeRemaining = _limits.time[_initialBoard.getActivePlayer()];
 
     // Divide up the remaining time (If movestogo not specified we are in sudden death)
     if(_limits.movesToGo == 0) {
@@ -40,7 +40,7 @@ Search::Search(const Board& board, Limits limits, bool logUci) :
     }
 
     // Use all of the increment to think
-    _timeAllocated += _limits.increment[_board.getActivePlayer()];
+    _timeAllocated += _limits.increment[_initialBoard.getActivePlayer()];
     
     // Depth is infinity in a timed search (ends when time runs out)
     _searchDepth = MAX_SEARCH_DEPTH;
@@ -54,7 +54,7 @@ void Search::iterDeep() {
   _start = std::chrono::steady_clock::now();
 
   for (int currDepth=1;currDepth<=_searchDepth;currDepth++) {
-    _rootMax(_board, currDepth);
+    _rootMax(_initialBoard, currDepth);
 
     int elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-_start).count();
 
@@ -74,7 +74,7 @@ void Search::iterDeep() {
 
 MoveList Search::_getPv(int length) {
   MoveList pv;
-  Board currBoard = _board;
+  Board currBoard = _initialBoard;
   const TranspTableEntry* currEntry;
   int currLength = 0;
 
@@ -279,7 +279,7 @@ int Search::_negaMax(const Board& board, int depth, int alpha, int beta) {
       // Add this move as a new killer move and update history if move is quiet
       _orderingInfo.updateKillers(_orderingInfo.getPly(), move);
       if (!(move.getFlags() & Move::CAPTURE)) {
-        _orderingInfo.incrementHistory(_board.getActivePlayer(), move.getFrom(), move.getTo(), depth);
+        _orderingInfo.incrementHistory(board.getActivePlayer(), move.getFrom(), move.getTo(), depth);
       }
 
       // Add a new tt entry for this node

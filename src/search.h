@@ -124,7 +124,7 @@ private:
   /**
    * @brief Initial board being used in this search.
    */
-  Board _board;
+  Board _initialBoard;
 
   /**
    * @brief True if UCI will be logged to standard output during the search.
