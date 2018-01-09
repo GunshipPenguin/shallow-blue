@@ -327,13 +327,16 @@ class Board {
     int _halfmoveClock;
 
     /**
-     * @name Castling right booleans.
+     * @name Castling rights
+     * 
+     * Stored as 4 bits:
+     * - Bit 0 - White kingside
+     * - Bit 1 - White queenside
+     * - Bit 2 - Black kingside
+     * - Bit 3 - Black queenside
      * @{
      */
-    bool _whiteCanCastleKs = false;
-    bool _whiteCanCastleQs = false;
-    bool _blackCanCastleKs = false;
-    bool _blackCanCastleQs = false;
+    unsigned char _castlingRights;
     /**@}*/
 
     /**

@@ -96,7 +96,7 @@ int Board::getHalfmoveClock() const {
 }
 
 bool Board::whiteCanCastleKs() const {
-  if (!_whiteCanCastleKs) {
+  if (!whiteKsCastlingRight()) {
     return false;
   }
 
@@ -108,7 +108,7 @@ bool Board::whiteCanCastleKs() const {
 }
 
 bool Board::whiteCanCastleQs() const {
-  if (!_whiteCanCastleQs) {
+  if (!whiteQsCastlingRight()) {
     return false;
   }
 
@@ -120,7 +120,7 @@ bool Board::whiteCanCastleQs() const {
 }
 
 bool Board::blackCanCastleKs() const {
-  if (!_blackCanCastleKs) {
+  if (!blackKsCastlingRight()) {
     return false;
   }
 
@@ -132,7 +132,7 @@ bool Board::blackCanCastleKs() const {
 }
 
 bool Board::blackCanCastleQs() const {
-  if (!_blackCanCastleQs) {
+  if (!blackQsCastlingRight()) {
     return false;
   }
 
@@ -144,19 +144,19 @@ bool Board::blackCanCastleQs() const {
 }
 
 bool Board::whiteKsCastlingRight() const {
-  return _whiteCanCastleKs;
+  return _castlingRights & 0x1;
 }
 
 bool Board::whiteQsCastlingRight() const {
-  return _whiteCanCastleQs;
+  return _castlingRights & 0x2;
 }
 
 bool Board::blackKsCastlingRight() const {
-  return _blackCanCastleKs;
+  return _castlingRights & 0x4;
 }
 
 bool Board::blackQsCastlingRight() const {
-  return _blackCanCastleQs;
+  return _castlingRights & 0x8;
 }
 
 std::string Board::getStringRep() const {
@@ -288,21 +288,16 @@ void Board::setToFen(std::string fenString) {
   // Castling availability
   fenStream >> token;
 
-  _whiteCanCastleKs = false, _whiteCanCastleQs = false,
-    _blackCanCastleKs = false, _blackCanCastleQs = false;
+  _castlingRights = 0;
   for (auto currChar : token) {
     switch(currChar) {
-      case 'K':
-        _whiteCanCastleKs = true;
+      case 'K': _castlingRights |= 0x01;
         break;
-      case 'Q':
-        _whiteCanCastleQs = true;
+      case 'Q': _castlingRights |= 0x02;
         break;
-      case 'k':
-        _blackCanCastleKs = true;
+      case 'k': _castlingRights |= 0x04;
         break;
-      case 'q':
-        _blackCanCastleQs = true;
+      case 'q': _castlingRights |= 0x08;
         break;
     }
   }
@@ -513,38 +508,35 @@ void Board::_updateCastlingRightsForMove(Move move) {
   if (flags & Move::CAPTURE) {
     // Update castling rights if a rook was captured
     switch(move.getTo()) {
-      case a1: _whiteCanCastleQs = false;
+      case a1: _castlingRights &= ~0x2;
         break;
-      case h1: _whiteCanCastleKs = false;
+      case h1: _castlingRights &= ~0x1;
         break;
-      case a8: _blackCanCastleQs = false;
+      case a8: _castlingRights &= ~0x8;
         break;
-      case h8: _blackCanCastleKs = false;
+      case h8: _castlingRights &= ~0x4;
         break;
     }
   }
 
   // Update castling flags if rooks or kings have moved
   switch(move.getFrom()) {
-    case e1:
-      _whiteCanCastleKs = false;
-      _whiteCanCastleQs = false;
+    case e1: _castlingRights &= ~0x3;
       break;
-    case e8:
-      _blackCanCastleKs = false;
-      _blackCanCastleQs = false;
+    case e8: _castlingRights &= ~0xC;
       break;
-    case a1: _whiteCanCastleQs = false;
+    case a1: _castlingRights &= ~0x2;
       break;
-    case h1: _whiteCanCastleKs = false;
+    case h1: _castlingRights &= ~0x1;
       break;
-    case a8: _blackCanCastleQs = false;
+    case a8: _castlingRights &= ~0x8;
       break;
-    case h8: _blackCanCastleKs = false;
+    case h8: _castlingRights &= ~0x4;
       break;
   }
 
-  _zKey.updateCastlingRights(_whiteCanCastleKs, _whiteCanCastleQs, _blackCanCastleKs, _blackCanCastleQs);
+  _zKey.updateCastlingRights(whiteKsCastlingRight(),
+      whiteQsCastlingRight(), blackKsCastlingRight(), blackQsCastlingRight());
 }
 
 void Board::setToStartPos() {
