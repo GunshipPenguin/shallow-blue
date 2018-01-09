@@ -36,6 +36,7 @@ namespace {
 
   void uciNewGame(){
     board.setToStartPos();
+    positionHistory.clear();
   }
 
   void setPosition(std::istringstream& is) {
