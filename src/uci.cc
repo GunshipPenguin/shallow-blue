@@ -29,7 +29,7 @@ namespace {
   }
 
   void initOptions() {
-    optionsMap["OwnBook"] = Option(false, true);
+    optionsMap["OwnBook"] = Option(false);
     optionsMap["BookPath"] = Option("book.bin", &loadBook);
   }
 

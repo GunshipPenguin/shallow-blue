@@ -26,7 +26,7 @@ Option::Option(int value, int min, int max, OnChange onChange) :
   _max(max),
   _onChange(onChange) {}
 
-Option::Option(bool value, bool a, OnChange onChange) :
+Option::Option(bool value, OnChange onChange) :
   _value(value ? "true" : "false"),
   _type("check"),
   _defaultValue(value ? "true" : "false"),
