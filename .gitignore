@@ -2,3 +2,5 @@ shallowblue
 shallowbluetest
 obj
 doc
+*.bin
+.vscode
