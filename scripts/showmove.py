@@ -1,29 +1,30 @@
-'''
+"""
 Showmove.py
 
-Given the value of a move's internal _move variable, print the move and all
-it's associated info.
-'''
+Given the value of a move"s internal _move variable, print the move and all
+it"s associated info.
+"""
 import sys
 
-FILES = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
+FILES = ["a", "b", "c", "d", "e", "f", "g", "h"]
 FLAGS = {
-    1<<0: 'NULL_MOVE',
-    1<<1: 'CAPTURE',
-    1<<2: 'DOUBLE_PAWN_PUSH',
-    1<<3: 'KSIDE_CASTLE',
-    1<<4: 'QSIDE_CASTLE',
-    1<<5: 'EN_PASSANT',
-    1<<6: 'PROMOTION'
+    1 << 0: "NULL_MOVE",
+    1 << 1: "CAPTURE",
+    1 << 2: "DOUBLE_PAWN_PUSH",
+    1 << 3: "KSIDE_CASTLE",
+    1 << 4: "QSIDE_CASTLE",
+    1 << 5: "EN_PASSANT",
+    1 << 6: "PROMOTION"
 }
 PIECE_TYPES = {
-    0: 'PAWN',
-    1: 'ROOK',
-    2: 'KNIGHT',
-    3: 'BISHOP',
-    4: 'QUEEN',
-    5: 'KING'
+    0: "PAWN",
+    1: "ROOK",
+    2: "KNIGHT",
+    3: "BISHOP",
+    4: "QUEEN",
+    5: "KING"
 }
+
 
 def print_move(moveStr):
     move = int(moveStr, 10)
@@ -42,7 +43,8 @@ def print_move(moveStr):
 
     # From square
     from_square_index = (move >> 9) & 0x3f
-    from_square = FILES[from_square_index % 8] + str((from_square_index // 8) + 1)
+    from_square = FILES[from_square_index %
+                        8] + str((from_square_index // 8) + 1)
     print "from: " + from_square + " (" + str(from_square_index) + ")"
 
     # To square
@@ -56,7 +58,8 @@ def print_move(moveStr):
     for flag in FLAGS:
         if flag_section & flag:
             print FLAGS[flag],
-    print ''
+    print ""
+
 
 if len(sys.argv) == 1:
     for line in sys.stdin.readlines():
