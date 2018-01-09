@@ -14,8 +14,8 @@ int main() {
   AttackTable::init();
   Eval::init();
 
-  Uci uci;
-  uci.start();
+  Uci::init();
+  Uci::start();
 
   return 0;
 }

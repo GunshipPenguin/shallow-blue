@@ -33,20 +33,27 @@ A UCI chess engine written in C++11
     - [History heuristic](https://chessprogramming.wikispaces.com/History+Heuristic)
   - Other
     - [Zobrist hashing](https://en.wikipedia.org/wiki/Zobrist_hashing) / [Transposition table](https://en.wikipedia.org/wiki/Transposition_table)
-
-    
+    - [Opening book support](https://chessprogramming.wikispaces.com/Opening+Book) (PolyGlot format)
 
 ## Building
 
-`make`
+To build on *nix:
+
+```
+make
+```
 
 You can build with debugging symbols and no optimizations using:
 
-`make debug`
+```
+make debug
+```
 
 If you have Mingw-w64 installed, you can cross compile for Windows on Linux with:
 
-`./build_windows.sh`
+```
+./build_windows.sh
+```
 
 ## Tests
 
@@ -54,18 +61,37 @@ If you have Mingw-w64 installed, you can cross compile for Windows on Linux with
 
 To build and run the unit tests, use:
 
-`make test`
+```
+make test
+```
 
 To build and run the unit tests, skipping perft tests (these take a while to run), use:
 
-`make test-noperft`
+```
+make test-noperft
+```
 
 ## Documentation
 
-Shallow Blue's code is extensively documented with Doxygen. To generate HTML
-documentation use:
+Shallow Blue's code is extensively documented with Doxygen. 
 
-`doxygen`
+To generate HTML documentation use:
+
+```
+doxygen
+```
+
+## Opening Books
+
+Shallow Blue supports PolyGlot formatted (`.bin`) opening books. To use an opening book, the `OwnBook`
+and `BookPath` UCI options must be set to `true` and the path to the opening book file respectively.
+
+These options can be set from your chess GUI or the UCI interface as follows:
+
+```
+setoption name OwnBook value true
+setoption name BookPath value /path/to/book.bin
+```
 
 ## Implemented non UCI Commands
 
@@ -82,7 +108,6 @@ These commands can be useful for debugging.
 
 - General
   - Avoid draws by repetition / 50 move rule
-  - Opening book support
   - Magic bitboards
   - Unmake move function
 - Search
