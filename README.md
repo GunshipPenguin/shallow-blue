@@ -83,8 +83,8 @@ doxygen
 
 ## Opening Books
 
-Shallow Blue has support for PolyGlot formatted (`.bin`) opening books. To use opening books, the `OwnBook`
-and `BookPath` UCI options must be set to `true` and the path to the PolyGlot opening book file respectively.
+Shallow Blue supports PolyGlot formatted (`.bin`) opening books. To use an opening book, the `OwnBook`
+and `BookPath` UCI options must be set to `true` and the path to the opening book file respectively.
 
 These options can be set from your chess GUI or the UCI interface as follows:
 
