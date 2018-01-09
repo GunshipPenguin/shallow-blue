@@ -261,7 +261,7 @@ Move Book::getMove(const Board& board) const {
   auto lookup = _content.find(hashBoard(board));
   if (lookup != _content.end()) {
     // Pick move based on weighted random choice
-    int weightSum;
+    int weightSum = 0;
     for (auto moveWeightPair : lookup->second) weightSum += moveWeightPair.second;
 
     std::random_device rd;
@@ -380,6 +380,7 @@ Move Book::decodeMove(const Board& board, unsigned short move) {
         break;
       case 4: decodedPromotionPiece = QUEEN;
         break;
+      default: throw new std::logic_error("Invalid PolyGlot promotion piece");
     }
 
     decodedMove.setFlag(Move::PROMOTION);
