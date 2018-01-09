@@ -1,6 +1,7 @@
 #include "book.h"
 #include "bitutils.h"
 #include <fstream>
+#include <cmath>
 #include <istream>
 #include <iostream>
 #include <random>
@@ -355,6 +356,16 @@ Move Book::decodeMove(const Board& board, unsigned short move) {
     PieceType capturedPiece = board.getPieceAtSquare(board.getInactivePlayer(), toSquare);
     decodedMove.setFlag(Move::CAPTURE);
     decodedMove.setCapturedPieceType(capturedPiece);
+  }
+
+  // En passants
+  if (board.getEnPassant() & (ONE << toSquare)) {
+    decodedMove.setFlag(Move::EN_PASSANT);
+  }
+
+  // Double pawn pushes
+  if (decodedMove.getPieceType() == PAWN && std::abs(fromSquare - toSquare) == 16) {
+    decodedMove.setFlag(Move::DOUBLE_PAWN_PUSH);
   }
   
   // Promotion info
