@@ -291,13 +291,13 @@ void Board::setToFen(std::string fenString) {
   _castlingRights = 0;
   for (auto currChar : token) {
     switch(currChar) {
-      case 'K': _castlingRights |= 0x01;
+      case 'K': _castlingRights |= 0x1;
         break;
-      case 'Q': _castlingRights |= 0x02;
+      case 'Q': _castlingRights |= 0x2;
         break;
-      case 'k': _castlingRights |= 0x04;
+      case 'k': _castlingRights |= 0x4;
         break;
-      case 'q': _castlingRights |= 0x08;
+      case 'q': _castlingRights |= 0x8;
         break;
     }
   }
