@@ -239,33 +239,31 @@ void Board::setToFen(std::string fenString) {
 
   U64 boardPos = 56; // Fen string starts at a8 = index 56
   fenStream >> token;
-
-  U64 one64 = ONE;
   for (auto currChar : token) {
     switch(currChar) {
-      case 'p': _pieces[BLACK][PAWN] |= (one64 << boardPos++);
+      case 'p': _pieces[BLACK][PAWN] |= (ONE << boardPos++);
         break;
-      case 'r': _pieces[BLACK][ROOK] |= (one64 << boardPos++);
+      case 'r': _pieces[BLACK][ROOK] |= (ONE << boardPos++);
         break;
-      case 'n': _pieces[BLACK][KNIGHT] |= (one64 << boardPos++);
+      case 'n': _pieces[BLACK][KNIGHT] |= (ONE << boardPos++);
         break;
-      case 'b': _pieces[BLACK][BISHOP] |= (one64 << boardPos++);
+      case 'b': _pieces[BLACK][BISHOP] |= (ONE << boardPos++);
         break;
-      case 'q': _pieces[BLACK][QUEEN] |= (one64 << boardPos++);
+      case 'q': _pieces[BLACK][QUEEN] |= (ONE << boardPos++);
         break;
-      case 'k': _pieces[BLACK][KING] |= (one64 << boardPos++);
+      case 'k': _pieces[BLACK][KING] |= (ONE << boardPos++);
         break;
-      case 'P': _pieces[WHITE][PAWN] |= (one64 << boardPos++);
+      case 'P': _pieces[WHITE][PAWN] |= (ONE << boardPos++);
         break;
-      case 'R': _pieces[WHITE][ROOK] |= (one64 << boardPos++);
+      case 'R': _pieces[WHITE][ROOK] |= (ONE << boardPos++);
         break;
-      case 'N': _pieces[WHITE][KNIGHT] |= (one64 << boardPos++);
+      case 'N': _pieces[WHITE][KNIGHT] |= (ONE << boardPos++);
         break;
-      case 'B': _pieces[WHITE][BISHOP] |= (one64 << boardPos++);
+      case 'B': _pieces[WHITE][BISHOP] |= (ONE << boardPos++);
         break;
-      case 'Q': _pieces[WHITE][QUEEN] |= (one64 << boardPos++);
+      case 'Q': _pieces[WHITE][QUEEN] |= (ONE << boardPos++);
         break;
-      case 'K': _pieces[WHITE][KING] |= (one64 << boardPos++);
+      case 'K': _pieces[WHITE][KING] |= (ONE << boardPos++);
         break;
       case '/': boardPos -= 16; // Go down one rank
         break;
@@ -280,7 +278,6 @@ void Board::setToFen(std::string fenString) {
 
   // Castling availability
   fenStream >> token;
-
   _castlingRights = 0;
   for (auto currChar : token) {
     switch(currChar) {
@@ -296,14 +293,8 @@ void Board::setToFen(std::string fenString) {
   }
 
   // En passant target square
-  std::string enPasSquare;
-  fenStream >> enPasSquare;
-  if (enPasSquare == "-") {
-    _enPassant = 0;
-  } else {
-    int enPasIndex = Move::notationToIndex(enPasSquare);
-    _enPassant = static_cast<U64>(1) << enPasIndex;
-  }
+  fenStream >> token;
+  _enPassant = token == "-" ? ZERO : ONE << Move::notationToIndex(token);
 
   // Halfmove clock
   fenStream >> _halfmoveClock;
