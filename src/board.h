@@ -93,53 +93,29 @@ class Board {
      */
     bool blackCanCastleQs() const;
 
-    /**
-     * @brief Returns true if white has kingside castling rights, false otherwise.
+   /**
+     * @name Methods to query castling rights
+     * @brief Returns true/false if the given color has the castling right
      *
-     * This method returning true does not imply that white can castle kingside,
-     * A return of true from this method means that white has the right to castle
-     * kingside provided it is a legal move (ie. king and kingside rook have
-     * not moved)
-     *
-     * @return True if white has a kingside castling right, false otherwise.
+     * These methods return true if the provided color has the given castling
+     * right. Note that these return values represent potential future
+     * castling and don't necessarily indicate that white/black can castle
+     * immediately.
+     * 
+     * For example, getKsCastlingRight(WHITE) returning true implies that
+     * white has the right to castle given that white is not in check,
+     * there are no pieces between the white king and white kingside rook
+     * and none of the squares between the white king and white kingside
+     * rook are under attack.
+     * 
+     * Phrased another way, getKsCastlingRight(WHITE) returning true means
+     * that neither the white king nor the white kingside rook have yet moved.
+     * 
+     * @{
      */
-    bool whiteKsCastlingRight() const;
-
-    /**
-     * @brief Returns true if white has queenside castling rights, false otherwise.
-     *
-     * This method returning true does not imply that white can castle queenside,
-     * A return of true from this method means that white has the right to castle
-     * queenside provided it is a legal move (ie. king and queenside rook have
-     * not moved)
-     *
-     * @return True if white has a queenside castling right, false otherwise.
-     */
-    bool whiteQsCastlingRight() const;
-
-    /**
-     * @brief Returns true if black has kingside castling rights, false otherwise.
-     *
-     * This method returning true does not imply that black can castle kingside,
-     * A return of true from this method means that black has the right to castle
-     * kingside provided it is a legal move (ie. king and kingside rook have
-     * not moved)
-     *
-     * @return True if white has a queenside castling right, false otherwise.
-     */
-    bool blackKsCastlingRight() const;
-
-    /**
-     * @brief Returns true if black has queenside castling rights, false otherwise.
-     *
-     * This method returning true does not imply that black can castle queenside,
-     * A return of true from this method means that black has the right to castle
-     * queenside provided it is a legal move (ie. king and queenside rook have
-     * not moved)
-     *
-     * @return True if white has a queenside castling right, false otherwise.
-     */
-    bool blackQsCastlingRight() const;
+    bool getKsCastlingRights(Color) const;
+    bool getQsCastlingRights(Color) const;
+    /**@}*/
 
     /**
      * @brief Returns true if the given color is in check, false otherwise.

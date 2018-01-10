@@ -79,19 +79,19 @@ ZKey::ZKey(const Board& board) {
 
   _whiteKs = false, _whiteQs = false, _blackKs = false, _blackQs = false;
   // Add castles
-  if (board.whiteKsCastlingRight()) {
+  if (board.getKsCastlingRights(WHITE)) {
     _whiteKs = true;
     _flipKsCastle(WHITE);
   }
-  if (board.whiteQsCastlingRight()) {
+  if (board.getQsCastlingRights(WHITE)) {
     _whiteQs = true;
     _flipQsCastle(WHITE);
   }
-  if (board.blackKsCastlingRight()) {
+  if (board.getKsCastlingRights(BLACK)) {
     _blackKs = true;
     _flipKsCastle(BLACK);
   }
-  if (board.blackQsCastlingRight()) {
+  if (board.getQsCastlingRights(BLACK)) {
     _blackQs = true;
     _flipQsCastle(BLACK);
   }

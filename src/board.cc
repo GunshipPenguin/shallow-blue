@@ -96,7 +96,7 @@ int Board::getHalfmoveClock() const {
 }
 
 bool Board::whiteCanCastleKs() const {
-  if (!whiteKsCastlingRight()) {
+  if (!getKsCastlingRights(WHITE)) {
     return false;
   }
 
@@ -108,7 +108,7 @@ bool Board::whiteCanCastleKs() const {
 }
 
 bool Board::whiteCanCastleQs() const {
-  if (!whiteQsCastlingRight()) {
+  if (!getQsCastlingRights(WHITE)) {
     return false;
   }
 
@@ -120,7 +120,7 @@ bool Board::whiteCanCastleQs() const {
 }
 
 bool Board::blackCanCastleKs() const {
-  if (!blackKsCastlingRight()) {
+  if (!getKsCastlingRights(BLACK)) {
     return false;
   }
 
@@ -132,7 +132,7 @@ bool Board::blackCanCastleKs() const {
 }
 
 bool Board::blackCanCastleQs() const {
-  if (!blackQsCastlingRight()) {
+  if (!getQsCastlingRights(BLACK)) {
     return false;
   }
 
@@ -143,20 +143,18 @@ bool Board::blackCanCastleQs() const {
   return !colorIsInCheck(BLACK) && !squaresOccupied && !squaresAttacked;
 }
 
-bool Board::whiteKsCastlingRight() const {
-  return _castlingRights & 0x1;
+bool Board::getKsCastlingRights(Color color) const {
+  switch (color) {
+    case WHITE: return _castlingRights & 0x1;
+    default: return _castlingRights & 0x4;
+  }
 }
 
-bool Board::whiteQsCastlingRight() const {
-  return _castlingRights & 0x2;
-}
-
-bool Board::blackKsCastlingRight() const {
-  return _castlingRights & 0x4;
-}
-
-bool Board::blackQsCastlingRight() const {
-  return _castlingRights & 0x8;
+bool Board::getQsCastlingRights(Color color) const {
+  switch (color) {
+    case WHITE: return _castlingRights & 0x2;
+    default: return _castlingRights & 0x8;
+  }
 }
 
 std::string Board::getStringRep() const {
@@ -535,8 +533,8 @@ void Board::_updateCastlingRightsForMove(Move move) {
       break;
   }
 
-  _zKey.updateCastlingRights(whiteKsCastlingRight(),
-      whiteQsCastlingRight(), blackKsCastlingRight(), blackQsCastlingRight());
+  _zKey.updateCastlingRights(getKsCastlingRights(WHITE),
+      getQsCastlingRights(WHITE), getKsCastlingRights(BLACK), getQsCastlingRights(BLACK));
 }
 
 void Board::setToStartPos() {
