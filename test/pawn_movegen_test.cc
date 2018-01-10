@@ -1,12 +1,12 @@
 #include "catch.hpp"
 #include "movegen.h"
 #include "board.h"
-#include "attacktable.h"
+#include "attacks.h"
 
 TEST_CASE("Pawn move generation is correct") {
     Board board;
     MoveGen movegen;
-    AttackTable::init();
+    Attacks::init();
 
     SECTION("White pawn moves are correct for a piece on rank 2") {
       board.setToFen("8/8/8/8/8/8/4P3/8 w - -");

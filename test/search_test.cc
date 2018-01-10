@@ -1,15 +1,13 @@
 #include "search.h"
 #include "catch.hpp"
-#include "raytable.h"
-#include "attacktable.h"
+#include "attacks.h"
 #include "board.h"
 #include "movepicker.h"
 
 TEST_CASE("Search works as expected") {
   PSquareTable::init();
   ZKey::init();
-  RayTable::init();
-  AttackTable::init();
+  Attacks::init();
   MovePicker::init();
 
   Board board;

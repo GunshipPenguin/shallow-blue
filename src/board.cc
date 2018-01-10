@@ -1,9 +1,8 @@
 #include "board.h"
 #include "move.h"
-#include "raytable.h"
 #include "defs.h"
 #include "bitutils.h"
-#include "attacktable.h"
+#include "attacks.h"
 #include <string>
 #include <sstream>
 #include <iostream>
@@ -484,9 +483,9 @@ void Board::doMove(Move move) {
 
 bool Board::_squareUnderAttack(Color color, int squareIndex) const {
   // Check for pawn, knight and king attacks
-  if (AttackTable::getAttacks(PAWN, squareIndex, getOppositeColor(color)) & getPieces(color, PAWN)) return true;
-  if (AttackTable::getAttacks(KNIGHT, squareIndex) & getPieces(color, KNIGHT)) return true;
-  if (AttackTable::getAttacks(KING, squareIndex) & getPieces(color, KING)) return true;
+  if (Attacks::getNonSlidingAttacks(PAWN, squareIndex, getOppositeColor(color)) & getPieces(color, PAWN)) return true;
+  if (Attacks::getNonSlidingAttacks(KNIGHT, squareIndex) & getPieces(color, KNIGHT)) return true;
+  if (Attacks::getNonSlidingAttacks(KING, squareIndex) & getPieces(color, KING)) return true;
 
   // Check for bishop/queen attacks
   U64 bishopsQueens = getPieces(color, BISHOP) | getPieces(color, QUEEN);
@@ -542,48 +541,31 @@ void Board::setToStartPos() {
 }
 
 U64 Board::_getWhitePawnAttacksForSquare(int square) const {
-  U64 attacks = AttackTable::getAttacks(PAWN, square, WHITE);
+  return Attacks::getNonSlidingAttacks(PAWN, square, WHITE);
 
-  return attacks;
 }
 
 U64 Board::_getBlackPawnAttacksForSquare(int square) const {
-  U64 attacks = AttackTable::getAttacks(PAWN, square, BLACK);
-
-  return attacks;
+  return Attacks::getNonSlidingAttacks(PAWN, square, BLACK);
 }
 
 
 U64 Board::_getKnightAttacksForSquare(int square, U64 own) const {
-  U64 moves = AttackTable::getAttacks(KNIGHT, square);
-
-  return moves & (~own);
+  return Attacks::getNonSlidingAttacks(KNIGHT, square) & ~own;
 }
 
 U64 Board::_getKingAttacksForSquare(int square, U64 own) const {
-  U64 moves = AttackTable::getAttacks(KING, square);
-
-  return moves & (~own);
+  return Attacks::getNonSlidingAttacks(KING, square) & ~own;
 }
 
 U64 Board::_getBishopAttacksForSquare(int square, U64 own) const {
-  U64 moves = RayTable::getPositiveAttacks(RayTable::NORTH_WEST, square, _occupied) |
-    RayTable::getPositiveAttacks(RayTable::NORTH_EAST, square, _occupied) |
-    RayTable::getNegativeAttacks(RayTable::SOUTH_WEST, square, _occupied) |
-    RayTable::getNegativeAttacks(RayTable::SOUTH_EAST, square, _occupied);
-
-  return moves & (~own);
+  return Attacks::getSlidingAttacks(BISHOP, square, _occupied) & ~own;
 }
 
 U64 Board::_getRookAttacksForSquare(int square, U64 own) const {
-  U64 moves = RayTable::getPositiveAttacks(RayTable::NORTH, square, _occupied) |
-    RayTable::getPositiveAttacks(RayTable::EAST, square, _occupied) |
-    RayTable::getNegativeAttacks(RayTable::SOUTH, square, _occupied) |
-    RayTable::getNegativeAttacks(RayTable::WEST, square, _occupied);
-
-  return moves & (~own);
+  return Attacks::getSlidingAttacks(ROOK, square, _occupied) & ~own;
 }
 
 U64 Board::_getQueenAttacksForSquare(int square, U64 own) const {
-  return _getBishopAttacksForSquare(square, own) | _getRookAttacksForSquare(square, own);
+  return Attacks::getSlidingAttacks(QUEEN, square, _occupied) & ~own;
 }

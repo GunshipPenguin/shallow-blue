@@ -2,7 +2,6 @@
 #define BOARD_H
 
 #include "defs.h"
-#include "raytable.h"
 #include "psquaretable.h"
 #include "zkey.h"
 #include "move.h"
