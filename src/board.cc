@@ -199,29 +199,17 @@ std::string Board::getStringRep() const {
 }
 
 void Board::_clearBitBoards() {
-  _pieces[WHITE][PAWN] = ZERO;
-  _pieces[BLACK][PAWN] = ZERO;
+  for (Color color: {WHITE, BLACK}) {
+    for (PieceType pieceType : {PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING}) {
+      _pieces[color][pieceType] = ZERO;
+    }
 
-  _pieces[WHITE][ROOK] = ZERO;
-  _pieces[BLACK][ROOK] = ZERO;
+    _allPieces[WHITE] = ZERO;
+    _allPieces[BLACK] = ZERO;
 
-  _pieces[WHITE][KNIGHT] = ZERO;
-  _pieces[BLACK][KNIGHT] = ZERO;
-
-  _pieces[WHITE][BISHOP] = ZERO;
-  _pieces[BLACK][BISHOP] = ZERO;
-
-  _pieces[WHITE][QUEEN] = ZERO;
-  _pieces[BLACK][QUEEN] = ZERO;
-
-  _pieces[WHITE][KING] = ZERO;
-  _pieces[BLACK][KING] = ZERO;
-
-  _allPieces[WHITE] = ZERO;
-  _allPieces[BLACK] = ZERO;
-
-  _attackable[WHITE] = ZERO;
-  _attackable[BLACK] = ZERO;
+    _attackable[WHITE] = ZERO;
+    _attackable[BLACK] = ZERO;
+  }
 
   _enPassant = ZERO;
 
