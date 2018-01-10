@@ -3,7 +3,7 @@
 #include "eval.h"
 #include "movepicker.h"
 #include "generalmovepicker.h"
-#include "capturemovepicker.h"
+#include "qsearchmovepicker.h"
 #include <algorithm>
 #include <iostream>
 
@@ -344,7 +344,7 @@ int Search::_qSearch(const Board& board, int alpha, int beta) {
   int standPat = Eval::evaluate(board, board.getActivePlayer());
   _nodes ++;
 
-  CaptureMovePicker movePicker(const_cast<MoveList*>(&legalMoves));
+  QSearchMovePicker movePicker(const_cast<MoveList*>(&legalMoves));
 
   // If node is quiet, just return eval
   if (!movePicker.hasNext()) {

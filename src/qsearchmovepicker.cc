@@ -1,7 +1,8 @@
 #include "movepicker.h"
-#include "capturemovepicker.h"
+#include "qsearchmovepicker.h"
+#include "eval.h"
 
-CaptureMovePicker::CaptureMovePicker(MoveList* moveList) : MovePicker(moveList) {
+QSearchMovePicker::QSearchMovePicker(MoveList* moveList) : MovePicker(moveList) {
   _currHead = 0;
 
   // Count captures
@@ -15,19 +16,21 @@ CaptureMovePicker::CaptureMovePicker(MoveList* moveList) : MovePicker(moveList) 
   _scoreMoves();
 }
 
-void CaptureMovePicker::_scoreMoves() {
+void QSearchMovePicker::_scoreMoves() {
   for (auto &move : *_moves) {
     if (move.getFlags() & Move::CAPTURE) {
-      move.setValue(_mvvLvaTable[move.getCapturedPieceType()][move.getPieceType()]);
+      move.setValue(CAPTURE_BONUS + _mvvLvaTable[move.getCapturedPieceType()][move.getPieceType()]);
+    } else if (move.getFlags() & Move::PROMOTION) {
+      move.setValue(PROMOTION_BONUS + Eval::getMaterialValue(move.getPromotionPieceType()));
     }
   }
 }
 
-bool CaptureMovePicker::hasNext() const {
+bool QSearchMovePicker::hasNext() const {
   return _currHead < _numCaptures;
 }
 
-Move CaptureMovePicker::getNext() {
+Move QSearchMovePicker::getNext() {
   size_t bestIndex;
   int bestScore = -INF;
 
@@ -35,8 +38,8 @@ Move CaptureMovePicker::getNext() {
     Move currMove = _moves->at(i);
     int currScore = _moves->at(i).getValue();
 
-    // Disregard non captures
-    if ((currMove.getFlags() & Move::CAPTURE) && (currScore > bestScore)) {
+    // Disregard non captures and promotions
+    if ((currMove.getFlags() & (Move::CAPTURE | Move::PROMOTION)) && (currScore > bestScore)) {
       bestScore = currScore;
       bestIndex = i;
     }
