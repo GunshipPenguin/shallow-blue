@@ -32,7 +32,7 @@ U64 Attacks::getSlidingAttacks(PieceType pieceType, int square, U64 blockers) {
     case ROOK: return detail::_getRookAttacks(square, blockers);
     case QUEEN: return detail::_getBishopAttacks(square, blockers) |
         detail::_getRookAttacks(square, blockers);
-    default: throw new std::logic_error("Not a sliding piece");
+    default: throw std::logic_error("Not a sliding piece");
   }
 }
 
