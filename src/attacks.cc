@@ -3,11 +3,10 @@
 #include <cstring>
 #include <stdexcept>
 
-U64 Attacks::detail::NON_SLIDING_ATTACKS[2][6][64];
-U64 Attacks::detail::RAYS[8][64];
+U64 Attacks::detail::NON_SLIDING_ATTACKS[2][6][64] = {{{0}}};
+U64 Attacks::detail::RAYS[8][64] = {{0}};
 
 void Attacks::init() {
-  detail::_zeroTables();
   detail::_initPawnAttacks();
   detail::_initKnightAttacks();
   detail::_initKingAttacks();
@@ -74,10 +73,6 @@ U64 Attacks::detail::_getNegativeRayAttack(Attacks::detail::Dir dir,
   }
 
   return attacks;
-}
-
-void Attacks::detail::_zeroTables() {
-  std::memset(NON_SLIDING_ATTACKS, ZERO, sizeof(NON_SLIDING_ATTACKS));
 }
 
 void Attacks::detail::_initPawnAttacks() {

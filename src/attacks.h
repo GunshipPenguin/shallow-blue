@@ -33,7 +33,6 @@ namespace Attacks {
     void _initPawnAttacks();
     void _initKnightAttacks();
     void _initKingAttacks();
-    void _zeroTables();
     /**@}*/
 
     /**
