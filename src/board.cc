@@ -1,13 +1,8 @@
 #include "board.h"
-#include "move.h"
-#include "defs.h"
 #include "bitutils.h"
 #include "attacks.h"
-#include <string>
 #include <sstream>
 #include <iostream>
-#include <string.h>
-#include <stdexcept>
 
 Board::Board() {
   setToFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");

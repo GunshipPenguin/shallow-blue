@@ -1,15 +1,7 @@
 #include "uci.h"
-#include "board.h"
-#include "defs.h"
-#include "move.h"
-#include "movegen.h"
-#include "search.h"
-#include "book.h"
 #include "version.h"
-#include "option.h"
 #include <iostream>
 #include <thread>
-#include <sstream>
 
 namespace {
   Book book;

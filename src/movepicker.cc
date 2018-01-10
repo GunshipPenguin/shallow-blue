@@ -1,6 +1,4 @@
 #include "movepicker.h"
-#include "eval.h"
-#include "defs.h"
 
 // Indexed by [victimValue][attackerValue]
 int MovePicker::_mvvLvaTable[5][6];

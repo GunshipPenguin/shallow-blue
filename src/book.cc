@@ -2,7 +2,6 @@
 #include "bitutils.h"
 #include <fstream>
 #include <cmath>
-#include <istream>
 #include <iostream>
 #include <random>
 

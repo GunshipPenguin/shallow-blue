@@ -1,6 +1,5 @@
 #include "transptable.h"
 #include <iostream>
-#include <utility>
 
 void TranspTable::set(const ZKey& key, TranspTableEntry entry) {
   auto insertResult = _table.insert(std::make_pair(key.getValue(), entry));

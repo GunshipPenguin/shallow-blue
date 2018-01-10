@@ -1,6 +1,4 @@
 #include "move.h"
-#include "defs.h"
-#include <string>
 #include <iostream>
 #include <algorithm>
 

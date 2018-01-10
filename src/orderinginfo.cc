@@ -1,6 +1,4 @@
 #include "orderinginfo.h"
-#include "defs.h"
-#include "eval.h"
 #include <cstring>
 
 OrderingInfo::OrderingInfo(const TranspTable* tt) {

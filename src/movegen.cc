@@ -1,8 +1,5 @@
 #include "movegen.h"
-#include "board.h"
 #include "eval.h"
-#include "bitutils.h"
-#include "defs.h"
 #include <iostream>
 
 MoveGen::MoveGen(const Board& board) {

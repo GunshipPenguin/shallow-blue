@@ -1,5 +1,4 @@
 #include "attacks.h"
-#include "defs.h"
 #include "bitutils.h"
 #include <cstring>
 #include <stdexcept>

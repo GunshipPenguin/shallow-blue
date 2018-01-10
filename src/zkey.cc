@@ -1,5 +1,4 @@
 #include "zkey.h"
-#include "defs.h"
 #include "board.h"
 #include "bitutils.h"
 #include <random>

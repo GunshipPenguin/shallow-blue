@@ -1,6 +1,4 @@
 #include "uci.h"
-#include "psquaretable.h"
-#include "zkey.h"
 #include "attacks.h"
 #include "movepicker.h"
 #include "eval.h"

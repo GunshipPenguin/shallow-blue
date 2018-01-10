@@ -1,8 +1,5 @@
 #include "psquaretable.h"
-#include "defs.h"
 #include "board.h"
-#include <vector>
-#include <vector>
 #include <algorithm>
 
 int PSquareTable::PIECE_VALUES[2][6][64];

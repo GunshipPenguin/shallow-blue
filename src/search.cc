@@ -1,16 +1,11 @@
 #include "defs.h"
 #include "search.h"
 #include "eval.h"
-#include "movegen.h"
-#include "transptable.h"
 #include "movepicker.h"
 #include "generalmovepicker.h"
 #include "capturemovepicker.h"
-#include <string>
 #include <algorithm>
-#include <time.h>
 #include <iostream>
-#include <chrono>
 
 Search::Search(const Board& board, Limits limits, std::vector<ZKey> positionHistory, bool logUci) :
   _positionHistory(positionHistory),

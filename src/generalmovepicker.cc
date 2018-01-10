@@ -1,7 +1,6 @@
 #include "movepicker.h"
 #include "generalmovepicker.h"
 #include "eval.h"
-#include "defs.h"
 
 GeneralMovePicker::GeneralMovePicker(const OrderingInfo* orderingInfo, const Board* board, MoveList* moveList) : MovePicker(moveList) {
   _orderingInfo = orderingInfo;
