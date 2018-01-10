@@ -1,17 +1,17 @@
 #include "catch.hpp"
-#include "capturemovepicker.h"
+#include "qsearchmovepicker.h"
 #include <iostream>
 
-TEST_CASE("CaptureMovePicker works as expected") {
+TEST_CASE("QSearchMovePicker works as expected") {
   MovePicker::init();
   Board board;
 
-  SECTION("CaptureMovePicker does not return non captures") {
+  SECTION("QSearchMovePicker does not return non captures") {
     board.setToFen("7k/8/5r2/2p5/8/P1R2n2/8/Kb6 w - -");
     MoveGen moveGen(board);
     MoveList moves = moveGen.getLegalMoves();
 
-    CaptureMovePicker movePicker(&moves);
+    QSearchMovePicker movePicker(&moves);
 
     // 3 captures for white on the test board
     for (int i=0;i<3;i++) {
@@ -23,12 +23,12 @@ TEST_CASE("CaptureMovePicker works as expected") {
     REQUIRE(!movePicker.hasNext());
   }
 
-  SECTION("CaptureMovePicker returns captures sorted by MVV/LVA") {
+  SECTION("QSearchMovePicker returns captures sorted by MVV/LVA") {
     board.setToFen("7k/1p5B/4b3/8/3N4/1R3q2/6P1/K7 w - -");
     MoveGen moveGen(board);
     MoveList moves = moveGen.getLegalMoves();
 
-    CaptureMovePicker movePicker(&moves);
+    QSearchMovePicker movePicker(&moves);
 
     // g2xf3
     REQUIRE(movePicker.hasNext());
