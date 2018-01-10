@@ -3,6 +3,7 @@
 #include "attacks.h"
 #include <sstream>
 #include <iostream>
+#include <stdexcept>
 
 Board::Board() {
   setToFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
