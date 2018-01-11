@@ -524,7 +524,6 @@ U64 Board::_getBlackPawnAttacksForSquare(int square) const {
   return Attacks::getNonSlidingAttacks(PAWN, square, BLACK);
 }
 
-
 U64 Board::_getKnightAttacksForSquare(int square, U64 own) const {
   return Attacks::getNonSlidingAttacks(KNIGHT, square) & ~own;
 }
