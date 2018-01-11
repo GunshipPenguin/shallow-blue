@@ -24,15 +24,23 @@ Search::Search(const Board& board, Limits limits, std::vector<ZKey> positionHist
     _searchDepth = _limits.depth;
     _timeAllocated = INF;
   } else if (_limits.time[_initialBoard.getActivePlayer()] != 0) { // Time search
-    int timeRemaining = _limits.time[_initialBoard.getActivePlayer()];
+    int ourTime = _limits.time[_initialBoard.getActivePlayer()];
+    int opponentTime = _limits.time[_initialBoard.getInactivePlayer()];
 
-    // Divide up the remaining time (If movestogo not specified we are in sudden death)
+    // Divide up the remaining time (If movestogo not specified we are in 
+    // sudden death)
     if(_limits.movesToGo == 0) {
-      _timeAllocated = timeRemaining / SUDDEN_DEATH_MOVESTOGO;
+      // Allocate less time for this search if our opponent's time is greater
+      // than our time by scaling movestogo by the ratio between our time
+      // and our opponent's time (ratio max forced to 2.0, min forced to 1.0)
+      double timeRatio = std::max((double) (ourTime / opponentTime), 1.0);
+
+      int movesToGo = (int) (SUDDEN_DEATH_MOVESTOGO * std::min(2.0, timeRatio));
+      _timeAllocated = ourTime / movesToGo;
     } else {
       // A small constant (3) is added to _limits.movesToGo when dividing to
       // ensure we don't go over time when movesToGo is small
-      _timeAllocated = timeRemaining / (_limits.movesToGo + 3);
+      _timeAllocated = ourTime / (_limits.movesToGo + 3);
     }
 
     // Use all of the increment to think

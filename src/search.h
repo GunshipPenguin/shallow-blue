@@ -103,7 +103,7 @@ private:
    * that the Search class uses to calculate the time allocated to a sudden
    * death search.
    */
-  static const int SUDDEN_DEATH_MOVESTOGO = 30;
+  static const int SUDDEN_DEATH_MOVESTOGO = 20;
 
   /**
    * @brief Maximum depth to search to if depth is not explicitly specified
