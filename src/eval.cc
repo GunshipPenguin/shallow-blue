@@ -21,8 +21,10 @@ void Eval::init() {
   for (int i=0;i<64;i++) {
     U64 square = ONE << i;
 
-    detail::PAWN_SHIELDS[WHITE][i] = (square << 8) | ((square << 7) & ~FILE_H) | ((square << 9) & ~FILE_A);
-    detail::PAWN_SHIELDS[BLACK][i] = (square >> 8) | ((square >> 7) & ~FILE_A) | ((square >> 9) & ~FILE_H);
+    detail::PAWN_SHIELDS[WHITE][i] = ((square << 8) | ((square << 7) & ~FILE_H) |
+        ((square << 9) & ~FILE_A)) & RANK_2;
+    detail::PAWN_SHIELDS[BLACK][i] = ((square >> 8) | ((square >> 7) & ~FILE_A) |
+        ((square >> 9) & ~FILE_H)) & RANK_7;
   }
 }
 

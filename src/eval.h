@@ -70,7 +70,7 @@ namespace Eval {
   /**
    * @brief Bonus given to a player for each pawn shielding their king
    */
-  const int KING_PAWN_SHIELD_BONUS = 15;
+  const int KING_PAWN_SHIELD_BONUS = 7;
 
   /**
    * @brief Initializes all inner constants used by functions in the Eval namespace
@@ -173,7 +173,8 @@ namespace Eval {
    * "Pawns shielding the king" are defined to be the three pawns to the
    * north, northeast and northwest (for white) or south, southeast and
    * southwest (for black). If the king is on the A or H files, the missing
-   * square will be disregarded.
+   * square will be disregarded. Pawn shields are only considered if the pawns
+   * are on rank 2 (for white) or rank 7 (for black).
    * 
    * @param board Board to check shield pawns for 
    * @param color Color to check shield pawns for 
