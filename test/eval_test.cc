@@ -146,5 +146,10 @@ TEST_CASE("Evaluation functions work properly") {
     board.setToFen("2k5/2pp4/8/8/8/8/2P5/2K5 w - -");
     REQUIRE(Eval::pawnsShieldingKing(board, WHITE) == 1);
     REQUIRE(Eval::pawnsShieldingKing(board, BLACK) == 2);
+
+    // No pawn shield if not on rank 2 (white) or rank 7 (black)
+    board.setToFen("8/2k5/1ppp4/8/8/6PP/6K1/8 w KQkq -");
+    REQUIRE(Eval::pawnsShieldingKing(board, WHITE) == 0);
+    REQUIRE(Eval::pawnsShieldingKing(board, BLACK) == 0);
   }
 }
