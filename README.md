@@ -16,24 +16,24 @@ A UCI chess engine written in C++11
   - Board representation
     - [Bitboards](https://en.wikipedia.org/wiki/Bitboard)
   - Search
-    - [Principal variation search](https://chessprogramming.wikispaces.com/Principal+Variation+Search)
+    - [Principal variation search](https://www.chessprogramming.org/Principal_Variation_Search)
     - [Iterative deepening](https://en.wikipedia.org/wiki/Iterative_deepening_depth-first_search)
     - [Quiescence search](https://en.wikipedia.org/wiki/Quiescence_search)
   - Evaluation
-    - [Piece square tables](https://chessprogramming.wikispaces.com/Piece-Square+Tables)
-    - [Pawn structure](https://chessprogramming.wikispaces.com/Pawn+Structure)
-    - [King safety](https://chessprogramming.wikispaces.com/King+Safety)
-    - [Bishop pairs](https://chessprogramming.wikispaces.com/Bishop+Pair)
-    - [Rooks on open files](https://chessprogramming.wikispaces.com/Rook+on+Open+File)
-    - [Mobility](https://chessprogramming.wikispaces.com/Mobility)
+    - [Piece square tables](https://www.chessprogramming.org/Piece-Square_Tables)
+    - [Pawn structure](https://www.chessprogramming.org/Pawn_Structure)
+    - [King safety](https://www.chessprogramming.org/King_Safety)
+    - [Bishop pairs](https://www.chessprogramming.org/Bishop_Pair)
+    - [Rooks on open files](https://www.chessprogramming.org/Rook_on_Open_File)
+    - [Mobility](https://www.chessprogramming.org/Mobility)
   - Move ordering
-    - [Hash move](https://chessprogramming.wikispaces.com/Hash+Move)
-    - [MVV/LVA](https://chessprogramming.wikispaces.com/MVV-LVA)
-    - [Killer heuristic](https://chessprogramming.wikispaces.com/Killer+Heuristic)
-    - [History heuristic](https://chessprogramming.wikispaces.com/History+Heuristic)
+    - [Hash move](https://www.chessprogramming.org/Hash_Move)
+    - [MVV/LVA](https://www.chessprogramming.org/MVV-LVA)
+    - [Killer heuristic](https://www.chessprogramming.org/Killer_Heuristic)
+    - [History heuristic](https://www.chessprogramming.org/History_Heuristic)
   - Other
-    - [Zobrist hashing](https://en.wikipedia.org/wiki/Zobrist_hashing) / [Transposition table](https://en.wikipedia.org/wiki/Transposition_table)
-    - [Opening book support](https://chessprogramming.wikispaces.com/Opening+Book) (PolyGlot format)
+    - [Zobrist hashing](https://www.chessprogramming.org/Zobrist_Hashing) / [Transposition table](https://en.wikipedia.org/wiki/Transposition_table)
+    - [Opening book support](https://www.chessprogramming.org/Opening_Book) (PolyGlot format)
 
 ## Building
 
@@ -73,7 +73,7 @@ make test-noperft
 
 ## Documentation
 
-Shallow Blue's code is extensively documented with Doxygen. 
+Shallow Blue's code is extensively documented with Doxygen.
 
 To generate HTML documentation use:
 
