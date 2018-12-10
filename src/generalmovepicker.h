@@ -16,7 +16,7 @@
  * - Quiet moves sorted by the history heuristic
  */
 class GeneralMovePicker : MovePicker {
-public:
+ public:
   /**
    * @brief Constructs a new GeneralMovePicker for the given OrderingInfo, Board and MoveList.
    *  
@@ -24,7 +24,7 @@ public:
    * @param board Current board state for all moves in the provided MoveList
    * @param moveList Pointer to the MoveList to pick moves from
    */
-  GeneralMovePicker(const OrderingInfo*, const Board*, MoveList*);
+  GeneralMovePicker(const OrderingInfo *, const Board *, MoveList *);
 
   bool hasNext() const override;
 
@@ -41,7 +41,7 @@ public:
    */
   Move getNext() override;
 
-private:
+ private:
   /**
    * @brief Assigns a value to each move in this GeneralMovePicker's MoveList representing desirability
    * in a negamax search.
@@ -56,12 +56,12 @@ private:
   /**
    * @brief OrderingInfo object containing search related information used by this GeneralMovePicker
    */
-  const OrderingInfo* _orderingInfo;
+  const OrderingInfo *_orderingInfo;
 
   /**
    * @brief Board for all moves in the provided MoveList
    */
-  const Board* _board;
+  const Board *_board;
 };
 
 #endif

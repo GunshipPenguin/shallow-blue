@@ -26,12 +26,12 @@ void ZKey::init() {
 
   WHITE_TO_MOVE_KEY = dist(mt);
 
-  for (int file=0;file<8;file++) {
+  for (int file = 0; file < 8; file++) {
     EN_PASSANT_KEYS[file] = dist(mt);
   }
 
-  for (int pieceType=0;pieceType<6;pieceType++) {
-    for (int square=0;square<64;square++) {
+  for (int pieceType = 0; pieceType < 6; pieceType++) {
+    for (int square = 0; square < 64; square++) {
       PIECE_KEYS[WHITE][pieceType][square] = dist(mt);
       PIECE_KEYS[BLACK][pieceType][square] = dist(mt);
     }
@@ -44,7 +44,7 @@ ZKey::ZKey() {
   _enPassantFile = -1;
 }
 
-ZKey::ZKey(const Board& board) {
+ZKey::ZKey(const Board &board) {
   _key = ZERO;
 
   if (board.getActivePlayer() == WHITE) {
@@ -56,9 +56,9 @@ ZKey::ZKey(const Board& board) {
   // Add white/black pieces
   for (auto piece : pieces) {
     U64 whiteBitBoard = board.getPieces(WHITE, piece);
-    U64 blackBitBoard = board.getPieces(BLACK,  piece);
+    U64 blackBitBoard = board.getPieces(BLACK, piece);
 
-    for (int squareIndex=0;squareIndex<64;squareIndex++) {
+    for (int squareIndex = 0; squareIndex < 64; squareIndex++) {
       U64 square = ONE << squareIndex;
       if (square & whiteBitBoard) {
         flipPiece(WHITE, piece, squareIndex);
@@ -152,6 +152,6 @@ void ZKey::flipActivePlayer() {
   _key ^= WHITE_TO_MOVE_KEY;
 }
 
-bool ZKey::operator==(const ZKey& other) {
+bool ZKey::operator==(const ZKey &other) {
   return other.getValue() == _key;
 }

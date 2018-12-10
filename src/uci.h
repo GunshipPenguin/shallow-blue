@@ -14,15 +14,15 @@
  * @brief Class for handling UCI input/output.
  */
 namespace Uci {
-  /**
-   * @brief Initializes UCI options with their default values
-   */
-  void init();
+/**
+ * @brief Initializes UCI options with their default values
+ */
+void init();
 
-  /**
-   * @brief Starts listening for UCI input and responds to it when received
-   */
-  void start();
+/**
+ * @brief Starts listening for UCI input and responds to it when received
+ */
+void start();
 };
 
 #endif

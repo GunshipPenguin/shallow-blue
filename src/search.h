@@ -17,7 +17,7 @@
  * This search is followed by a quiescence search at leaf nodes.
  */
 class Search {
-public:
+ public:
   /**
    * @brief Represents limits imposed on a search through the UCI protocol.
    */
@@ -68,7 +68,7 @@ public:
    * @param logUci If logUci is set, UCI info commands about the search will be printed
    * to standard output in real time.k
    */
-  Search(const Board&, Limits, std::vector<ZKey>, bool=true);
+  Search(const Board &, Limits, std::vector<ZKey>, bool= true);
 
   /**
    * @brief Performs an iterative deepening search within the constraints of the given limits.
@@ -92,7 +92,7 @@ public:
    */
   void stop();
 
-private:
+ private:
   /**
    * @brief Default depth to search to if no limits are specified.
    */
@@ -211,7 +211,7 @@ private:
    * @param board Board to search through
    * @param depth Depth to search to
    */
-  void _rootMax(const Board&, int);
+  void _rootMax(const Board &, int);
 
   /**
    * @brief Non root negamax function, should only be called by _rootMax()
@@ -223,7 +223,7 @@ private:
    * @param  beta  Beta value
    * @return The score of the given board
    */
-  int _negaMax(const Board&, int, int, int);
+  int _negaMax(const Board &, int, int, int);
 
   /**
    * @brief Performs a quiescence search
@@ -236,7 +236,7 @@ private:
    * @param  beta  Beta value
    * @return The score of the given board
    */
-  int _qSearch(const Board&, int=-INF, int=INF);
+  int _qSearch(const Board &, int= -INF, int= INF);
 
   /**
    * @brief Logs info about a search according to the UCI protocol.
@@ -248,7 +248,7 @@ private:
    * @param nodes     Number of nodes searched
    * @param elapsed   Time taken to complete the search in milliseconds
    */
-  void _logUciInfo(const MoveList&, int, Move, int, int, int);
+  void _logUciInfo(const MoveList &, int, Move, int, int, int);
 
   /**
    * @brief Returns the principal variation for the last performed search.

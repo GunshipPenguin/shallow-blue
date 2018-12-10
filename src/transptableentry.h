@@ -9,7 +9,7 @@
  * Stores score, depth, upper/lower bound information and the best move found
  */
 class TranspTableEntry {
-public:
+ public:
   /**
    * @enum Flag
    * @brief Flag stored with each transposition table entry indicating its type.
@@ -30,7 +30,7 @@ public:
    * @param bestMove Best move found at this node
    */
   TranspTableEntry(int score, int depth, Flag flag, Move bestMove)
-    : _score(score), _depth(depth), _flag(flag), _bestMove(bestMove) {}
+      : _score(score), _depth(depth), _flag(flag), _bestMove(bestMove) {}
 
   /**
    * @brief Get the score stored in this transposition table entry.
@@ -59,7 +59,8 @@ public:
    * @return The best move of this transposition table entry.
    */
   Move getBestMove() const { return _bestMove; }
-private:
+
+ private:
 
   /** @brief Score of this transposition table entry */
   int _score;

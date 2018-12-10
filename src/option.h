@@ -12,7 +12,7 @@ typedef void (*OnChange)();
  * @brief Represents a UCI option
  */
 class Option {
-public:
+ public:
   /**
    * @brief Constructs a new empty option
    */
@@ -25,7 +25,7 @@ public:
    * @param value Initial and default value of this option 
    * @param onChange Pointer to function to be called when this option changes
    */
-  Option(bool, OnChange=nullptr);
+  Option(bool, OnChange= nullptr);
 
   /**
    * @brief Constructs a new UCI spin option with the specified default value
@@ -36,7 +36,7 @@ public:
    * @param max Maximum value of this spin option
    * @param onChange Pointer to function to be called when this option changes
    */
-  Option(int, int, int, OnChange=nullptr);
+  Option(int, int, int, OnChange= nullptr);
 
   /**
    * @brief Constructs a new UCI string option with the specified default value
@@ -45,7 +45,7 @@ public:
    * @param value Initial and default value of this option
    * @param onChange Pointer to function to be called when this option changes
    */
-  Option(const char*, OnChange=nullptr); // String
+  Option(const char *, OnChange= nullptr); // String
 
   /**
    * @brief Gets the current value of this option
@@ -93,7 +93,7 @@ public:
    */
   void setValue(std::string);
 
-private:
+ private:
   /**
    * @brief Current value of this option
    */

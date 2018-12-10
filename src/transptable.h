@@ -14,7 +14,7 @@
  *
  */
 class TranspTable {
-public:
+ public:
   /**
    * @enum Flag
    * @brief Flag stored with each transposition table entry indicating its type.
@@ -38,7 +38,7 @@ public:
    * @param key Zobrist key of the board
    * @param entry Entry to store
    */
-  void set(const ZKey&, TranspTableEntry);
+  void set(const ZKey &, TranspTableEntry);
 
   /**
    * @brief Get the entry in the transposition table for the given ZKey
@@ -47,14 +47,14 @@ public:
    * @param key ZKey to lookup entry for
    * @return The transposition table entry corresponding to the given ZKey, or nullptr if it does not exist
    */
-  const TranspTableEntry* getEntry(const ZKey&) const;
+  const TranspTableEntry *getEntry(const ZKey &) const;
 
   /**
    * @brief Removes all entries from the transposition table.
    */
   void clear();
 
-private:
+ private:
   /**
    * @brief The transposition table hash map.
    *

@@ -11,7 +11,7 @@ class Board;
  * Zobrist keys are represented as unsigned 64 bit integers (same as bitboards).
  */
 class ZKey {
-public:
+ public:
   /**
    * @brief Constructs a new empty ZKey.
    */
@@ -21,7 +21,7 @@ public:
    * @brief Constructs a new ZKey from the given board.
    * @param board Board to construct this ZKey from
    */
-  ZKey(const Board& board);
+  ZKey(const Board &board);
 
   /**
    * @brief Initialize the pseudo-random values used to generate a ZKey.
@@ -95,9 +95,9 @@ public:
    * @param other ZKey to compare
    * @return true if the two ZKeys have the same value, false otherwise
    */
-  bool operator==(const ZKey&);
+  bool operator==(const ZKey &);
 
-private:
+ private:
   /**
    * @brief The current value of the Zobrist key.
    */

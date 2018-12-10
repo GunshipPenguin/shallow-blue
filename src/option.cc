@@ -3,36 +3,36 @@
 std::map<std::string, Option> optionsMap;
 
 Option::Option() :
-  _value(""),
-  _type(""),
-  _defaultValue(""),
-  _min(0),
-  _max(0),
-  _onChange(nullptr) {}
+    _value(""),
+    _type(""),
+    _defaultValue(""),
+    _min(0),
+    _max(0),
+    _onChange(nullptr) {}
 
-Option::Option(const char* value, OnChange onChange) :
-  _value(value),
-  _type("string"),
-  _defaultValue(value),
-  _min(0), 
-  _max(0),
-  _onChange(onChange) {}
+Option::Option(const char *value, OnChange onChange) :
+    _value(value),
+    _type("string"),
+    _defaultValue(value),
+    _min(0),
+    _max(0),
+    _onChange(onChange) {}
 
 Option::Option(int value, int min, int max, OnChange onChange) :
-  _value(std::to_string(value)),
-  _type("spin"),
-  _defaultValue(std::to_string(value)),
-  _min(min), 
-  _max(max),
-  _onChange(onChange) {}
+    _value(std::to_string(value)),
+    _type("spin"),
+    _defaultValue(std::to_string(value)),
+    _min(min),
+    _max(max),
+    _onChange(onChange) {}
 
 Option::Option(bool value, OnChange onChange) :
-  _value(value ? "true" : "false"),
-  _type("check"),
-  _defaultValue(value ? "true" : "false"),
-  _min(0), 
-  _max(0),
-  _onChange(onChange) {}
+    _value(value ? "true" : "false"),
+    _type("check"),
+    _defaultValue(value ? "true" : "false"),
+    _min(0),
+    _max(0),
+    _onChange(onChange) {}
 
 std::string Option::getValue() const {
   return _value;

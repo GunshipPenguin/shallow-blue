@@ -13,13 +13,13 @@ typedef std::vector<Move> MoveList;
  * @brief Pseudo-legal move generator.
  */
 class MoveGen {
-public:
+ public:
   /**
    * @brief Constructs a new MoveGen and generates moves for the given board.
    *
    * @param board Board to generate moves for.
    */
-  MoveGen(const Board& board);
+  MoveGen(const Board &board);
 
   /**
    * @brief Constructs a new MoveGen for an empty board.
@@ -31,7 +31,7 @@ public:
    *
    * @param board Board to set and generate moves for
    */
-  void setBoard(const Board& board);
+  void setBoard(const Board &board);
 
   /**
    * @brief Returns all pseudo-legal moves that have been generated for the current board.
@@ -47,7 +47,7 @@ public:
    */
   MoveList getLegalMoves();
 
-private:
+ private:
   /**
    * @brief A vector containing generated pseudo-legal moves
    */
@@ -73,14 +73,14 @@ private:
    *
    * @param board Board to generate moves for
    */
-  void _genMoves(const Board& board);
+  void _genMoves(const Board &board);
 
   /**
    * @brief Populates the _legalMoves vector with moves from _moves that are legal.
    *
    * @param board Board to check legality of moves with.
    */
-  void _genLegalMoves(const Board& board);
+  void _genLegalMoves(const Board &board);
 
   /**
    * @brief Convenience function to generate pawn promotions.
@@ -94,7 +94,7 @@ private:
    * @param flags             Extra move flags (if applicable)
    * @param capturedPieceType Captured piece type (if applicable)
    */
-  void _genPawnPromotions(unsigned int, unsigned int, unsigned int=0, PieceType=PAWN);
+  void _genPawnPromotions(unsigned int, unsigned int, unsigned int= 0, PieceType= PAWN);
 
   /**
    * @name White/black move generation functions
@@ -103,8 +103,8 @@ private:
    *
    * @{
    */
-  void _genWhiteMoves(const Board&);
-  void _genBlackMoves(const Board&);
+  void _genWhiteMoves(const Board &);
+  void _genBlackMoves(const Board &);
   /**@}*/
 
   /**
@@ -114,23 +114,23 @@ private:
    *
    * @{
    */
-  void _genWhitePawnMoves(const Board&);
-  void _genBlackPawnMoves(const Board&);
+  void _genWhitePawnMoves(const Board &);
+  void _genBlackPawnMoves(const Board &);
 
-  void _genWhiteKingMoves(const Board&);
-  void _genBlackKingMoves(const Board&);
+  void _genWhiteKingMoves(const Board &);
+  void _genBlackKingMoves(const Board &);
 
-  void _genWhiteKnightMoves(const Board&);
-  void _genBlackKnightMoves(const Board&);
+  void _genWhiteKnightMoves(const Board &);
+  void _genBlackKnightMoves(const Board &);
 
-  void _genWhiteBishopMoves(const Board&);
-  void _genBlackBishopMoves(const Board&);
+  void _genWhiteBishopMoves(const Board &);
+  void _genBlackBishopMoves(const Board &);
 
-  void _genWhiteRookMoves(const Board&);
-  void _genBlackRookMoves(const Board&);
+  void _genWhiteRookMoves(const Board &);
+  void _genBlackRookMoves(const Board &);
 
-  void _genWhiteQueenMoves(const Board&);
-  void _genBlackQueenMoves(const Board&);
+  void _genWhiteQueenMoves(const Board &);
+  void _genBlackQueenMoves(const Board &);
   /**@}*/
 
   /**
@@ -139,10 +139,10 @@ private:
    * These functions generate the four types of pawn moves for white for a given board.
    * @{
    */
-  void _genWhitePawnSingleMoves(const Board&);
-  void _genWhitePawnDoubleMoves(const Board&);
-  void _genWhitePawnRightAttacks(const Board&);
-  void _genWhitePawnLeftAttacks(const Board&);
+  void _genWhitePawnSingleMoves(const Board &);
+  void _genWhitePawnDoubleMoves(const Board &);
+  void _genWhitePawnRightAttacks(const Board &);
+  void _genWhitePawnLeftAttacks(const Board &);
   /**@}*/
 
   /**
@@ -152,10 +152,10 @@ private:
    *
    * @{
    */
-  void _genBlackPawnSingleMoves(const Board&);
-  void _genBlackPawnDoubleMoves(const Board&);
-  void _genBlackPawnRightAttacks(const Board&);
-  void _genBlackPawnLeftAttacks(const Board&);
+  void _genBlackPawnSingleMoves(const Board &);
+  void _genBlackPawnDoubleMoves(const Board &);
+  void _genBlackPawnRightAttacks(const Board &);
+  void _genBlackPawnLeftAttacks(const Board &);
   /**@}*/
 
   /**
@@ -166,11 +166,11 @@ private:
    * attackable pieces.
    *
    */
-  void _genKingMoves(const Board&, U64, U64, U64);
-  void _genKnightMoves(const Board&, U64, U64, U64);
-  void _genBishopMoves(const Board&, U64, U64, U64);
-  void _genRookMoves(const Board&, U64, U64, U64);
-  void _genQueenMoves(const Board&, U64, U64, U64);
+  void _genKingMoves(const Board &, U64, U64, U64);
+  void _genKnightMoves(const Board &, U64, U64, U64);
+  void _genBishopMoves(const Board &, U64, U64, U64);
+  void _genRookMoves(const Board &, U64, U64, U64);
+  void _genQueenMoves(const Board &, U64, U64, U64);
   /**@}*/
 
   /**
@@ -186,7 +186,7 @@ private:
    * @param moves      Bitboard containing possible destination squares
    * @param attackable Bitboard containing attackable pieces for this move
    */
-  void _addMoves(const Board&, int, PieceType, U64, U64);
+  void _addMoves(const Board &, int, PieceType, U64, U64);
 };
 
 #endif

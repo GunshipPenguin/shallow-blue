@@ -11,13 +11,13 @@
  * for move ordering purposes.
  */
 class OrderingInfo {
-public:
+ public:
   /**
    * @brief Construct a new OrderingInfo with the provided transposition table
    * 
    * @param tt Transposition table of search
    */
-  OrderingInfo(const TranspTable*);
+  OrderingInfo(const TranspTable *);
 
   /**
    * @brief Increment the ply number of this search by one.
@@ -25,7 +25,7 @@ public:
   void incrementPly();
 
   /**
-   * @brief Deincrement the ply number of this search by one.
+   * @brief Decrement the ply number of this search by one.
    */
   void deincrementPly();
 
@@ -71,7 +71,7 @@ public:
    * 
    * @return A pointer to this search's transposition table.
    */
-  const TranspTable* getTt() const;
+  const TranspTable *getTt() const;
 
   /**
    * @brief Get the first killer move for the given ply.
@@ -89,11 +89,11 @@ public:
    */
   Move getKiller2(int) const;
 
-private:
+ private:
   /**
    * @brief Transposition table for the search
    */
-  const TranspTable* _tt;
+  const TranspTable *_tt;
 
   /**
    * @brief Array of first killer moves by ply

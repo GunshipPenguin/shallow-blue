@@ -10,7 +10,7 @@
  * @brief Represents a move.
  */
 class Move {
-public:
+ public:
   /**
    * @brief Construct a null move.
    */
@@ -24,20 +24,20 @@ public:
    * @param piece Type of piece
    * @param flags Flags
    */
-  Move(unsigned int, unsigned int, PieceType, unsigned int=0); // Non Null Move
+  Move(unsigned int, unsigned int, PieceType, unsigned int= 0); // Non Null Move
 
   /**
    * @enum Flag
    * @brief Flags that indicate special moves.
    */
   enum Flag {
-    NULL_MOVE = 1<<0, /**< The move is a null move */
-    CAPTURE = 1<<1, /**< The move is a capture (Captured piece type must be set with setCapturedPieceType()) */
-    DOUBLE_PAWN_PUSH = 1<<2, /**< The move is a double pawn push */
-    KSIDE_CASTLE = 1<<3, /**< The move is a kingisde castle */
-    QSIDE_CASTLE = 1<<4, /**< The move is a queenside castle */
-    EN_PASSANT = 1<<5, /**< The move is an en passant capture (Do not set the CAPTURE flag additionally) */
-    PROMOTION = 1<<6 /**< The move is a promotion (Promotion piece type must be set with setPromotionPieceType()) */
+    NULL_MOVE = 1 << 0, /**< The move is a null move */
+    CAPTURE = 1 << 1, /**< The move is a capture (Captured piece type must be set with setCapturedPieceType()) */
+    DOUBLE_PAWN_PUSH = 1 << 2, /**< The move is a double pawn push */
+    KSIDE_CASTLE = 1 << 3, /**< The move is a kingisde castle */
+    QSIDE_CASTLE = 1 << 4, /**< The move is a queenside castle */
+    EN_PASSANT = 1 << 5, /**< The move is an en passant capture (Do not set the CAPTURE flag additionally) */
+    PROMOTION = 1 << 6 /**< The move is a promotion (Promotion piece type must be set with setPromotionPieceType()) */
   };
 
   /**
@@ -160,8 +160,7 @@ public:
    */
   static std::string indexToNotation(int);
 
-private:
-
+ private:
   /**
    * @brief A packed integer containing all of the move data.
    *

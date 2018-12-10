@@ -83,8 +83,7 @@ std::string Move::getNotation() const {
         break;
       case BISHOP: moveNotation += 'b';
         break;
-      default:
-        break;
+      default:break;
     }
   }
 
@@ -95,13 +94,13 @@ bool Move::operator==(const Move other) const {
   return other._move == _move;
 }
 
-std::string Move::indexToNotation (int index) {
-  return std::string({FILES[index%8], RANKS[index/8]});
+std::string Move::indexToNotation(int index) {
+  return std::string({FILES[index % 8], RANKS[index / 8]});
 }
 
-unsigned int Move::notationToIndex (std::string notation) {
-  int file = std::find(FILES, FILES+8, notation[0]) - std::begin(FILES);
-  int rank = std::find(RANKS, RANKS+8, notation[1]) - std::begin(RANKS);
+unsigned int Move::notationToIndex(std::string notation) {
+  int file = std::find(FILES, FILES + 8, notation[0]) - std::begin(FILES);
+  int rank = std::find(RANKS, RANKS + 8, notation[1]) - std::begin(RANKS);
 
   return rank * 8 + file;
 }

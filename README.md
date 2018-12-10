@@ -104,6 +104,10 @@ These commands can be useful for debugging.
 - `printmoves`
     - Prints all legal moves for the currently active player
 
+## Code Style
+
+Shallow Blue follows [Google's C++ Style Guide](https://google.github.io/styleguide/cppguide.html).
+
 ## Future Improvements
 
 - Magic bitboard move generation

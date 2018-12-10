@@ -90,17 +90,15 @@ PSquareTable::PSquareTable() {
   _scores[BLACK] = 0;
 }
 
-PSquareTable::PSquareTable(const Board& board) {
+PSquareTable::PSquareTable(const Board &board) {
   _scores[WHITE] = 0;
   _scores[BLACK] = 0;
 
-  PieceType pieceTypes[6] = {PAWN, ROOK, KNIGHT, BISHOP, QUEEN, KING};
-
-  for (auto pieceType : pieceTypes) {
+  for (auto pieceType : {PAWN, ROOK, KNIGHT, BISHOP, QUEEN, KING}) {
     U64 whiteBitBoard = board.getPieces(WHITE, pieceType);
-    U64 blackBitBoard = board.getPieces(BLACK,  pieceType);
+    U64 blackBitBoard = board.getPieces(BLACK, pieceType);
 
-    for (int squareIndex=0;squareIndex<64;squareIndex++) {
+    for (int squareIndex = 0; squareIndex < 64; squareIndex++) {
       U64 square = ONE << squareIndex;
       if (square & whiteBitBoard) {
         addPiece(WHITE, pieceType, squareIndex);

@@ -191,7 +191,7 @@ std::string Board::getStringRep() const {
       boardPos -= 16;
     }
 
-    boardPos ++;
+    boardPos++;
   }
 
   stringRep += "\n\n    A  B  C  D  E  F  G  H";
@@ -228,7 +228,7 @@ void Board::setToFen(std::string fenString) {
   U64 boardPos = 56; // Fen string starts at a8 = index 56
   fenStream >> token;
   for (auto currChar : token) {
-    switch(currChar) {
+    switch (currChar) {
       case 'p': _pieces[BLACK][PAWN] |= (ONE << boardPos++);
         break;
       case 'r': _pieces[BLACK][ROOK] |= (ONE << boardPos++);
@@ -255,8 +255,7 @@ void Board::setToFen(std::string fenString) {
         break;
       case '/': boardPos -= 16; // Go down one rank
         break;
-      default:
-        boardPos += static_cast<U64>(currChar - '0');
+      default:boardPos += static_cast<U64>(currChar - '0');
     }
   }
 
@@ -268,7 +267,7 @@ void Board::setToFen(std::string fenString) {
   fenStream >> token;
   _castlingRights = 0;
   for (auto currChar : token) {
-    switch(currChar) {
+    switch (currChar) {
       case 'K': _castlingRights |= 0x1;
         break;
       case 'Q': _castlingRights |= 0x2;
@@ -324,8 +323,9 @@ PieceType Board::getPieceAtSquare(Color color, int squareIndex) const {
   else if (square & _pieces[color][BISHOP]) piece = BISHOP;
   else if (square & _pieces[color][KING]) piece = KING;
   else if (square & _pieces[color][QUEEN]) piece = QUEEN;
-  else throw std::logic_error((color == WHITE ? std::string("White") : std::string("Black")) +
-      " piece at square " + std::to_string(squareIndex) + " does not exist");
+  else
+    throw std::logic_error((color == WHITE ? std::string("White") : std::string("Black")) +
+        " piece at square " + std::to_string(squareIndex) + " does not exist");
 
   return piece;
 }
@@ -479,7 +479,7 @@ void Board::_updateCastlingRightsForMove(Move move) {
   // Update castling flags if rooks have been captured
   if (flags & Move::CAPTURE) {
     // Update castling rights if a rook was captured
-    switch(move.getTo()) {
+    switch (move.getTo()) {
       case a1: _castlingRights &= ~0x2;
         break;
       case h1: _castlingRights &= ~0x1;
@@ -492,7 +492,7 @@ void Board::_updateCastlingRightsForMove(Move move) {
   }
 
   // Update castling flags if rooks or kings have moved
-  switch(move.getFrom()) {
+  switch (move.getFrom()) {
     case e1: _castlingRights &= ~0x3;
       break;
     case e8: _castlingRights &= ~0xC;
@@ -508,7 +508,7 @@ void Board::_updateCastlingRightsForMove(Move move) {
   }
 
   _zKey.updateCastlingRights(getKsCastlingRights(WHITE),
-      getQsCastlingRights(WHITE), getKsCastlingRights(BLACK), getQsCastlingRights(BLACK));
+                             getQsCastlingRights(WHITE), getKsCastlingRights(BLACK), getQsCastlingRights(BLACK));
 }
 
 void Board::setToStartPos() {

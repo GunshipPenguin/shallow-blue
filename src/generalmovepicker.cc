@@ -2,16 +2,17 @@
 #include "generalmovepicker.h"
 #include "eval.h"
 
-GeneralMovePicker::GeneralMovePicker(const OrderingInfo* orderingInfo, const Board* board, MoveList* moveList) : MovePicker(moveList) {
+GeneralMovePicker::GeneralMovePicker(const OrderingInfo *orderingInfo, const Board *board, MoveList *moveList)
+    : MovePicker(moveList) {
   _orderingInfo = orderingInfo;
   _moves = moveList;
   _board = board;
-  _currHead = 0;  
+  _currHead = 0;
   _scoreMoves();
 }
 
 void GeneralMovePicker::_scoreMoves() {
-  const TranspTableEntry* ttEntry = _orderingInfo->getTt()->getEntry(_board->getZKey());
+  const TranspTableEntry *ttEntry = _orderingInfo->getTt()->getEntry(_board->getZKey());
   Move pvMove;
   if (ttEntry) {
     pvMove = ttEntry->getBestMove();
@@ -42,7 +43,7 @@ Move GeneralMovePicker::getNext() {
   size_t bestIndex;
   int bestScore = -INF;
 
-  for (size_t i=_currHead;i<_moves->size();i++) {
+  for (size_t i = _currHead; i < _moves->size(); i++) {
     if (_moves->at(i).getValue() > bestScore) {
       bestScore = _moves->at(i).getValue();
       bestIndex = i;

@@ -18,6 +18,6 @@ void MovePicker::init() {
   }
 }
 
-MovePicker::MovePicker(MoveList* moveList) {
+MovePicker::MovePicker(MoveList *moveList) {
   _moves = moveList;
 }

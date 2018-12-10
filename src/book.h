@@ -14,7 +14,7 @@
  * book data, and load all moves into memory.
  */
 class Book {
-public:
+ public:
   /**
    * @brief Constructs a new empty opening book
    */
@@ -40,7 +40,7 @@ public:
    * @param board Board to get moves for
    * @return A valid move for the given board from the opening book 
    */
-  Move getMove(const Board&) const;
+  Move getMove(const Board &) const;
 
   /**
    * @brief Returns true if there is at least one move in this Book for the
@@ -50,7 +50,7 @@ public:
    * @return true if there is at least one move in this book for the given
    * board, false otherwise
    */
-  bool inBook(const Board&) const;
+  bool inBook(const Board &) const;
 
   /**
    * @brief Returns the 64 bit PolyGlot hash of the given board
@@ -58,7 +58,7 @@ public:
    * @param board Board to calculate PolyGlot hash of
    * @return The PolyGlot hash of the given board
    */
-  static U64 hashBoard(const Board&);
+  static U64 hashBoard(const Board &);
 
   /**
    * @brief Given a move in PolyGlot form, and the board to which it
@@ -68,9 +68,9 @@ public:
    * @param move A move in PolyGlot form (16 bit packed data)
    * @return A Move object representing the PolyGlot move
    */
-  static Move decodeMove(const Board&, unsigned short);
+  static Move decodeMove(const Board &, unsigned short);
 
-private:
+ private:
   /**
    * @brief Values used to calculate PolyGlot hashes
    * 

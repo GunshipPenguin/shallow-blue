@@ -4,21 +4,21 @@
 #include "eval.h"
 
 U64 Eval::detail::FILES[8] = {FILE_A, FILE_B, FILE_C, FILE_D, FILE_E, FILE_F, FILE_G, FILE_H};
-U64 Eval::detail::NEIGHBOR_FILES[8] {
-  FILE_B,
-  FILE_A | FILE_C,
-  FILE_B | FILE_D,
-  FILE_C | FILE_E,
-  FILE_D | FILE_F,
-  FILE_E | FILE_G,
-  FILE_F | FILE_H,
-  FILE_G
+U64 Eval::detail::NEIGHBOR_FILES[8]{
+    FILE_B,
+    FILE_A | FILE_C,
+    FILE_B | FILE_D,
+    FILE_C | FILE_E,
+    FILE_D | FILE_F,
+    FILE_E | FILE_G,
+    FILE_F | FILE_H,
+    FILE_G
 };
 U64 Eval::detail::PAWN_SHIELDS[2][64];
 
 void Eval::init() {
   // Fill king pawn shield bitboard
-  for (int i=0;i<64;i++) {
+  for (int i = 0; i < 64; i++) {
     U64 square = ONE << i;
 
     detail::PAWN_SHIELDS[WHITE][i] = ((square << 8) | ((square << 7) & ~FILE_H) |
@@ -47,11 +47,12 @@ int Eval::getMaterialValue(PieceType pieceType) {
   return value;
 }
 
-bool Eval::hasBishopPair(const Board& board, Color color) {
-  return ((board.getPieces(color, BISHOP) & BLACK_SQUARES) != ZERO) && ((board.getPieces(color, BISHOP) & WHITE_SQUARES) != ZERO);
+bool Eval::hasBishopPair(const Board &board, Color color) {
+  return ((board.getPieces(color, BISHOP) & BLACK_SQUARES) != ZERO)
+      && ((board.getPieces(color, BISHOP) & WHITE_SQUARES) != ZERO);
 }
 
-int Eval::mobility(const Board& board, Color color) {
+int Eval::mobility(const Board &board, Color color) {
   int moves = 0;
 
   // Special case for pawn moves
@@ -66,7 +67,7 @@ int Eval::mobility(const Board& board, Color color) {
     doublePawnPushes = ((singlePawnPushes & RANK_6) >> 8) & board.getNotOccupied();
     pawnAttacks = ((pawns >> 7) & ~FILE_A) | ((pawns >> 9) & ~FILE_H);
   }
-  
+
   pawnAttacks &= board.getAttackable(getOppositeColor(color));
 
   moves += _popCount(singlePawnPushes | doublePawnPushes | pawnAttacks);
@@ -87,18 +88,19 @@ int Eval::mobility(const Board& board, Color color) {
   return moves;
 }
 
-int Eval::rooksOnOpenFiles(const Board& board, Color color) {
+int Eval::rooksOnOpenFiles(const Board &board, Color color) {
   int numRooks = 0;
 
   for (U64 file : detail::FILES) {
-    if ((file & board.getPieces(color, ROOK)) && (file & board.getPieces(color, ROOK)) == (file & board.getOccupied())) {
+    if ((file & board.getPieces(color, ROOK))
+        && (file & board.getPieces(color, ROOK)) == (file & board.getOccupied())) {
       numRooks++;
     }
   }
   return numRooks;
 }
 
-int Eval::doubledPawns(const Board& board, Color color) {
+int Eval::doubledPawns(const Board &board, Color color) {
   int doubled = 0;
 
   for (U64 file : detail::FILES) {
@@ -110,12 +112,12 @@ int Eval::doubledPawns(const Board& board, Color color) {
   return doubled;
 }
 
-int Eval::isolatedPawns(const Board& board, Color color) {
+int Eval::isolatedPawns(const Board &board, Color color) {
   int isolated = 0;
 
   U64 pawns = board.getPieces(color, PAWN);
 
-  for (int fileNumber=0;fileNumber<8;fileNumber++) {
+  for (int fileNumber = 0; fileNumber < 8; fileNumber++) {
     U64 fileMask = detail::FILES[fileNumber];
     U64 neighborFileMask = detail::NEIGHBOR_FILES[fileNumber];
 
@@ -125,7 +127,7 @@ int Eval::isolatedPawns(const Board& board, Color color) {
   return isolated;
 }
 
-int Eval::backwardPawns(const Board& board, Color color) {
+int Eval::backwardPawns(const Board &board, Color color) {
   // Pawns whose stop square is under attack by our opponent's
   // pawns but not by us are backward
   U64 pawns = board.getPieces(color, PAWN);
@@ -145,13 +147,13 @@ int Eval::backwardPawns(const Board& board, Color color) {
   return _popCount(stopSquares & ~ownPawnAttacks & opponentPawnAttacks);
 }
 
-int Eval::pawnsShieldingKing(const Board& board, Color color) {
+int Eval::pawnsShieldingKing(const Board &board, Color color) {
   int kingSquare = _bitscanForward(board.getPieces(color, KING));
 
   return _popCount(detail::PAWN_SHIELDS[color][kingSquare] & board.getPieces(color, PAWN));
 }
 
-int Eval::evaluate(const Board& board, Color color) {
+int Eval::evaluate(const Board &board, Color color) {
   int score = 0;
 
   Color otherColor = getOppositeColor(color);
@@ -162,7 +164,7 @@ int Eval::evaluate(const Board& board, Color color) {
   score += BISHOP_VALUE * (_popCount(board.getPieces(color, BISHOP)) - _popCount(board.getPieces(otherColor, BISHOP)));
   score += ROOK_VALUE * (_popCount(board.getPieces(color, ROOK)) - _popCount(board.getPieces(otherColor, ROOK)));
   score += QUEEN_VALUE * (_popCount(board.getPieces(color, QUEEN)) - _popCount(board.getPieces(otherColor, QUEEN)));
-  
+
   // Piece square tables
   score += (board.getPSquareTable().getScore(color) - board.getPSquareTable().getScore(otherColor));
 

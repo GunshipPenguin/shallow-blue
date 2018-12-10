@@ -9,8 +9,8 @@ int main() {
   MovePicker::init();
   Attacks::init();
   Eval::init();
-
   Uci::init();
+
   Uci::start();
 
   return 0;

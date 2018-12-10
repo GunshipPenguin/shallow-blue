@@ -13,9 +13,9 @@
  * @param  board Value to reset LSB of
  * @return Index of reset LSB
  */
-inline int _popLsb(U64& board) {
+inline int _popLsb(U64 &board) {
   int lsbIndex = __builtin_ffsll(board) - 1;
-  board &= board-1;
+  board &= board - 1;
   return lsbIndex;
 }
 

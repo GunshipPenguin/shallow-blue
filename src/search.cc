@@ -7,15 +7,15 @@
 #include <algorithm>
 #include <iostream>
 
-Search::Search(const Board& board, Limits limits, std::vector<ZKey> positionHistory, bool logUci) :
-  _positionHistory(positionHistory),
-  _orderingInfo(OrderingInfo(const_cast<TranspTable*>(&_tt))),
-  _limits(limits),
-  _initialBoard(board),
-  _logUci(logUci),
-  _stop(false),
-  _limitCheckCount(0),
-  _bestScore(0) {
+Search::Search(const Board &board, Limits limits, std::vector<ZKey> positionHistory, bool logUci) :
+    _positionHistory(positionHistory),
+    _orderingInfo(OrderingInfo(const_cast<TranspTable *>(&_tt))),
+    _limits(limits),
+    _initialBoard(board),
+    _logUci(logUci),
+    _stop(false),
+    _limitCheckCount(0),
+    _bestScore(0) {
 
   if (_limits.infinite) { // Infinite search
     _searchDepth = INF;
@@ -29,7 +29,7 @@ Search::Search(const Board& board, Limits limits, std::vector<ZKey> positionHist
 
     // Divide up the remaining time (If movestogo not specified we are in 
     // sudden death)
-    if(_limits.movesToGo == 0) {
+    if (_limits.movesToGo == 0) {
       // Allocate less time for this search if our opponent's time is greater
       // than our time by scaling movestogo by the ratio between our time
       // and our opponent's time (ratio max forced to 2.0, min forced to 1.0)
@@ -45,22 +45,23 @@ Search::Search(const Board& board, Limits limits, std::vector<ZKey> positionHist
 
     // Use all of the increment to think
     _timeAllocated += _limits.increment[_initialBoard.getActivePlayer()];
-    
+
     // Depth is infinity in a timed search (ends when time runs out)
     _searchDepth = MAX_SEARCH_DEPTH;
   } else { // No limits specified, use default depth
-      _searchDepth = DEFAULT_SEARCH_DEPTH;
-      _timeAllocated = INF;
+    _searchDepth = DEFAULT_SEARCH_DEPTH;
+    _timeAllocated = INF;
   }
 }
 
 void Search::iterDeep() {
   _start = std::chrono::steady_clock::now();
 
-  for (int currDepth=1;currDepth<=_searchDepth;currDepth++) {
+  for (int currDepth = 1; currDepth <= _searchDepth; currDepth++) {
     _rootMax(_initialBoard, currDepth);
 
-    int elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-_start).count();
+    int elapsed =
+        std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - _start).count();
 
     // If limits were exceeded in the search, break without logging UCI info (search was incomplete)
     if (_stop) break;
@@ -79,7 +80,7 @@ void Search::iterDeep() {
 MoveList Search::_getPv(int length) {
   MoveList pv;
   Board currBoard = _initialBoard;
-  const TranspTableEntry* currEntry;
+  const TranspTableEntry *currEntry;
   int currLength = 0;
 
   while (currLength++ < length && (currEntry = _tt.getEntry(currBoard.getZKey()))) {
@@ -90,9 +91,9 @@ MoveList Search::_getPv(int length) {
   return pv;
 }
 
-void Search::_logUciInfo(const MoveList& pv, int depth, Move bestMove, int bestScore, int nodes, int elapsed) {
+void Search::_logUciInfo(const MoveList &pv, int depth, Move bestMove, int bestScore, int nodes, int elapsed) {
   std::string pvString;
-  for(auto move : pv) {
+  for (auto move : pv) {
     pvString += move.getNotation() + " ";
   }
 
@@ -136,7 +137,8 @@ bool Search::_checkLimits() {
 
   _limitCheckCount = 4096;
 
-  int elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-_start).count();
+  int elapsed =
+      std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - _start).count();
 
   if (_limits.nodes != 0 && (_nodes >= _limits.nodes)) return true;
   if (elapsed >= (_timeAllocated)) return true;
@@ -144,7 +146,7 @@ bool Search::_checkLimits() {
   return false;
 }
 
-void Search::_rootMax(const Board& board, int depth) {
+void Search::_rootMax(const Board &board, int depth) {
   MoveGen movegen(board);
   MoveList legalMoves = movegen.getLegalMoves();
   _nodes = 0;
@@ -156,7 +158,8 @@ void Search::_rootMax(const Board& board, int depth) {
     return;
   }
 
-  GeneralMovePicker movePicker(const_cast<OrderingInfo*>(&_orderingInfo), const_cast<Board*>(&board), const_cast<MoveList*>(&legalMoves));
+  GeneralMovePicker movePicker
+      (const_cast<OrderingInfo *>(&_orderingInfo), const_cast<Board *>(&board), const_cast<MoveList *>(&legalMoves));
 
   int alpha = -INF;
   int beta = INF;
@@ -173,10 +176,10 @@ void Search::_rootMax(const Board& board, int depth) {
 
     _orderingInfo.incrementPly();
     if (fullWindow) {
-      currScore = -_negaMax(movedBoard, depth-1, -beta, -alpha);
+      currScore = -_negaMax(movedBoard, depth - 1, -beta, -alpha);
     } else {
-      currScore = -_negaMax(movedBoard, depth-1, -alpha-1, -alpha);
-      if (currScore > alpha) currScore = -_negaMax(movedBoard, depth-1, -beta, -alpha);
+      currScore = -_negaMax(movedBoard, depth - 1, -alpha - 1, -alpha);
+      if (currScore > alpha) currScore = -_negaMax(movedBoard, depth - 1, -beta, -alpha);
     }
     _orderingInfo.deincrementPly();
 
@@ -215,7 +218,7 @@ void Search::_rootMax(const Board& board, int depth) {
   }
 }
 
-int Search::_negaMax(const Board& board, int depth, int alpha, int beta) {
+int Search::_negaMax(const Board &board, int depth, int alpha, int beta) {
   // Check search limits
   if (_stop || _checkLimits()) {
     _stop = true;
@@ -233,17 +236,14 @@ int Search::_negaMax(const Board& board, int depth, int alpha, int beta) {
   }
 
   int alphaOrig = alpha;
-  const TranspTableEntry* ttEntry = _tt.getEntry(board.getZKey());
+  const TranspTableEntry *ttEntry = _tt.getEntry(board.getZKey());
   // Check transposition table cache
   if (ttEntry && (ttEntry->getDepth() >= depth)) {
-    switch(ttEntry->getFlag()) {
-      case TranspTable::EXACT:
-        return ttEntry->getScore();
-      case TranspTable::UPPER_BOUND:
-        beta = std::min(beta, ttEntry->getScore());
+    switch (ttEntry->getFlag()) {
+      case TranspTable::EXACT:return ttEntry->getScore();
+      case TranspTable::UPPER_BOUND:beta = std::min(beta, ttEntry->getScore());
         break;
-      case TranspTable::LOWER_BOUND:
-        alpha = std::max(alpha, ttEntry->getScore());
+      case TranspTable::LOWER_BOUND:alpha = std::max(alpha, ttEntry->getScore());
         break;
     }
 
@@ -267,8 +267,9 @@ int Search::_negaMax(const Board& board, int depth, int alpha, int beta) {
     return _qSearch(board, alpha, beta);
   }
 
-  GeneralMovePicker movePicker(const_cast<OrderingInfo*>(&_orderingInfo), const_cast<Board*>(&board), const_cast<MoveList*>(&legalMoves));
-  
+  GeneralMovePicker movePicker
+      (const_cast<OrderingInfo *>(&_orderingInfo), const_cast<Board *>(&board), const_cast<MoveList *>(&legalMoves));
+
   Move bestMove;
   bool fullWindow = true;
   while (movePicker.hasNext()) {
@@ -280,13 +281,13 @@ int Search::_negaMax(const Board& board, int depth, int alpha, int beta) {
     int score;
     _orderingInfo.incrementPly();
     if (fullWindow) {
-      score = -_negaMax(movedBoard, depth-1, -beta, -alpha);
+      score = -_negaMax(movedBoard, depth - 1, -beta, -alpha);
     } else {
-      score = -_negaMax(movedBoard, depth-1, -alpha-1, -alpha);
-      if (score > alpha) score = -_negaMax(movedBoard, depth-1, -beta, -alpha);
+      score = -_negaMax(movedBoard, depth - 1, -alpha - 1, -alpha);
+      if (score > alpha) score = -_negaMax(movedBoard, depth - 1, -beta, -alpha);
     }
     _orderingInfo.deincrementPly();
-    
+
     // Beta cutoff
     if (score >= beta) {
       // Add this move as a new killer move and update history if move is quiet
@@ -330,7 +331,7 @@ int Search::_negaMax(const Board& board, int depth, int alpha, int beta) {
   return alpha;
 }
 
-int Search::_qSearch(const Board& board, int alpha, int beta) {
+int Search::_qSearch(const Board &board, int alpha, int beta) {
   // Check search limits
   if (_stop || _checkLimits()) {
     _stop = true;
@@ -350,9 +351,9 @@ int Search::_qSearch(const Board& board, int alpha, int beta) {
   }
 
   int standPat = Eval::evaluate(board, board.getActivePlayer());
-  _nodes ++;
+  _nodes++;
 
-  QSearchMovePicker movePicker(const_cast<MoveList*>(&legalMoves));
+  QSearchMovePicker movePicker(const_cast<MoveList *>(&legalMoves));
 
   // If node is quiet, just return eval
   if (!movePicker.hasNext()) {

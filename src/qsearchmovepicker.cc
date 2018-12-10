@@ -2,7 +2,7 @@
 #include "qsearchmovepicker.h"
 #include "eval.h"
 
-QSearchMovePicker::QSearchMovePicker(MoveList* moveList) : MovePicker(moveList) {
+QSearchMovePicker::QSearchMovePicker(MoveList *moveList) : MovePicker(moveList) {
   _currHead = 0;
 
   // Count captures
@@ -34,7 +34,7 @@ Move QSearchMovePicker::getNext() {
   size_t bestIndex;
   int bestScore = -INF;
 
-  for (size_t i=_currHead;i<_moves->size();i++) {
+  for (size_t i = _currHead; i < _moves->size(); i++) {
     Move currMove = _moves->at(i);
     int currScore = _moves->at(i).getValue();
 

@@ -1,14 +1,14 @@
 #include "orderinginfo.h"
 #include <cstring>
 
-OrderingInfo::OrderingInfo(const TranspTable* tt) {
+OrderingInfo::OrderingInfo(const TranspTable *tt) {
   _tt = tt;
   _ply = 0;
   std::memset(_history, 0, sizeof(_history));
 }
 
 void OrderingInfo::incrementHistory(Color color, int from, int to, int depth) {
-  _history[color][from][to] += depth*depth;
+  _history[color][from][to] += depth * depth;
 }
 
 int OrderingInfo::getHistory(Color color, int from, int to) const {
@@ -27,7 +27,7 @@ int OrderingInfo::getPly() const {
   return _ply;
 }
 
-const TranspTable* OrderingInfo::getTt() const {
+const TranspTable *OrderingInfo::getTt() const {
   return _tt;
 }
 

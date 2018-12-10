@@ -10,7 +10,7 @@ class Board;
  * @brief Represents a Piece Square Table.
  */
 class PSquareTable {
-public:
+ public:
   /**
    * @brief Constructs a new empty piece square table.
    */
@@ -21,7 +21,7 @@ public:
    *
    * @param board Board to construct this PSquareTable for
    */
-  PSquareTable(const Board&);
+  PSquareTable(const Board &);
 
   /**
    * @brief Initializes PSquareTable square values.
@@ -66,7 +66,7 @@ public:
    */
   int getScore(Color);
 
-private:
+ private:
   /**
    * @brief Array indexed by [Color][PieceType][SquareIndex] of square values for each  piece, square and color.
    */
