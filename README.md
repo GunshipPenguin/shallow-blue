@@ -63,12 +63,14 @@ To build and run the unit tests, use:
 
 ```
 make test
+./shallowbluetest
 ```
 
 To build and run the unit tests, skipping perft tests (these take a while to run), use:
 
 ```
-make test-noperft
+make test
+./shallowbluetest exclude:[perft]
 ```
 
 ## Documentation
