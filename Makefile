@@ -12,8 +12,8 @@ LD_FLAGS ?= -pthread -flto
 CC_FLAGS ?= -Wall -std=c++11 -O3 -march=native -flto -pthread
 
 # Debug compile and linker flags (remove optimizations and add debugging symbols)
-debug: CC_FLAGS = -Wall -std=c++11 -g -D__DEBUG__
-debug: LD_FLAGS = -pthread
+debug debug-test: CC_FLAGS = -Wall -std=c++11 -g -D__DEBUG__
+debug debug-test: LD_FLAGS = -pthread
 
 OBJ_DIR = obj
 
@@ -24,11 +24,9 @@ all: $(OBJ_DIR) $(BIN_NAME)
 
 debug: all
 
-test: $(OBJ_DIR) $(TEST_BIN_NAME)
-	./$(TEST_BIN_NAME)
+debug-test: test
 
-test-noperft: $(OBJ_DIR) $(TEST_BIN_NAME)
-	./$(TEST_BIN_NAME) exclude:[perft]
+test: $(OBJ_DIR) $(TEST_BIN_NAME)
 
 $(BIN_NAME): $(OBJ_FILES)
 	$(CXX) $(LD_FLAGS) -o $@ $^

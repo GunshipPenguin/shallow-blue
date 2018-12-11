@@ -4,3 +4,6 @@ obj
 doc
 *.bin
 .vscode
+CMakeLists.txt
+.idea
+cmake-build-debug
