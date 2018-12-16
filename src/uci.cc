@@ -95,6 +95,8 @@ void go(std::istringstream &is) {
 unsigned long long perft(const Board &board, int depth) {
   if (depth == 0) {
     return 1;
+  } else if (depth == 1) {
+    return MoveGen(board).getLegalMoves().size();
   }
 
   MoveGen movegen(board);

@@ -4,14 +4,16 @@
 #include "catch.hpp"
 #include "attacks.h"
 
-int perft(int depth, const Board& board) {
+unsigned long long perft(int depth, const Board& board) {
   if (depth == 0) {
     return 1;
+  } else if (depth == 1) {
+    return MoveGen(board).getLegalMoves().size();
   }
 
   MoveGen movegen(board);
 
-  int nodes = 0;
+  unsigned long long nodes = 0;
   for (auto move : movegen.getLegalMoves()) {
     Board movedBoard = board;
     movedBoard.doMove(move);
