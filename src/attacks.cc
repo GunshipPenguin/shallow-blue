@@ -3,26 +3,237 @@
 #include <cstring>
 #include <stdexcept>
 
-U64 Attacks::detail::NON_SLIDING_ATTACKS[2][6][64] = {{{0}}};
-U64 Attacks::detail::RAYS[8][64] = {{0}};
+U64 Attacks::detail::_nonSlidingAttacks[2][6][64] = {{{0}}};
+
+U64 Attacks::detail::_bishopTable[64][1024] = {{0}};
+U64 Attacks::detail::_rookTable[64][4096] = {{0}};
+
+const U64 Attacks::detail::_rookMagics[64] = {
+    0xa8002c000108020ULL,
+    0x6c00049b0002001ULL,
+    0x100200010090040ULL,
+    0x2480041000800801ULL,
+    0x280028004000800ULL,
+    0x900410008040022ULL,
+    0x280020001001080ULL,
+    0x2880002041000080ULL,
+    0xa000800080400034ULL,
+    0x4808020004000ULL,
+    0x2290802004801000ULL,
+    0x411000d00100020ULL,
+    0x402800800040080ULL,
+    0xb000401004208ULL,
+    0x2409000100040200ULL,
+    0x1002100004082ULL,
+    0x22878001e24000ULL,
+    0x1090810021004010ULL,
+    0x801030040200012ULL,
+    0x500808008001000ULL,
+    0xa08018014000880ULL,
+    0x8000808004000200ULL,
+    0x201008080010200ULL,
+    0x801020000441091ULL,
+    0x800080204005ULL,
+    0x1040200040100048ULL,
+    0x120200402082ULL,
+    0xd14880480100080ULL,
+    0x12040280080080ULL,
+    0x100040080020080ULL,
+    0x9020010080800200ULL,
+    0x813241200148449ULL,
+    0x491604001800080ULL,
+    0x100401000402001ULL,
+    0x4820010021001040ULL,
+    0x400402202000812ULL,
+    0x209009005000802ULL,
+    0x810800601800400ULL,
+    0x4301083214000150ULL,
+    0x204026458e001401ULL,
+    0x40204000808000ULL,
+    0x8001008040010020ULL,
+    0x8410820820420010ULL,
+    0x1003001000090020ULL,
+    0x804040008008080ULL,
+    0x12000810020004ULL,
+    0x1000100200040208ULL,
+    0x430000a044020001ULL,
+    0x280009023410300ULL,
+    0xe0100040002240ULL,
+    0x200100401700ULL,
+    0x2244100408008080ULL,
+    0x8000400801980ULL,
+    0x2000810040200ULL,
+    0x8010100228810400ULL,
+    0x2000009044210200ULL,
+    0x4080008040102101ULL,
+    0x40002080411d01ULL,
+    0x2005524060000901ULL,
+    0x502001008400422ULL,
+    0x489a000810200402ULL,
+    0x1004400080a13ULL,
+    0x4000011008020084ULL,
+    0x26002114058042ULL,
+};
+
+const U64 Attacks::detail::_bishopMagics[64] = {
+    0x89a1121896040240ULL,
+    0x2004844802002010ULL,
+    0x2068080051921000ULL,
+    0x62880a0220200808ULL,
+    0x4042004000000ULL,
+    0x100822020200011ULL,
+    0xc00444222012000aULL,
+    0x28808801216001ULL,
+    0x400492088408100ULL,
+    0x201c401040c0084ULL,
+    0x840800910a0010ULL,
+    0x82080240060ULL,
+    0x2000840504006000ULL,
+    0x30010c4108405004ULL,
+    0x1008005410080802ULL,
+    0x8144042209100900ULL,
+    0x208081020014400ULL,
+    0x4800201208ca00ULL,
+    0xf18140408012008ULL,
+    0x1004002802102001ULL,
+    0x841000820080811ULL,
+    0x40200200a42008ULL,
+    0x800054042000ULL,
+    0x88010400410c9000ULL,
+    0x520040470104290ULL,
+    0x1004040051500081ULL,
+    0x2002081833080021ULL,
+    0x400c00c010142ULL,
+    0x941408200c002000ULL,
+    0x658810000806011ULL,
+    0x188071040440a00ULL,
+    0x4800404002011c00ULL,
+    0x104442040404200ULL,
+    0x511080202091021ULL,
+    0x4022401120400ULL,
+    0x80c0040400080120ULL,
+    0x8040010040820802ULL,
+    0x480810700020090ULL,
+    0x102008e00040242ULL,
+    0x809005202050100ULL,
+    0x8002024220104080ULL,
+    0x431008804142000ULL,
+    0x19001802081400ULL,
+    0x200014208040080ULL,
+    0x3308082008200100ULL,
+    0x41010500040c020ULL,
+    0x4012020c04210308ULL,
+    0x208220a202004080ULL,
+    0x111040120082000ULL,
+    0x6803040141280a00ULL,
+    0x2101004202410000ULL,
+    0x8200000041108022ULL,
+    0x21082088000ULL,
+    0x2410204010040ULL,
+    0x40100400809000ULL,
+    0x822088220820214ULL,
+    0x40808090012004ULL,
+    0x910224040218c9ULL,
+    0x402814422015008ULL,
+    0x90014004842410ULL,
+    0x1000042304105ULL,
+    0x10008830412a00ULL,
+    0x2520081090008908ULL,
+    0x40102000a0a60140ULL,
+};
+
+const int Attacks::detail::_rookIndexBits[64] = {
+    12, 11, 11, 11, 11, 11, 11, 12,
+    11, 10, 10, 10, 10, 10, 10, 11,
+    11, 10, 10, 10, 10, 10, 10, 11,
+    11, 10, 10, 10, 10, 10, 10, 11,
+    11, 10, 10, 10, 10, 10, 10, 11,
+    11, 10, 10, 10, 10, 10, 10, 11,
+    11, 10, 10, 10, 10, 10, 10, 11,
+    12, 11, 11, 11, 11, 11, 11, 12
+};
+
+const int Attacks::detail::_bishopIndexBits[64] = {
+    6, 5, 5, 5, 5, 5, 5, 6,
+    5, 5, 5, 5, 5, 5, 5, 5,
+    5, 5, 7, 7, 7, 7, 5, 5,
+    5, 5, 7, 9, 9, 7, 5, 5,
+    5, 5, 7, 9, 9, 7, 5, 5,
+    5, 5, 7, 7, 7, 7, 5, 5,
+    5, 5, 5, 5, 5, 5, 5, 5,
+    6, 5, 5, 5, 5, 5, 5, 6
+};
 
 void Attacks::init() {
   detail::_initPawnAttacks();
   detail::_initKnightAttacks();
   detail::_initKingAttacks();
 
-  detail::_initNorthRays();
-  detail::_initNorthEastRays();
-  detail::_initEastRays();
-  detail::_initNorthWestRays();
-  detail::_initSouthRays();
-  detail::_initSouthWestRays();
-  detail::_initWestRays();
-  detail::_initSouthEastRays();
+  detail::_initRookMagicTable();
+  detail::_initBishopMagicTable();
+}
+
+U64 Attacks::detail::_getBlockersFromIndex(int index, U64 mask) {
+  U64 blockers = ZERO;
+  int bits = _popCount(mask);
+  for (int i = 0; i < bits; i++) {
+    int bitPos = _popLsb(mask);
+    if (index & (1 << i)) {
+      blockers |= (ONE << bitPos);
+    }
+  }
+  return blockers;
+}
+
+U64 Attacks::detail::_getBishopMask(int square) {
+  U64 edgeSquares = FILE_A | FILE_H | RANK_1 | RANK_8;
+  return (_northEastRay(square) | _northWestRay(square) |
+      _southWestRay(square) | _southEastRay(square)) & ~(edgeSquares);
+}
+
+U64 Attacks::detail::_getRookMask(int square) {
+  return (_northRay(square) & ~RANK_8) |
+      (_southRay(square) & ~RANK_1) |
+      (_eastRay(square) & ~FILE_H) |
+      (_westRay(square) & ~FILE_A);
+}
+
+void Attacks::detail::_initBishopMagicTable() {
+  // For all squares
+  for (int square = 0; square < 64; square++) {
+    // For all possible blockers for this square
+    for (int blockerIndex = 0; blockerIndex < (1 << _bishopIndexBits[square]); blockerIndex++) {
+      U64 blockers = _getBlockersFromIndex(blockerIndex, _getBishopMask(square));
+      _bishopTable[square][(blockers * _bishopMagics[square]) >> (64 - _bishopIndexBits[square])] =
+          _getBishopAttacksSlow(square, blockers);
+    }
+  }
+}
+
+void Attacks::detail::_initRookMagicTable() {
+  for (int square = 0; square < 64; square++) {
+    // For all possible blockers for this square
+    for (int blockerIndex = 0; blockerIndex < (1 << _rookIndexBits[square]); blockerIndex++) {
+      U64 blockers = _getBlockersFromIndex(blockerIndex, _getRookMask(square));
+      _rookTable[square][(blockers * _rookMagics[square]) >> (64 - _rookIndexBits[square])] =
+          _getRookAttacksSlow(square, blockers);
+    }
+  }
+}
+
+U64 Attacks::detail::_getBishopAttacks(int square, U64 blockers) {
+  blockers &= detail::_getBishopMask(square);
+  return detail::_bishopTable[square][(blockers * detail::_bishopMagics[square]) >> (64 - detail::_bishopIndexBits[square])];
+}
+
+U64 Attacks::detail::_getRookAttacks(int square, U64 blockers) {
+  blockers &= detail::_getRookMask(square);
+  U64 key = (blockers * detail::_rookMagics[square]) >> (64 - detail::_rookIndexBits[square]);
+  return detail::_rookTable[square][key];
 }
 
 U64 Attacks::getNonSlidingAttacks(PieceType pieceType, int square, Color color) {
-  return detail::NON_SLIDING_ATTACKS[color][pieceType][square];
+  return detail::_nonSlidingAttacks[color][pieceType][square];
 }
 
 U64 Attacks::getSlidingAttacks(PieceType pieceType, int square, U64 blockers) {
@@ -36,41 +247,61 @@ U64 Attacks::getSlidingAttacks(PieceType pieceType, int square, U64 blockers) {
   }
 }
 
-U64 Attacks::detail::_getBishopAttacks(int square, U64 blockers) {
-  return _getPositiveRayAttack(detail::NORTH_WEST, square, blockers) |
-      _getPositiveRayAttack(detail::NORTH_EAST, square, blockers) |
-      _getNegativeRayAttack(detail::SOUTH_WEST, square, blockers) |
-      _getNegativeRayAttack(detail::SOUTH_EAST, square, blockers);
-}
+U64 Attacks::detail::_getBishopAttacksSlow(int square, U64 blockers) {
+  U64 attacks = ZERO;
 
-U64 Attacks::detail::_getRookAttacks(int square, U64 blockers) {
-  return _getPositiveRayAttack(detail::NORTH, square, blockers) |
-      _getPositiveRayAttack(detail::EAST, square, blockers) |
-      _getNegativeRayAttack(detail::SOUTH, square, blockers) |
-      _getNegativeRayAttack(detail::WEST, square, blockers);
-}
+  // North West
+  attacks |= _northWestRay(square);
+  if (_northWestRay(square) & blockers) {
+    attacks &= ~(_northWestRay(_bitscanForward(_northWestRay(square) & blockers)));
+  }
 
-U64 Attacks::detail::_getPositiveRayAttack(Attacks::detail::Dir dir,
-                                           int square, U64 blockers) {
-  U64 attacks = RAYS[dir][square];
-  U64 blocked = attacks & blockers;
+  // North East
+  attacks |= _northEastRay(square);
+  if (_northEastRay(square) & blockers) {
+    attacks &= ~(_northEastRay(_bitscanForward(_northEastRay(square) & blockers)));
+  }
 
-  if (blocked) {
-    int blockSquare = _bitscanForward(blocked);
-    attacks ^= RAYS[dir][blockSquare];
+  // South East
+  attacks |= _southEastRay(square);
+  if (_southEastRay(square) & blockers) {
+    attacks &= ~(_southEastRay(_bitscanReverse(_southEastRay(square) & blockers)));
+  }
+
+  // South West
+  attacks |= _southWestRay(square);
+  if (_southWestRay(square) & blockers) {
+    attacks &= ~(_southWestRay(_bitscanReverse(_southWestRay(square) & blockers)));
   }
 
   return attacks;
 }
 
-U64 Attacks::detail::_getNegativeRayAttack(Attacks::detail::Dir dir,
-                                           int square, U64 blockers) {
-  U64 attacks = RAYS[dir][square];
-  U64 blocked = attacks & blockers;
+U64 Attacks::detail::_getRookAttacksSlow(int square, U64 blockers) {
+  U64 attacks = ZERO;
 
-  if (blocked) {
-    int blockSquare = 64 - _bitscanReverse(blocked);
-    attacks ^= RAYS[dir][blockSquare];
+  // North
+  attacks |= _northRay(square);
+  if (_northRay(square) & blockers) {
+    attacks &= ~(_northRay(_bitscanForward(_northRay(square) & blockers)));
+  }
+
+  // South
+  attacks |= _southRay(square);
+  if (_southRay(square) & blockers) {
+    attacks &= ~(_southRay(_bitscanReverse(_southRay(square) & blockers)));
+  }
+
+  // East
+  attacks |= _eastRay(square);
+  if (_eastRay(square) & blockers) {
+    attacks &= ~(_eastRay(_bitscanForward(_eastRay(square) & blockers)));
+  }
+
+  // West
+  attacks |= _westRay(square);
+  if (_westRay(square) & blockers) {
+    attacks &= ~(_westRay(_bitscanReverse(_westRay(square) & blockers)));
   }
 
   return attacks;
@@ -83,8 +314,8 @@ void Attacks::detail::_initPawnAttacks() {
     U64 whiteAttackBb = ((start << 9) & ~FILE_A) | ((start << 7) & ~FILE_H);
     U64 blackAttackBb = ((start >> 9) & ~FILE_H) | ((start >> 7) & ~FILE_A);
 
-    NON_SLIDING_ATTACKS[WHITE][PAWN][i] = whiteAttackBb;
-    NON_SLIDING_ATTACKS[BLACK][PAWN][i] = blackAttackBb;
+    _nonSlidingAttacks[WHITE][PAWN][i] = whiteAttackBb;
+    _nonSlidingAttacks[BLACK][PAWN][i] = blackAttackBb;
   }
 }
 
@@ -97,8 +328,8 @@ void Attacks::detail::_initKnightAttacks() {
         (((start << 6) | (start >> 10)) & ~(FILE_G | FILE_H)) | // Left 2
         (((start >> 6) | (start << 10)) & ~(FILE_A | FILE_B)); // Right 2
 
-    NON_SLIDING_ATTACKS[WHITE][KNIGHT][i] = attackBb;
-    NON_SLIDING_ATTACKS[BLACK][KNIGHT][i] = attackBb;
+    _nonSlidingAttacks[WHITE][KNIGHT][i] = attackBb;
+    _nonSlidingAttacks[BLACK][KNIGHT][i] = attackBb;
   }
 }
 
@@ -110,73 +341,7 @@ void Attacks::detail::_initKingAttacks() {
         (((start << 9) | (start >> 7) | (start << 1)) & (~FILE_A)) |
         ((start >> 8) | (start << 8));
 
-    NON_SLIDING_ATTACKS[WHITE][KING][i] = attackBb;
-    NON_SLIDING_ATTACKS[BLACK][KING][i] = attackBb;
-  }
-}
-
-void Attacks::detail::_initNorthRays() {
-  U64 north = U64(0x0101010101010100);
-  for (int square = 0; square < 64; square++, north <<= 1) {
-    RAYS[NORTH][square] = north;
-  }
-}
-
-void Attacks::detail::_initEastRays() {
-  for (int square = 0; square < 64; square++) {
-    RAYS[EAST][square] = 2 * ((ONE << (square | 7)) - (ONE << square));
-  }
-}
-
-void Attacks::detail::_initNorthEastRays() {
-  U64 startRay = U64(0x8040201008040200);
-  for (int file = 0; file < 8; file++, startRay = _eastOne(startRay)) {
-    U64 currRay = startRay;
-    for (int rank8 = 0; rank8 < 64; rank8 += 8, currRay <<= 8ull) {
-      RAYS[NORTH_EAST][rank8 + file] = currRay;
-    }
-  }
-}
-
-void Attacks::detail::_initNorthWestRays() {
-  U64 startRay = U64(0x102040810204000);
-  for (int file = 7; file >= 0; file--, startRay = _westOne(startRay)) {
-    U64 currRay = startRay;
-    for (int rank8 = 0; rank8 < 64; rank8 += 8, currRay <<= 8ull) {
-      RAYS[NORTH_WEST][rank8 + file] = currRay;
-    }
-  }
-}
-
-void Attacks::detail::_initSouthEastRays() {
-  U64 startRay = U64(0x2040810204080);
-  for (int file = 0; file < 8; file++, startRay = _eastOne(startRay)) {
-    U64 currRay = startRay;
-    for (int rank8 = 56; rank8 >= 0; rank8 -= 8, currRay >>= 8ull) {
-      RAYS[SOUTH_EAST][rank8 + file] = currRay;
-    }
-  }
-}
-
-void Attacks::detail::_initSouthRays() {
-  U64 south = U64(0x0080808080808080);
-  for (int square = 63; square >= 0; square--, south >>= 1) {
-    RAYS[SOUTH][square] = south;
-  }
-}
-
-void Attacks::detail::_initSouthWestRays() {
-  U64 startRay = U64(0x40201008040201);
-  for (int file = 7; file >= 0; file--, startRay = _westOne(startRay)) {
-    U64 currRay = startRay;
-    for (int rank8 = 56; rank8 >= 0; rank8 -= 8, currRay >>= 8ull) {
-      RAYS[SOUTH_WEST][rank8 + file] = currRay;
-    }
-  }
-}
-
-void Attacks::detail::_initWestRays() {
-  for (int square = 0; square < 64; square++) {
-    RAYS[WEST][square] = (ONE << square) - (ONE << (square & 56));
+    _nonSlidingAttacks[WHITE][KING][i] = attackBb;
+    _nonSlidingAttacks[BLACK][KING][i] = attackBb;
   }
 }

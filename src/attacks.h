@@ -42,7 +42,7 @@ void _initKingAttacks();
  * @param blockers A bitboard containing any blocking pieces
  * @return A bitboard containing all possible bishop moves
  */
-U64 _getBishopAttacks(int, U64);
+U64 _getBishopAttacksSlow(int square, U64 blockers);
 
 /**
  * @brief Returns a bitboard containing all possible rook moves
@@ -51,64 +51,33 @@ U64 _getBishopAttacks(int, U64);
  * @param blockers A bitboard containing any blocking pieces
  * @return A bitboard containing all possible rook moves
  */
+U64 _getRookAttacksSlow(int square, U64 blockers);
+
+void _initBishopMagicTable();
+void _initRookMagicTable();
+
+U64 _getBishopAttacks(int, U64);
 U64 _getRookAttacks(int, U64);
 
-/**
- * @brief Gets a ray in the specified positive direction from the specified
- * square
- *
- * Rays are returned up to and including any blockers.
- *
- * @param dir Direction to get positive ray attack in
- * @param square Square to get positive ray attack from
- * @param blockers Bitboard containing blocking pieces
- * @return A bitboard containing the ray up to and including the first
- * blocking piece
- */
-U64 _getPositiveRayAttack(Dir, int, U64);
+U64 _getBishopMask(int);
+U64 _getRookMask(int);
 
-/**
- * @brief Gets a ray in the specified negative direction from the specified
- * square
- *
- * Rays are returned up to and including any blockers.
- *
- * @param dir Direction to get negative ray attacks in
- * @param square Square to get negative ray attacks from
- * @param blockers Bitboard containing blocking pieces
- * @return A bitboard containing the ray up to and including the first
- * blocking piece
- */
-U64 _getNegativeRayAttack(Dir, int, U64);
-/**@}*/
-
-/**
- * @name Ray precalculation functions
- * @brief These functions precalculate rays for a each direction
- * that are used for generation of sliding attacks
- * @{
- */
-void _initNorthRays();
-void _initNorthEastRays();
-void _initEastRays();
-void _initNorthWestRays();
-void _initSouthRays();
-void _initSouthWestRays();
-void _initWestRays();
-void _initSouthEastRays();
-/**@}*/
+U64 _getBlockersFromIndex(int, U64);
 
 /**
  * @brief 3D array indexed by [color][pieceType][square] of non sliding
  * piece attacks
  */
-extern U64 NON_SLIDING_ATTACKS[2][6][64];
+extern U64 _nonSlidingAttacks[2][6][64];
 
-/**
- * @brief 2D array indexed by [direction][square] of all possible rays for
- * all squares
- */
-extern U64 RAYS[8][64];
+extern U64 _rookTable[64][4096];
+extern U64 _bishopTable[64][1024];
+
+const extern U64 _rookMagics[64];
+const extern U64 _bishopMagics[64];
+
+const extern int _rookIndexBits[64];
+const extern int _bishopIndexBits[64];
 }
 
 /**
