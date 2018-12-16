@@ -217,8 +217,6 @@ void Board::_clearBitBoards() {
   _enPassant = ZERO;
 
   _occupied = ZERO;
-
-  return;
 }
 
 void Board::setToFen(std::string fenString) {
