@@ -22,7 +22,7 @@ U64 Board::getAllPieces(Color color) const {
 }
 
 U64 Board::getAttackable(Color color) const {
-  return _attackable[color];
+  return _allPieces[color] & ~_pieces[color][KING];
 }
 
 U64 Board::getOccupied() const {
@@ -30,7 +30,7 @@ U64 Board::getOccupied() const {
 }
 
 U64 Board::getNotOccupied() const {
-  return _notOccupied;
+  return ~_occupied;
 }
 
 U64 Board::getEnPassant() const {
@@ -83,6 +83,12 @@ PSquareTable Board::getPSquareTable() const {
 
 bool Board::colorIsInCheck(Color color) const {
   int kingSquare = _bitscanForward(getPieces(color, KING));
+
+  // Prevent a crash if no king is on board (eg. during testing)
+  if (kingSquare == -1) {
+    return false;
+  }
+
   return _squareUnderAttack(getOppositeColor(color), kingSquare);
 }
 
@@ -206,15 +212,11 @@ void Board::_clearBitBoards() {
 
     _allPieces[WHITE] = ZERO;
     _allPieces[BLACK] = ZERO;
-
-    _attackable[WHITE] = ZERO;
-    _attackable[BLACK] = ZERO;
   }
 
   _enPassant = ZERO;
 
   _occupied = ZERO;
-  _notOccupied = ZERO;
 
   return;
 }
@@ -298,7 +300,6 @@ void Board::_updateNonPieceBitBoards() {
     _pieces[WHITE][BISHOP] | \
     _pieces[WHITE][QUEEN] | \
     _pieces[WHITE][KING];
-  _attackable[WHITE] = _allPieces[WHITE] & ~_pieces[WHITE][KING];
 
   _allPieces[BLACK] = _pieces[BLACK][PAWN] | \
     _pieces[BLACK][ROOK] | \
@@ -306,10 +307,8 @@ void Board::_updateNonPieceBitBoards() {
     _pieces[BLACK][BISHOP] | \
     _pieces[BLACK][QUEEN] | \
     _pieces[BLACK][KING];
-  _attackable[BLACK] = _allPieces[BLACK] & ~_pieces[BLACK][KING];
 
   _occupied = _allPieces[WHITE] | _allPieces[BLACK];
-  _notOccupied = ~_occupied;
 }
 
 PieceType Board::getPieceAtSquare(Color color, int squareIndex) const {
@@ -331,8 +330,15 @@ PieceType Board::getPieceAtSquare(Color color, int squareIndex) const {
 }
 
 void Board::_movePiece(Color color, PieceType pieceType, int from, int to) {
-  _removePiece(color, pieceType, from);
-  _addPiece(color, pieceType, to);
+  U64 squareMask =  (ONE << to) | (ONE << from);
+
+  _pieces[color][pieceType] ^= squareMask;
+  _allPieces[color] ^= squareMask;
+
+  _occupied ^= squareMask;
+
+  _zKey.movePiece(color, pieceType, from, to);
+  _pst.movePiece(color, pieceType, from, to);
 }
 
 void Board::_removePiece(Color color, PieceType pieceType, int squareIndex) {
@@ -342,11 +348,6 @@ void Board::_removePiece(Color color, PieceType pieceType, int squareIndex) {
   _allPieces[color] ^= square;
 
   _occupied ^= square;
-  _notOccupied = ~_occupied;
-
-  if (pieceType != KING) {
-    _attackable[color] ^= square;
-  }
 
   _zKey.flipPiece(color, pieceType, squareIndex);
   _pst.removePiece(color, pieceType, squareIndex);
@@ -359,24 +360,20 @@ void Board::_addPiece(Color color, PieceType pieceType, int squareIndex) {
   _allPieces[color] |= square;
 
   _occupied |= square;
-  _notOccupied = ~_occupied;
-
-  if (pieceType != KING) {
-    _attackable[color] ^= square;
-  }
 
   _zKey.flipPiece(color, pieceType, squareIndex);
   _pst.addPiece(color, pieceType, squareIndex);
 }
 
 void Board::doMove(Move move) {
-  unsigned int flags = move.getFlags();
-
-  // En passant always cleared after a move
-  _zKey.clearEnPassant();
-  _enPassant = ZERO;
+  // Clear En passant info after each move if it exists
+  if (_enPassant) {
+    _zKey.clearEnPassant();
+    _enPassant = ZERO;
+  }
 
   // Handle move depending on what type of move it is
+  unsigned int flags = move.getFlags();
   if (!flags) {
     // No flags set, not a special move
     _movePiece(_activePlayer, move.getPieceType(), move.getFrom(), move.getTo());
@@ -450,7 +447,9 @@ void Board::doMove(Move move) {
     _halfmoveClock++;
   }
 
-  _updateCastlingRightsForMove(move);
+  if (_castlingRights) {
+    _updateCastlingRightsForMove(move);
+  }
 
   _zKey.flipActivePlayer();
   _activePlayer = getInactivePlayer();
@@ -517,7 +516,6 @@ void Board::setToStartPos() {
 
 U64 Board::_getWhitePawnAttacksForSquare(int square) const {
   return Attacks::getNonSlidingAttacks(PAWN, square, WHITE);
-
 }
 
 U64 Board::_getBlackPawnAttacksForSquare(int square) const {
