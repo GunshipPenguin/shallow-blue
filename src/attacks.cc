@@ -5,8 +5,11 @@
 
 U64 Attacks::detail::_nonSlidingAttacks[2][6][64] = {{{0}}};
 
-U64 Attacks::detail::_bishopTable[64][1024] = {{0}};
+U64 Attacks::detail::_rookMasks[64] = {0};
+U64 Attacks::detail::_bishopMasks[64] = {0};
+
 U64 Attacks::detail::_rookTable[64][4096] = {{0}};
+U64 Attacks::detail::_bishopTable[64][1024] = {{0}};
 
 const U64 Attacks::detail::_rookMagics[64] = {
     0xa8002c000108020ULL,
@@ -169,6 +172,9 @@ void Attacks::init() {
   detail::_initKnightAttacks();
   detail::_initKingAttacks();
 
+  detail::_initRookMasks();
+  detail::_initBishopMasks();
+
   detail::_initRookMagicTable();
   detail::_initBishopMagicTable();
 }
@@ -185,28 +191,20 @@ U64 Attacks::detail::_getBlockersFromIndex(int index, U64 mask) {
   return blockers;
 }
 
-U64 Attacks::detail::_getBishopMask(int square) {
-  U64 edgeSquares = FILE_A | FILE_H | RANK_1 | RANK_8;
-  return (_northEastRay(square) | _northWestRay(square) |
-      _southWestRay(square) | _southEastRay(square)) & ~(edgeSquares);
-}
-
-U64 Attacks::detail::_getRookMask(int square) {
-  return (_northRay(square) & ~RANK_8) |
-      (_southRay(square) & ~RANK_1) |
-      (_eastRay(square) & ~FILE_H) |
-      (_westRay(square) & ~FILE_A);
-}
-
-void Attacks::detail::_initBishopMagicTable() {
-  // For all squares
+void Attacks::detail::_initRookMasks() {
   for (int square = 0; square < 64; square++) {
-    // For all possible blockers for this square
-    for (int blockerIndex = 0; blockerIndex < (1 << _bishopIndexBits[square]); blockerIndex++) {
-      U64 blockers = _getBlockersFromIndex(blockerIndex, _getBishopMask(square));
-      _bishopTable[square][(blockers * _bishopMagics[square]) >> (64 - _bishopIndexBits[square])] =
-          _getBishopAttacksSlow(square, blockers);
-    }
+    _rookMasks[square] = (_northRay(square) & ~RANK_8) |
+        (_southRay(square) & ~RANK_1) |
+        (_eastRay(square) & ~FILE_H) |
+        (_westRay(square) & ~FILE_A);
+  }
+}
+
+void Attacks::detail::_initBishopMasks() {
+  U64 edgeSquares = FILE_A | FILE_H | RANK_1 | RANK_8;
+  for (int square = 0; square < 64; square++) {
+    _bishopMasks[square] = (_northEastRay(square) | _northWestRay(square) |
+        _southWestRay(square) | _southEastRay(square)) & ~(edgeSquares);
   }
 }
 
@@ -214,20 +212,32 @@ void Attacks::detail::_initRookMagicTable() {
   for (int square = 0; square < 64; square++) {
     // For all possible blockers for this square
     for (int blockerIndex = 0; blockerIndex < (1 << _rookIndexBits[square]); blockerIndex++) {
-      U64 blockers = _getBlockersFromIndex(blockerIndex, _getRookMask(square));
+      U64 blockers = _getBlockersFromIndex(blockerIndex, _rookMasks[square]);
       _rookTable[square][(blockers * _rookMagics[square]) >> (64 - _rookIndexBits[square])] =
           _getRookAttacksSlow(square, blockers);
     }
   }
 }
 
+void Attacks::detail::_initBishopMagicTable() {
+  // For all squares
+  for (int square = 0; square < 64; square++) {
+    // For all possible blockers for this square
+    for (int blockerIndex = 0; blockerIndex < (1 << _bishopIndexBits[square]); blockerIndex++) {
+      U64 blockers = _getBlockersFromIndex(blockerIndex, _bishopMasks[square]);
+      _bishopTable[square][(blockers * _bishopMagics[square]) >> (64 - _bishopIndexBits[square])] =
+          _getBishopAttacksSlow(square, blockers);
+    }
+  }
+}
+
 U64 Attacks::detail::_getBishopAttacks(int square, U64 blockers) {
-  blockers &= detail::_getBishopMask(square);
+  blockers &= _bishopMasks[square];
   return detail::_bishopTable[square][(blockers * detail::_bishopMagics[square]) >> (64 - detail::_bishopIndexBits[square])];
 }
 
 U64 Attacks::detail::_getRookAttacks(int square, U64 blockers) {
-  blockers &= detail::_getRookMask(square);
+  blockers &= detail::_rookMasks[square];
   U64 key = (blockers * detail::_rookMagics[square]) >> (64 - detail::_rookIndexBits[square]);
   return detail::_rookTable[square][key];
 }

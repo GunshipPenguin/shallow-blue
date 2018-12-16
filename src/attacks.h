@@ -36,15 +36,6 @@ void _initKingAttacks();
 /**@}*/
 
 /**
- * @brief Returns a bitboard containing all possible bishop moves
- *
- * @param square Square to calculate bishop moves from
- * @param blockers A bitboard containing any blocking pieces
- * @return A bitboard containing all possible bishop moves
- */
-U64 _getBishopAttacksSlow(int square, U64 blockers);
-
-/**
  * @brief Returns a bitboard containing all possible rook moves
  *
  * @param square Square to calculate rook moves from
@@ -53,14 +44,23 @@ U64 _getBishopAttacksSlow(int square, U64 blockers);
  */
 U64 _getRookAttacksSlow(int square, U64 blockers);
 
-void _initBishopMagicTable();
+/**
+ * @brief Returns a bitboard containing all possible bishop moves
+ *
+ * @param square Square to calculate bishop moves from
+ * @param blockers A bitboard containing any blocking pieces
+ * @return A bitboard containing all possible bishop moves
+ */
+U64 _getBishopAttacksSlow(int square, U64 blockers);
+
 void _initRookMagicTable();
+void _initBishopMagicTable();
 
-U64 _getBishopAttacks(int, U64);
+void _initRookMasks();
+void _initBishopMasks();
+
 U64 _getRookAttacks(int, U64);
-
-U64 _getBishopMask(int);
-U64 _getRookMask(int);
+U64 _getBishopAttacks(int, U64);
 
 U64 _getBlockersFromIndex(int, U64);
 
@@ -72,6 +72,9 @@ extern U64 _nonSlidingAttacks[2][6][64];
 
 extern U64 _rookTable[64][4096];
 extern U64 _bishopTable[64][1024];
+
+extern U64 _rookMasks[64];
+extern U64 _bishopMasks[64];
 
 const extern U64 _rookMagics[64];
 const extern U64 _bishopMagics[64];
