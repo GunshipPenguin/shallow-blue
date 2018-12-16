@@ -15,6 +15,7 @@ TEST_CASE("Rook move generation is correct") {
     REQUIRE(movegen.getMoves().size() == 14);
 
     board.setToFen("8/8/8/3r4/8/8/8/8 b - -");
+    movegen.setBoard(board);
     REQUIRE(movegen.getMoves().size() == 14);
   }
 
