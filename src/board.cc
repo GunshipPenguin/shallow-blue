@@ -63,7 +63,7 @@ U64 Board::getAttacksForSquare(PieceType pieceType, Color color, int square) con
       break;
     case KING: attacks = _getKingAttacksForSquare(square, own);
       break;
-    default: throw std::logic_error("Invalid piece type");
+    default: fatal("Invalid piece type");
   }
 
   return attacks;
@@ -321,7 +321,7 @@ PieceType Board::getPieceAtSquare(Color color, int squareIndex) const {
   else if (square & _pieces[color][KING]) piece = KING;
   else if (square & _pieces[color][QUEEN]) piece = QUEEN;
   else
-    throw std::logic_error((color == WHITE ? std::string("White") : std::string("Black")) +
+    fatal((color == WHITE ? std::string("White") : std::string("Black")) +
         " piece at square " + std::to_string(squareIndex) + " does not exist");
 
   return piece;

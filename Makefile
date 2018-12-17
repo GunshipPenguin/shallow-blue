@@ -9,7 +9,7 @@ OBJ_FILES = $(addprefix obj/,$(notdir $(CPP_FILES:.cc=.o)))
 TEST_OBJ_FILES = $(addprefix obj/,$(notdir $(TEST_CPP_FILES:.cc=.o)))
 
 LD_FLAGS ?= -pthread -flto
-CC_FLAGS ?= -Wall -std=c++11 -O3 -march=native -flto -pthread
+CC_FLAGS ?= -Wall -std=c++11 -O3 -march=native -flto -pthread -fno-exceptions
 
 # Debug compile and linker flags (remove optimizations and add debugging symbols)
 debug debug-test: CC_FLAGS = -Wall -std=c++11 -g -D__DEBUG__
