@@ -151,7 +151,7 @@ void Search::_rootMax(const Board &board, int depth) {
   MoveList legalMoves = movegen.getLegalMoves();
   _nodes = 0;
 
-  // If no legal moves are avaliable, just return, setting bestmove to a null move
+  // If no legal moves are available, just return, setting bestmove to a null move
   if (legalMoves.size() == 0) {
     _bestMove = Move();
     _bestScore = -INF;
@@ -262,8 +262,14 @@ int Search::_negaMax(const Board &board, int depth, int alpha, int beta) {
     return score;
   }
 
+  // Extend when evading check
+  int checkExtension = 0;
+  if (board.colorIsInCheck(board.getActivePlayer())) {
+    checkExtension = 1;
+  }
+
   // Eval if depth is 0
-  if (depth == 0) {
+  if ((depth + checkExtension) == 0) {
     return _qSearch(board, alpha, beta);
   }
 
@@ -281,10 +287,10 @@ int Search::_negaMax(const Board &board, int depth, int alpha, int beta) {
     int score;
     _orderingInfo.incrementPly();
     if (fullWindow) {
-      score = -_negaMax(movedBoard, depth - 1, -beta, -alpha);
+      score = -_negaMax(movedBoard, depth - 1 + checkExtension, -beta, -alpha);
     } else {
-      score = -_negaMax(movedBoard, depth - 1, -alpha - 1, -alpha);
-      if (score > alpha) score = -_negaMax(movedBoard, depth - 1, -beta, -alpha);
+      score = -_negaMax(movedBoard, depth - 1 + checkExtension, -alpha - 1, -alpha);
+      if (score > alpha) score = -_negaMax(movedBoard, depth - 1 + checkExtension, -beta, -alpha);
     }
     _orderingInfo.deincrementPly();
 

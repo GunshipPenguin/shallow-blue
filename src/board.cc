@@ -75,6 +75,10 @@ ZKey Board::getZKey() const {
   return _zKey;
 }
 
+ZKey Board::getPawnStructureZKey() const {
+  return _pawnStructureZkey;
+}
+
 PSquareTable Board::getPSquareTable() const {
   return _pst;
 }
@@ -308,6 +312,8 @@ void Board::setToFen(std::string fenString) {
 
   _updateNonPieceBitBoards();
   _zKey = ZKey(*this);
+  _pawnStructureZkey.setFromPawnStructure(*this);
+
   _pst = PSquareTable(*this);
 }
 
@@ -467,6 +473,11 @@ void Board::doMove(Move move) {
 
   if (_castlingRights) {
     _updateCastlingRightsForMove(move);
+  }
+
+  // Update pawn structure ZKey if this is a pawn move
+  if (move.getPieceType() == PAWN) {
+    _pawnStructureZkey.movePiece(_activePlayer, PAWN, move.getFrom(), move.getTo());
   }
 
   _zKey.flipActivePlayer();

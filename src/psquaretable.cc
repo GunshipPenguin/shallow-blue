@@ -2,21 +2,20 @@
 #include "board.h"
 #include <algorithm>
 
-int PSquareTable::PIECE_VALUES[2][6][64];
+int PSquareTable::PIECE_VALUES[2][2][6][64];
 
 std::vector<int> PSquareTable::_mirrorList(std::vector<int> list) {
   std::reverse(list.begin(), list.end());
   return list;
 }
 
-void PSquareTable::_setValues(std::vector<int> list, PieceType pieceType) {
-  std::copy(list.begin(), list.end(), PIECE_VALUES[BLACK][pieceType]);
+void PSquareTable::_setValues(std::vector<int> list, PieceType pieceType, GamePhase phase) {
+  std::copy(list.begin(), list.end(), PIECE_VALUES[phase][BLACK][pieceType]);
 
   std::vector<int> mirrored = _mirrorList(list);
-  std::copy(mirrored.begin(), mirrored.end(), PIECE_VALUES[WHITE][pieceType]);
+  std::copy(mirrored.begin(), mirrored.end(), PIECE_VALUES[phase][WHITE][pieceType]);
 }
 
-// Values taken from https://chessprogramming.wikispaces.com/Simplified+evaluation+function
 void PSquareTable::init() {
   _setValues(std::vector<int>({
     0,  0,  0,  0,  0,  0,  0,  0,
@@ -27,7 +26,7 @@ void PSquareTable::init() {
     5, -5,-10,  0,  0,-10, -5,  5,
     5, 10, 10,-20,-20, 10, 10,  5,
     0,  0,  0,  0,  0,  0,  0,  0
-  }), PAWN);
+  }), PAWN, OPENING);
 
   _setValues(std::vector<int>({
     -50,-40,-30,-30,-30,-30,-40,-50,
@@ -38,7 +37,7 @@ void PSquareTable::init() {
     -30,  5, 10, 15, 15, 10,  5,-30,
     -40,-20,  0,  5,  5,  0,-20,-40,
     -50,-40,-30,-30,-30,-30,-40,-50
-  }), KNIGHT);
+  }), KNIGHT, OPENING);
 
   _setValues(std::vector<int>({
     -20,-10,-10,-10,-10,-10,-10,-20,
@@ -49,18 +48,18 @@ void PSquareTable::init() {
     -10, 10, 10, 10, 10, 10, 10,-10,
     -10,  5,  0,  0,  0,  0,  5,-10,
     -20,-10,-10,-10,-10,-10,-10,-20
-  }), BISHOP);
+  }), BISHOP, OPENING);
 
   _setValues(std::vector<int>({
     0,  0,  0,  0,  0,  0,  0,  0,
-    5, 10, 10, 10, 10, 10, 10,  5,
+    5,  0,  0,  0,  0,  0,  0,  5,
    -5,  0,  0,  0,  0,  0,  0, -5,
    -5,  0,  0,  0,  0,  0,  0, -5,
    -5,  0,  0,  0,  0,  0,  0, -5,
    -5,  0,  0,  0,  0,  0,  0, -5,
    -5,  0,  0,  0,  0,  0,  0, -5,
     0,  0,  0,  5,  5,  0,  0,  0
-  }), ROOK);
+  }), ROOK, OPENING);
 
   _setValues(std::vector<int>({
     -20,-10,-10, -5, -5,-10,-10,-20,
@@ -71,7 +70,7 @@ void PSquareTable::init() {
     -10,  5,  5,  5,  5,  5,  0,-10,
     -10,  0,  5,  0,  0,  0,  0,-10,
     -20,-10,-10, -5, -5,-10,-10,-20
-  }), QUEEN);
+  }), QUEEN, OPENING);
 
   _setValues(std::vector<int>({
     -30,-40,-40,-50,-50,-40,-40,-30,
@@ -81,19 +80,82 @@ void PSquareTable::init() {
     -20,-30,-30,-40,-40,-30,-30,-20,
     -10,-20,-20,-20,-20,-20,-20,-10,
      20, 20,  0,  0,  0,  0, 20, 20,
-     20, 30, 10,  0,  0, 10, 30, 20
-  }), KING);
+     30, 30, 20,  20, 20, 30, 30, 30
+  }), KING, OPENING);
+
+  // ENDGAME
+  _setValues(std::vector<int>({
+     0,   0,  0,  0,  0,  0,  0,  0,
+     80, 80, 80, 80, 80, 80, 80, 80,
+     60, 60, 60, 60, 60, 60, 60, 60,
+     40, 40, 40, 40, 40, 40, 40, 40,
+     20, 20, 20, 20, 20, 20, 20, 20,
+      0,  0,  0,  0,  0,  0,  0,  0,
+    -20,-20,-20,-20,-20,-20,-20,-20,
+    0,  0,  0,  0,  0,  0,  0,  0
+  }), PAWN, ENDGAME);
+
+  _setValues(std::vector<int>({
+    -50,-40,-30,-30,-30,-30,-40,-50,
+    -40,-20,  0,  0,  0,  0,-20,-40,
+    -30,  0, 10, 15, 15, 10,  0,-30,
+    -30,  5, 15, 20, 20, 15,  5,-30,
+    -30,  0, 15, 20, 20, 15,  0,-30,
+    -30,  5, 10, 15, 15, 10,  5,-30,
+    -40,-20,  0,  5,  5,  0,-20,-40,
+    -50,-40,-30,-30,-30,-30,-40,-50
+  }), KNIGHT, ENDGAME);
+
+  _setValues(std::vector<int>({
+    -20,-10,-10,-10,-10,-10,-10,-20,
+    -10,  0,  0,  0,  0,  0,  0,-10,
+    -10,  0,  5, 10, 10,  5,  0,-10,
+    -10,  5,  5, 10, 10,  5,  5,-10,
+    -10,  0, 10, 10, 10, 10,  0,-10,
+    -10, 10, 10, 10, 10, 10, 10,-10,
+    -10,  5,  0,  0,  0,  0,  5,-10,
+    -20,-10,-10,-10,-10,-10,-10,-20
+  }), BISHOP, ENDGAME);
+
+  _setValues(std::vector<int>({
+    0,  0,  0,  0,  0,  0,  0,  0,
+   -5,  0,  0,  0,  0,  0,  0, -5,
+   -5,  0,  0,  0,  0,  0,  0, -5,
+   -5,  0,  0,  0,  0,  0,  0, -5,
+   -5,  0,  0,  0,  0,  0,  0, -5,
+   -5,  0,  0,  0,  0,  0,  0, -5,
+   -5,  0,  0,  0,  0,  0,  0, -5,
+    0,  0,  0,  0,  0,  0,  0,  0
+  }), ROOK, ENDGAME);
+
+  _setValues(std::vector<int>({
+    -20,-10,-10, -5, -5,-10,-10,-20,
+    -10,  0,  0,  0,  0,  0,  0,-10,
+    -10,  0,  5,  5,  5,  5,  0,-10,
+     -5,  0,  5,  5,  5,  5,  0, -5,
+      0,  0,  5,  5,  5,  5,  0, -5,
+    -10,  5,  5,  5,  5,  5,  0,-10,
+    -10,  0,  5,  0,  0,  0,  0,-10,
+    -20,-10,-10, -5, -5,-10,-10,-20
+  }), QUEEN, ENDGAME);
+
+  _setValues(std::vector<int>({
+    -50,-40,-30,-20,-20,-30,-40,-50,
+    -30,-20,-10,  0,  0,-10,-20,-30,
+    -30,-10, 20, 30, 30, 20,-10,-30,
+    -30,-10, 30, 40, 40, 30,-10,-30,
+    -30,-10, 30, 40, 40, 30,-10,-30,
+    -30,-10, 20, 30, 30, 20,-10,-30,
+    -30,-30,  0,  0,  0,  0,-30,-30,
+    -50,-30,-30,-30,-30,-30,-30,-50
+  }), KING, ENDGAME);
 }
 
 PSquareTable::PSquareTable() {
-  _scores[WHITE] = 0;
-  _scores[BLACK] = 0;
+
 }
 
 PSquareTable::PSquareTable(const Board &board) {
-  _scores[WHITE] = 0;
-  _scores[BLACK] = 0;
-
   for (auto pieceType : {PAWN, ROOK, KNIGHT, BISHOP, QUEEN, KING}) {
     U64 whiteBitBoard = board.getPieces(WHITE, pieceType);
     U64 blackBitBoard = board.getPieces(BLACK, pieceType);
@@ -110,11 +172,13 @@ PSquareTable::PSquareTable(const Board &board) {
 }
 
 void PSquareTable::addPiece(Color color, PieceType pieceType, unsigned int square) {
-  _scores[color] += PIECE_VALUES[color][pieceType][square];
+  _scores[OPENING][color] += PIECE_VALUES[OPENING][color][pieceType][square];
+  _scores[ENDGAME][color] += PIECE_VALUES[ENDGAME][color][pieceType][square];
 }
 
 void PSquareTable::removePiece(Color color, PieceType pieceType, unsigned int square) {
-  _scores[color] -= PIECE_VALUES[color][pieceType][square];
+  _scores[OPENING][color] -= PIECE_VALUES[OPENING][color][pieceType][square];
+  _scores[ENDGAME][color] -= PIECE_VALUES[ENDGAME][color][pieceType][square];
 }
 
 void PSquareTable::movePiece(Color color, PieceType pieceType, unsigned int fromSquare, unsigned int toSquare) {
@@ -122,6 +186,6 @@ void PSquareTable::movePiece(Color color, PieceType pieceType, unsigned int from
   addPiece(color, pieceType, toSquare);
 }
 
-int PSquareTable::getScore(Color color) {
-  return _scores[color];
+int PSquareTable::getScore(GamePhase phase, Color color) {
+  return _scores[phase][color];
 }

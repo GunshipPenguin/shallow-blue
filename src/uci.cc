@@ -1,5 +1,6 @@
 #include "uci.h"
 #include "version.h"
+#include "eval.h"
 #include <iostream>
 #include <thread>
 

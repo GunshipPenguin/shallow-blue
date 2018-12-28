@@ -113,8 +113,7 @@ inline void fatal(std::string msg) {
 
 /**
  * @enum SquareIndex
- *
- * Little endian rank file mapping of each square.
+ * @brief Little endian rank file mapping of each square.
  */
 enum SquareIndex {
   a1, b1, c1, d1, e1, f1, g1, h1,
@@ -127,4 +126,12 @@ enum SquareIndex {
   a8, b8, c8, d8, e8, f8, g8, h8
 };
 
+/**
+ * @enum GamePhase
+ * @brief Enum representing the game phase (opening/endgame)
+ */
+enum GamePhase {
+  OPENING,
+  ENDGAME
+};
 #endif

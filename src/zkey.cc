@@ -96,6 +96,23 @@ ZKey::ZKey(const Board &board) {
   }
 }
 
+void ZKey::setFromPawnStructure(const Board &board) {
+  _key = ZERO;
+
+  // Add white/black pieces
+  U64 whitePawns = board.getPieces(WHITE, PAWN);
+  U64 blackPawns = board.getPieces(BLACK, PAWN);
+
+  for (unsigned int squareIndex = 0; squareIndex < 64; squareIndex++) {
+    U64 square = ONE << squareIndex;
+    if (square & whitePawns) {
+      flipPiece(WHITE, PAWN, squareIndex);
+    } else if (square & blackPawns) {
+      flipPiece(BLACK, PAWN, squareIndex);
+    }
+  }
+}
+
 U64 ZKey::getValue() const {
   return _key;
 }

@@ -90,6 +90,12 @@ class ZKey {
   void updateCastlingRights(bool, bool, bool, bool);
 
   /**
+   * @brief Sets this ZKey from the given board, taking into account only pawn
+   * positions
+   */
+  void setFromPawnStructure(const Board&);
+
+  /**
    * @brief Compare Zobrist keys 
    * 
    * @param other ZKey to compare

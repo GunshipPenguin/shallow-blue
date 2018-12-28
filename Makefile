@@ -27,7 +27,7 @@ all: $(OBJ_DIR) $(BIN_NAME)
 
 debug: all
 
-debug-test: test
+debug-test: $(OBJ_DIR) $(TEST_BIN_NAME)
 
 test: $(OBJ_DIR) $(TEST_BIN_NAME)
 
