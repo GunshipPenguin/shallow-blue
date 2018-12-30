@@ -11,6 +11,9 @@ TEST_OBJ_FILES = $(addprefix obj/,$(notdir $(TEST_CPP_FILES:.cc=.o)))
 LD_FLAGS ?= -pthread -flto
 CC_FLAGS ?= -Wall -std=c++11 -O3 -march=native -flto -pthread -fno-exceptions
 
+# Catch makes use of C++ exceptions, so remove -fno-exceptions when making a test build
+test: CC_FLAGS = -Wall -std=c++11 -O3 -march=native -flto -pthread
+
 # Debug compile and linker flags (remove optimizations and add debugging symbols)
 debug debug-test: CC_FLAGS = -Wall -std=c++11 -g -D__DEBUG__
 debug debug-test: LD_FLAGS = -pthread
