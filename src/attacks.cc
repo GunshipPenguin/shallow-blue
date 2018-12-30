@@ -1,7 +1,6 @@
 #include "attacks.h"
 #include "bitutils.h"
 #include <cstring>
-#include <stdexcept>
 
 U64 Attacks::detail::NON_SLIDING_ATTACKS[2][6][64] = {{{0}}};
 U64 Attacks::detail::RAYS[8][64] = {{0}};
