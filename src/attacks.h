@@ -9,21 +9,6 @@
 namespace Attacks {
 namespace detail {
 /**
- * @enum Dir
- * @brief Represents the 4 cardinal and intercardinal directions
- */
-enum Dir {
-  NORTH,
-  SOUTH,
-  EAST,
-  WEST,
-  NORTH_EAST,
-  NORTH_WEST,
-  SOUTH_EAST,
-  SOUTH_WEST
-};
-
-/**
  * @name Non sliding attack initialization functions
  * @brief These functions precalculate pawn, knight and king moves for
  * each square
@@ -53,15 +38,54 @@ U64 _getRookAttacksSlow(int square, U64 blockers);
  */
 U64 _getBishopAttacksSlow(int square, U64 blockers);
 
+/**
+ * @name Rook/bishop magic table precalculation functions
+ *
+ * Initializes the internal rook/bishop magic tables used for
+ * fast calculation of sliding attacks
+ *
+ * @{
+ */
 void _initRookMagicTable();
 void _initBishopMagicTable();
+/**@}*/
 
+/**
+ * @name Rook/bishop mask precalculation functions
+ *
+ * Initializes the internal tables of rook/bishop masks used for
+ * sliding attack calculations
+ *
+ * @{
+ */
 void _initRookMasks();
 void _initBishopMasks();
+/**@}*/
 
+/**
+ * @brief Gets rook/bishop attacks on the given square with the given blocker
+ * pieces
+ *
+ * Internally this uses the fancy magic bitboard technique to lookup attacks
+ * from a preinitialized attack table
+ *
+ * @{
+ */
 U64 _getRookAttacks(int, U64);
 U64 _getBishopAttacks(int, U64);
+/**@}*/
 
+/**
+ * @brief Given a blockers bitboard and an index value containing
+ * no more set bits than exist in the blockers bitboard, return a new bitboard
+ * with blocked squares bits set or unset in the same order as in the passed
+ * index
+ *
+ * This is used to exhaustively generate blocker sets to create magic tables.
+ *
+ * @return A bitboard with the blocked bits set/unset in the same order as
+ * the index
+ */
 U64 _getBlockersFromIndex(int, U64);
 
 /**
@@ -70,17 +94,43 @@ U64 _getBlockersFromIndex(int, U64);
  */
 extern U64 _nonSlidingAttacks[2][6][64];
 
+/**
+ * @name Rook and bishop magic bitboard tables
+ *
+ * @{
+ */
 extern U64 _rookTable[64][4096];
 extern U64 _bishopTable[64][1024];
+/**@}*/
 
+/**
+ * @name Rook and bishop sliding attack masks indexed by [square]
+ *
+ * These do not include edge squares
+ *
+ * @{
+ */
 extern U64 _rookMasks[64];
 extern U64 _bishopMasks[64];
+/**@}*/
 
+/**
+ * @name Rook and bishop magic values for magic table lookups
+ * @{
+ */
 const extern U64 _rookMagics[64];
 const extern U64 _bishopMagics[64];
+/*@}*/
 
+/**
+ * @name Number of bits in the magic bitboard table index for rooks
+ * and bishops
+ *
+ * @{
+ */
 const extern int _rookIndexBits[64];
 const extern int _bishopIndexBits[64];
+/**@}*/
 }
 
 /**
