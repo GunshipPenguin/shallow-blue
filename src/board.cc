@@ -2,8 +2,6 @@
 #include "bitutils.h"
 #include "attacks.h"
 #include <sstream>
-#include <iostream>
-#include <stdexcept>
 
 Board::Board() {
   setToFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
@@ -193,6 +191,28 @@ std::string Board::getStringRep() const {
     squaresProcessed++;
 
     if ((squaresProcessed % 8 == 0) && (squaresProcessed != 64)) {
+      switch (squaresProcessed / 8) {
+        case 1:
+          stringRep += "        ";
+          stringRep += getActivePlayer() == WHITE ? "White" : "Black";
+          stringRep += " to Move";
+          break;
+        case 2:
+          stringRep += "        Halfmove Clock: ";
+          stringRep += std::to_string(_halfmoveClock);
+          break;
+        case 3:
+          stringRep += "        Castling Rights: ";
+          stringRep += _castlingRights & 1 ? "K" : "";
+          stringRep += _castlingRights & 2 ? "Q" : "";
+          stringRep += _castlingRights & 4 ? "k" : "";
+          stringRep += _castlingRights & 8 ? "q" : "";
+          break;
+        case 4:
+          stringRep += "        En Passant Square: ";
+          stringRep += _enPassant == ZERO ? "-" : Move::indexToNotation(_bitscanForward(_enPassant));
+          break;
+      }
       stringRep += "\n" + std::to_string(--rank) + "  ";
       boardPos -= 16;
     }
