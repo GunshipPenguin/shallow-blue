@@ -2,8 +2,10 @@
 #include "attacks.h"
 #include "movepicker.h"
 #include "eval.h"
+#include "rays.h"
 
 int main() {
+  Rays::init();
   PSquareTable::init();
   ZKey::init();
   MovePicker::init();

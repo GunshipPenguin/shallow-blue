@@ -3,8 +3,10 @@
 #include "attacks.h"
 #include "board.h"
 #include "movepicker.h"
+#include "rays.h"
 
 TEST_CASE("Search works as expected") {
+  Rays::init();
   PSquareTable::init();
   ZKey::init();
   Attacks::init();

@@ -3,10 +3,12 @@
 #include "board.h"
 #include "defs.h"
 #include "attacks.h"
+#include "rays.h"
 
 TEST_CASE("Rook move generation is correct") {
   Board board;
   MoveGen movegen;
+  Rays::init();
   Attacks::init();
 
   SECTION("Rook move generation is correct in the middle of an empty board") {
@@ -15,6 +17,7 @@ TEST_CASE("Rook move generation is correct") {
     REQUIRE(movegen.getMoves().size() == 14);
 
     board.setToFen("8/8/8/3r4/8/8/8/8 b - -");
+    movegen.setBoard(board);
     REQUIRE(movegen.getMoves().size() == 14);
   }
 
