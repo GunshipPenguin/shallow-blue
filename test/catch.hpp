@@ -22,7 +22,7 @@
 // #included from: internal/catch_suppress_warnings.h
 
 #ifdef __clang__
-#   ifdef __ICC // icpc defines the __clang__ macro
+                                                                                                                        #   ifdef __ICC // icpc defines the __clang__ macro
 #       pragma warning(push)
 #       pragma warning(disable: 161 1682)
 #   else // __ICC
@@ -50,7 +50,7 @@
 #endif
 
 #ifdef CATCH_IMPL
-#  ifndef CLARA_CONFIG_MAIN
+                                                                                                                        #  ifndef CLARA_CONFIG_MAIN
 #    define CLARA_CONFIG_MAIN_NOT_DEFINED
 #    define CLARA_CONFIG_MAIN
 #  endif
@@ -111,7 +111,7 @@
 
 #ifdef __clang__
 
-#  if __has_feature(cxx_nullptr)
+                                                                                                                        #  if __has_feature(cxx_nullptr)
 #    define CATCH_INTERNAL_CONFIG_CPP11_NULLPTR
 #  endif
 
@@ -139,7 +139,7 @@
 // We know some environments not to support full POSIX signals
 #if defined(__CYGWIN__) || defined(__QNX__)
 
-#   if !defined(CATCH_CONFIG_POSIX_SIGNALS)
+                                                                                                                        #   if !defined(CATCH_CONFIG_POSIX_SIGNALS)
 #       define CATCH_INTERNAL_CONFIG_NO_POSIX_SIGNALS
 #   endif
 
@@ -149,7 +149,7 @@
 // Cygwin
 #ifdef __CYGWIN__
 
-// Required for some versions of Cygwin to declare gettimeofday
+                                                                                                                        // Required for some versions of Cygwin to declare gettimeofday
 // see: http://stackoverflow.com/questions/36901803/gettimeofday-not-declared-in-this-scope-cygwin
 #   define _BSD_SOURCE
 
@@ -190,7 +190,7 @@
 // Visual C++
 #ifdef _MSC_VER
 
-#define CATCH_INTERNAL_CONFIG_WINDOWS_SEH
+                                                                                                                        #define CATCH_INTERNAL_CONFIG_WINDOWS_SEH
 
 #if (_MSC_VER >= 1600)
 #   define CATCH_INTERNAL_CONFIG_CPP11_NULLPTR
@@ -209,19 +209,19 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 // Use variadic macros if the compiler supports them
-#if ( defined _MSC_VER && _MSC_VER > 1400 && !defined __EDGE__) || \
-    ( defined __WAVE__ && __WAVE_HAS_VARIADICS ) || \
-    ( defined __GNUC__ && __GNUC__ >= 3 ) || \
-    ( !defined __cplusplus && __STDC_VERSION__ >= 199901L || __cplusplus >= 201103L )
+#if (defined _MSC_VER && _MSC_VER > 1400 && !defined __EDGE__) || \
+    (defined __WAVE__ && __WAVE_HAS_VARIADICS) || \
+    (defined __GNUC__ && __GNUC__ >= 3) || \
+    (!defined __cplusplus && __STDC_VERSION__ >= 199901L || __cplusplus >= 201103L)
 
 #define CATCH_INTERNAL_CONFIG_VARIADIC_MACROS
 
 #endif
 
 // Use __COUNTER__ if the compiler supports it
-#if ( defined _MSC_VER && _MSC_VER >= 1300 ) || \
-    ( defined __GNUC__  && __GNUC__ >= 4 && __GNUC_MINOR__ >= 3 ) || \
-    ( defined __clang__ && __clang_major__ >= 3 )
+#if (defined _MSC_VER && _MSC_VER >= 1300) || \
+    (defined __GNUC__  && __GNUC__ >= 4 && __GNUC_MINOR__ >= 3) || \
+    (defined __clang__ && __clang_major__ >= 3)
 
 #define CATCH_INTERNAL_CONFIG_COUNTER
 
@@ -338,7 +338,7 @@
 #  define CATCH_NOEXCEPT noexcept
 #  define CATCH_NOEXCEPT_IS(x) noexcept(x)
 #else
-#  define CATCH_NOEXCEPT throw()
+                                                                                                                        #  define CATCH_NOEXCEPT throw()
 #  define CATCH_NOEXCEPT_IS(x)
 #endif
 
@@ -358,159 +358,160 @@
 
 // unique_ptr support
 #ifdef CATCH_CONFIG_CPP11_UNIQUE_PTR
-#   define CATCH_AUTO_PTR( T ) std::unique_ptr<T>
+#   define CATCH_AUTO_PTR(T) std::unique_ptr<T>
 #else
 #   define CATCH_AUTO_PTR( T ) std::auto_ptr<T>
 #endif
 
-#define INTERNAL_CATCH_UNIQUE_NAME_LINE2( name, line ) name##line
-#define INTERNAL_CATCH_UNIQUE_NAME_LINE( name, line ) INTERNAL_CATCH_UNIQUE_NAME_LINE2( name, line )
+#define INTERNAL_CATCH_UNIQUE_NAME_LINE2(name, line) name##line
+#define INTERNAL_CATCH_UNIQUE_NAME_LINE(name, line) INTERNAL_CATCH_UNIQUE_NAME_LINE2( name, line )
 #ifdef CATCH_CONFIG_COUNTER
 #  define INTERNAL_CATCH_UNIQUE_NAME( name ) INTERNAL_CATCH_UNIQUE_NAME_LINE( name, __COUNTER__ )
 #else
-#  define INTERNAL_CATCH_UNIQUE_NAME( name ) INTERNAL_CATCH_UNIQUE_NAME_LINE( name, __LINE__ )
+#  define INTERNAL_CATCH_UNIQUE_NAME(name) INTERNAL_CATCH_UNIQUE_NAME_LINE( name, __LINE__ )
 #endif
 
-#define INTERNAL_CATCH_STRINGIFY2( expr ) #expr
-#define INTERNAL_CATCH_STRINGIFY( expr ) INTERNAL_CATCH_STRINGIFY2( expr )
+#define INTERNAL_CATCH_STRINGIFY2(expr) #expr
+#define INTERNAL_CATCH_STRINGIFY(expr) INTERNAL_CATCH_STRINGIFY2( expr )
 
 #include <sstream>
 #include <algorithm>
 
 namespace Catch {
 
-    struct IConfig;
+struct IConfig;
 
-    struct CaseSensitive { enum Choice {
-        Yes,
-        No
-    }; };
+struct CaseSensitive {
+  enum Choice {
+    Yes,
+    No
+  };
+};
 
-    class NonCopyable {
+class NonCopyable {
 #ifdef CATCH_CONFIG_CPP11_GENERATED_METHODS
-        NonCopyable( NonCopyable const& )              = delete;
-        NonCopyable( NonCopyable && )                  = delete;
-        NonCopyable& operator = ( NonCopyable const& ) = delete;
-        NonCopyable& operator = ( NonCopyable && )     = delete;
+  NonCopyable(NonCopyable const &) = delete;
+  NonCopyable(NonCopyable &&) = delete;
+  NonCopyable &operator=(NonCopyable const &) = delete;
+  NonCopyable &operator=(NonCopyable &&) = delete;
 #else
-        NonCopyable( NonCopyable const& info );
+                                                                                                                          NonCopyable( NonCopyable const& info );
         NonCopyable& operator = ( NonCopyable const& );
 #endif
 
-    protected:
-        NonCopyable() {}
-        virtual ~NonCopyable();
-    };
+ protected:
+  NonCopyable() {}
+  virtual ~NonCopyable();
+};
 
-    class SafeBool {
-    public:
-        typedef void (SafeBool::*type)() const;
+class SafeBool {
+ public:
+  typedef void (SafeBool::*type)() const;
 
-        static type makeSafe( bool value ) {
-            return value ? &SafeBool::trueValue : 0;
-        }
-    private:
-        void trueValue() const {}
-    };
+  static type makeSafe(bool value) {
+    return value ? &SafeBool::trueValue : 0;
+  }
+ private:
+  void trueValue() const {}
+};
 
-    template<typename ContainerT>
-    inline void deleteAll( ContainerT& container ) {
-        typename ContainerT::const_iterator it = container.begin();
-        typename ContainerT::const_iterator itEnd = container.end();
-        for(; it != itEnd; ++it )
-            delete *it;
-    }
-    template<typename AssociativeContainerT>
-    inline void deleteAllValues( AssociativeContainerT& container ) {
-        typename AssociativeContainerT::const_iterator it = container.begin();
-        typename AssociativeContainerT::const_iterator itEnd = container.end();
-        for(; it != itEnd; ++it )
-            delete it->second;
-    }
+template<typename ContainerT>
+inline void deleteAll(ContainerT &container) {
+  typename ContainerT::const_iterator it = container.begin();
+  typename ContainerT::const_iterator itEnd = container.end();
+  for (; it != itEnd; ++it)
+    delete *it;
+}
+template<typename AssociativeContainerT>
+inline void deleteAllValues(AssociativeContainerT &container) {
+  typename AssociativeContainerT::const_iterator it = container.begin();
+  typename AssociativeContainerT::const_iterator itEnd = container.end();
+  for (; it != itEnd; ++it)
+    delete it->second;
+}
 
-    bool startsWith( std::string const& s, std::string const& prefix );
-    bool startsWith( std::string const& s, char prefix );
-    bool endsWith( std::string const& s, std::string const& suffix );
-    bool endsWith( std::string const& s, char suffix );
-    bool contains( std::string const& s, std::string const& infix );
-    void toLowerInPlace( std::string& s );
-    std::string toLower( std::string const& s );
-    std::string trim( std::string const& str );
-    bool replaceInPlace( std::string& str, std::string const& replaceThis, std::string const& withThis );
+bool startsWith(std::string const &s, std::string const &prefix);
+bool startsWith(std::string const &s, char prefix);
+bool endsWith(std::string const &s, std::string const &suffix);
+bool endsWith(std::string const &s, char suffix);
+bool contains(std::string const &s, std::string const &infix);
+void toLowerInPlace(std::string &s);
+std::string toLower(std::string const &s);
+std::string trim(std::string const &str);
+bool replaceInPlace(std::string &str, std::string const &replaceThis, std::string const &withThis);
 
-    struct pluralise {
-        pluralise( std::size_t count, std::string const& label );
+struct pluralise {
+  pluralise(std::size_t count, std::string const &label);
 
-        friend std::ostream& operator << ( std::ostream& os, pluralise const& pluraliser );
+  friend std::ostream &operator<<(std::ostream &os, pluralise const &pluraliser);
 
-        std::size_t m_count;
-        std::string m_label;
-    };
+  std::size_t m_count;
+  std::string m_label;
+};
 
-    struct SourceLineInfo {
+struct SourceLineInfo {
 
-        SourceLineInfo();
-        SourceLineInfo( char const* _file, std::size_t _line );
+  SourceLineInfo();
+  SourceLineInfo(char const *_file, std::size_t _line);
 #  ifdef CATCH_CONFIG_CPP11_GENERATED_METHODS
-        SourceLineInfo(SourceLineInfo const& other)          = default;
-        SourceLineInfo( SourceLineInfo && )                  = default;
-        SourceLineInfo& operator = ( SourceLineInfo const& ) = default;
-        SourceLineInfo& operator = ( SourceLineInfo && )     = default;
+  SourceLineInfo(SourceLineInfo const &other) = default;
+  SourceLineInfo(SourceLineInfo &&) = default;
+  SourceLineInfo &operator=(SourceLineInfo const &) = default;
+  SourceLineInfo &operator=(SourceLineInfo &&) = default;
 #  endif
-        bool empty() const;
-        bool operator == ( SourceLineInfo const& other ) const;
-        bool operator < ( SourceLineInfo const& other ) const;
+  bool empty() const;
+  bool operator==(SourceLineInfo const &other) const;
+  bool operator<(SourceLineInfo const &other) const;
 
-        char const* file;
-        std::size_t line;
-    };
+  char const *file;
+  std::size_t line;
+};
 
-    std::ostream& operator << ( std::ostream& os, SourceLineInfo const& info );
+std::ostream &operator<<(std::ostream &os, SourceLineInfo const &info);
 
-    // This is just here to avoid compiler warnings with macro constants and boolean literals
-    inline bool isTrue( bool value ){ return value; }
-    inline bool alwaysTrue() { return true; }
-    inline bool alwaysFalse() { return false; }
+// This is just here to avoid compiler warnings with macro constants and boolean literals
+inline bool isTrue(bool value) { return value; }
+inline bool alwaysTrue() { return true; }
+inline bool alwaysFalse() { return false; }
 
-    void throwLogicError( std::string const& message, SourceLineInfo const& locationInfo );
+void throwLogicError(std::string const &message, SourceLineInfo const &locationInfo);
 
-    void seedRng( IConfig const& config );
-    unsigned int rngSeed();
+void seedRng(IConfig const &config);
+unsigned int rngSeed();
 
-    // Use this in variadic streaming macros to allow
-    //    >> +StreamEndStop
-    // as well as
-    //    >> stuff +StreamEndStop
-    struct StreamEndStop {
-        std::string operator+() {
-            return std::string();
-        }
-    };
-    template<typename T>
-    T const& operator + ( T const& value, StreamEndStop ) {
-        return value;
-    }
+// Use this in variadic streaming macros to allow
+//    >> +StreamEndStop
+// as well as
+//    >> stuff +StreamEndStop
+struct StreamEndStop {
+  std::string operator+() {
+    return std::string();
+  }
+};
+template<typename T>
+T const &operator+(T const &value, StreamEndStop) {
+  return value;
+}
 }
 
 #define CATCH_INTERNAL_LINEINFO ::Catch::SourceLineInfo( __FILE__, static_cast<std::size_t>( __LINE__ ) )
-#define CATCH_INTERNAL_ERROR( msg ) ::Catch::throwLogicError( msg, CATCH_INTERNAL_LINEINFO );
+#define CATCH_INTERNAL_ERROR(msg) ::Catch::throwLogicError( msg, CATCH_INTERNAL_LINEINFO );
 
 namespace Catch {
 
-    class NotImplementedException : public std::exception
-    {
-    public:
-        NotImplementedException( SourceLineInfo const& lineInfo );
-        NotImplementedException( NotImplementedException const& ) {}
+class NotImplementedException : public std::exception {
+ public:
+  NotImplementedException(SourceLineInfo const &lineInfo);
+  NotImplementedException(NotImplementedException const &) {}
 
-        virtual ~NotImplementedException() CATCH_NOEXCEPT {}
+  virtual ~NotImplementedException() CATCH_NOEXCEPT {}
 
-        virtual const char* what() const CATCH_NOEXCEPT;
+  virtual const char *what() const CATCH_NOEXCEPT;
 
-    private:
-        std::string m_what;
-        SourceLineInfo m_lineInfo;
-    };
+ private:
+  std::string m_what;
+  SourceLineInfo m_lineInfo;
+};
 
 } // end namespace Catch
 
@@ -527,20 +528,20 @@ namespace Catch {
 
 namespace Catch {
 
-    struct IGeneratorInfo {
-        virtual ~IGeneratorInfo();
-        virtual bool moveNext() = 0;
-        virtual std::size_t getCurrentIndex() const = 0;
-    };
+struct IGeneratorInfo {
+  virtual ~IGeneratorInfo();
+  virtual bool moveNext() = 0;
+  virtual std::size_t getCurrentIndex() const = 0;
+};
 
-    struct IGeneratorsForTest {
-        virtual ~IGeneratorsForTest();
+struct IGeneratorsForTest {
+  virtual ~IGeneratorsForTest();
 
-        virtual IGeneratorInfo& getGeneratorInfo( std::string const& fileInfo, std::size_t size ) = 0;
-        virtual bool moveNext() = 0;
-    };
+  virtual IGeneratorInfo &getGeneratorInfo(std::string const &fileInfo, std::size_t size) = 0;
+  virtual bool moveNext() = 0;
+};
 
-    IGeneratorsForTest* createGeneratorsForTest();
+IGeneratorsForTest *createGeneratorsForTest();
 
 } // end namespace Catch
 
@@ -548,78 +549,78 @@ namespace Catch {
 #define TWOBLUECUBES_CATCH_PTR_HPP_INCLUDED
 
 #ifdef __clang__
-#pragma clang diagnostic push
+                                                                                                                        #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wpadded"
 #endif
 
 namespace Catch {
 
-    // An intrusive reference counting smart pointer.
-    // T must implement addRef() and release() methods
-    // typically implementing the IShared interface
-    template<typename T>
-    class Ptr {
-    public:
-        Ptr() : m_p( CATCH_NULL ){}
-        Ptr( T* p ) : m_p( p ){
-            if( m_p )
-                m_p->addRef();
-        }
-        Ptr( Ptr const& other ) : m_p( other.m_p ){
-            if( m_p )
-                m_p->addRef();
-        }
-        ~Ptr(){
-            if( m_p )
-                m_p->release();
-        }
-        void reset() {
-            if( m_p )
-                m_p->release();
-            m_p = CATCH_NULL;
-        }
-        Ptr& operator = ( T* p ){
-            Ptr temp( p );
-            swap( temp );
-            return *this;
-        }
-        Ptr& operator = ( Ptr const& other ){
-            Ptr temp( other );
-            swap( temp );
-            return *this;
-        }
-        void swap( Ptr& other ) { std::swap( m_p, other.m_p ); }
-        T* get() const{ return m_p; }
-        T& operator*() const { return *m_p; }
-        T* operator->() const { return m_p; }
-        bool operator !() const { return m_p == CATCH_NULL; }
-        operator SafeBool::type() const { return SafeBool::makeSafe( m_p != CATCH_NULL ); }
+// An intrusive reference counting smart pointer.
+// T must implement addRef() and release() methods
+// typically implementing the IShared interface
+template<typename T>
+class Ptr {
+ public:
+  Ptr() : m_p(CATCH_NULL) {}
+  Ptr(T *p) : m_p(p) {
+    if (m_p)
+      m_p->addRef();
+  }
+  Ptr(Ptr const &other) : m_p(other.m_p) {
+    if (m_p)
+      m_p->addRef();
+  }
+  ~Ptr() {
+    if (m_p)
+      m_p->release();
+  }
+  void reset() {
+    if (m_p)
+      m_p->release();
+    m_p = CATCH_NULL;
+  }
+  Ptr &operator=(T *p) {
+    Ptr temp(p);
+    swap(temp);
+    return *this;
+  }
+  Ptr &operator=(Ptr const &other) {
+    Ptr temp(other);
+    swap(temp);
+    return *this;
+  }
+  void swap(Ptr &other) { std::swap(m_p, other.m_p); }
+  T *get() const { return m_p; }
+  T &operator*() const { return *m_p; }
+  T *operator->() const { return m_p; }
+  bool operator!() const { return m_p == CATCH_NULL; }
+  operator SafeBool::type() const { return SafeBool::makeSafe(m_p != CATCH_NULL); }
 
-    private:
-        T* m_p;
-    };
+ private:
+  T *m_p;
+};
 
-    struct IShared : NonCopyable {
-        virtual ~IShared();
-        virtual void addRef() const = 0;
-        virtual void release() const = 0;
-    };
+struct IShared : NonCopyable {
+  virtual ~IShared();
+  virtual void addRef() const = 0;
+  virtual void release() const = 0;
+};
 
-    template<typename T = IShared>
-    struct SharedImpl : T {
+template<typename T = IShared>
+struct SharedImpl : T {
 
-        SharedImpl() : m_rc( 0 ){}
+  SharedImpl() : m_rc(0) {}
 
-        virtual void addRef() const {
-            ++m_rc;
-        }
-        virtual void release() const {
-            if( --m_rc == 0 )
-                delete this;
-        }
+  virtual void addRef() const {
+    ++m_rc;
+  }
+  virtual void release() const {
+    if (--m_rc == 0)
+      delete this;
+  }
 
-        mutable unsigned int m_rc;
-    };
+  mutable unsigned int m_rc;
+};
 
 } // end namespace Catch
 
@@ -629,36 +630,34 @@ namespace Catch {
 
 namespace Catch {
 
-    class TestCase;
-    class Stream;
-    struct IResultCapture;
-    struct IRunner;
-    struct IGeneratorsForTest;
-    struct IConfig;
+class TestCase;
+class Stream;
+struct IResultCapture;
+struct IRunner;
+struct IGeneratorsForTest;
+struct IConfig;
 
-    struct IContext
-    {
-        virtual ~IContext();
+struct IContext {
+  virtual ~IContext();
 
-        virtual IResultCapture* getResultCapture() = 0;
-        virtual IRunner* getRunner() = 0;
-        virtual size_t getGeneratorIndex( std::string const& fileInfo, size_t totalSize ) = 0;
-        virtual bool advanceGeneratorsForCurrentTest() = 0;
-        virtual Ptr<IConfig const> getConfig() const = 0;
-    };
+  virtual IResultCapture *getResultCapture() = 0;
+  virtual IRunner *getRunner() = 0;
+  virtual size_t getGeneratorIndex(std::string const &fileInfo, size_t totalSize) = 0;
+  virtual bool advanceGeneratorsForCurrentTest() = 0;
+  virtual Ptr<IConfig const> getConfig() const = 0;
+};
 
-    struct IMutableContext : IContext
-    {
-        virtual ~IMutableContext();
-        virtual void setResultCapture( IResultCapture* resultCapture ) = 0;
-        virtual void setRunner( IRunner* runner ) = 0;
-        virtual void setConfig( Ptr<IConfig const> const& config ) = 0;
-    };
+struct IMutableContext : IContext {
+  virtual ~IMutableContext();
+  virtual void setResultCapture(IResultCapture *resultCapture) = 0;
+  virtual void setRunner(IRunner *runner) = 0;
+  virtual void setConfig(Ptr<IConfig const> const &config) = 0;
+};
 
-    IContext& getCurrentContext();
-    IMutableContext& getCurrentMutableContext();
-    void cleanUpContext();
-    Stream createStream( std::string const& streamName );
+IContext &getCurrentContext();
+IMutableContext &getCurrentMutableContext();
+void cleanUpContext();
+Stream createStream(std::string const &streamName);
 
 }
 
@@ -672,26 +671,28 @@ namespace Catch {
 
 namespace Catch {
 
-    class TestSpec;
+class TestSpec;
 
-    struct ITestCase : IShared {
-        virtual void invoke () const = 0;
-    protected:
-        virtual ~ITestCase();
-    };
+struct ITestCase : IShared {
+  virtual void invoke() const = 0;
+ protected:
+  virtual ~ITestCase();
+};
 
-    class TestCase;
-    struct IConfig;
+class TestCase;
+struct IConfig;
 
-    struct ITestCaseRegistry {
-        virtual ~ITestCaseRegistry();
-        virtual std::vector<TestCase> const& getAllTests() const = 0;
-        virtual std::vector<TestCase> const& getAllTestsSorted( IConfig const& config ) const = 0;
-    };
+struct ITestCaseRegistry {
+  virtual ~ITestCaseRegistry();
+  virtual std::vector<TestCase> const &getAllTests() const = 0;
+  virtual std::vector<TestCase> const &getAllTestsSorted(IConfig const &config) const = 0;
+};
 
-    bool matchTest( TestCase const& testCase, TestSpec const& testSpec, IConfig const& config );
-    std::vector<TestCase> filterTests( std::vector<TestCase> const& testCases, TestSpec const& testSpec, IConfig const& config );
-    std::vector<TestCase> const& getAllTestCasesSorted( IConfig const& config );
+bool matchTest(TestCase const &testCase, TestSpec const &testSpec, IConfig const &config);
+std::vector<TestCase> filterTests(std::vector<TestCase> const &testCases,
+                                  TestSpec const &testSpec,
+                                  IConfig const &config);
+std::vector<TestCase> const &getAllTestCasesSorted(IConfig const &config);
 
 }
 
@@ -700,91 +701,90 @@ namespace Catch {
 template<typename C>
 class MethodTestCase : public SharedImpl<ITestCase> {
 
-public:
-    MethodTestCase( void (C::*method)() ) : m_method( method ) {}
+ public:
+  MethodTestCase(void (C::*method)()) : m_method(method) {}
 
-    virtual void invoke() const {
-        C obj;
-        (obj.*m_method)();
-    }
+  virtual void invoke() const {
+    C obj;
+    (obj.*m_method)();
+  }
 
-private:
-    virtual ~MethodTestCase() {}
+ private:
+  virtual ~MethodTestCase() {}
 
-    void (C::*m_method)();
+  void (C::*m_method)();
 };
 
 typedef void(*TestFunction)();
 
 struct NameAndDesc {
-    NameAndDesc( const char* _name = "", const char* _description= "" )
-    : name( _name ), description( _description )
-    {}
+  NameAndDesc(const char *_name = "", const char *_description = "")
+      : name(_name), description(_description) {}
 
-    const char* name;
-    const char* description;
+  const char *name;
+  const char *description;
 };
 
 void registerTestCase
-    (   ITestCase* testCase,
-        char const* className,
-        NameAndDesc const& nameAndDesc,
-        SourceLineInfo const& lineInfo );
+    (ITestCase *testCase,
+     char const *className,
+     NameAndDesc const &nameAndDesc,
+     SourceLineInfo const &lineInfo);
 
 struct AutoReg {
 
-    AutoReg
-        (   TestFunction function,
-            SourceLineInfo const& lineInfo,
-            NameAndDesc const& nameAndDesc );
+  AutoReg
+      (TestFunction function,
+       SourceLineInfo const &lineInfo,
+       NameAndDesc const &nameAndDesc);
 
-    template<typename C>
-    AutoReg
-        (   void (C::*method)(),
-            char const* className,
-            NameAndDesc const& nameAndDesc,
-            SourceLineInfo const& lineInfo ) {
+  template<typename C>
+  AutoReg
+      (void (C::*method)(),
+       char const *className,
+       NameAndDesc const &nameAndDesc,
+       SourceLineInfo const &lineInfo) {
 
-        registerTestCase
-            (   new MethodTestCase<C>( method ),
-                className,
-                nameAndDesc,
-                lineInfo );
-    }
+    registerTestCase
+        (new MethodTestCase<C>(method),
+         className,
+         nameAndDesc,
+         lineInfo);
+  }
 
-    ~AutoReg();
+  ~AutoReg();
 
-private:
-    AutoReg( AutoReg const& );
-    void operator= ( AutoReg const& );
+ private:
+  AutoReg(AutoReg const &);
+  void operator=(AutoReg const &);
 };
 
 void registerTestCaseFunction
-    (   TestFunction function,
-        SourceLineInfo const& lineInfo,
-        NameAndDesc const& nameAndDesc );
+    (TestFunction function,
+     SourceLineInfo const &lineInfo,
+     NameAndDesc const &nameAndDesc);
 
 } // end namespace Catch
 
 #ifdef CATCH_CONFIG_VARIADIC_MACROS
-    ///////////////////////////////////////////////////////////////////////////////
-    #define INTERNAL_CATCH_TESTCASE2( TestName, ... ) \
+///////////////////////////////////////////////////////////////////////////////
+#define INTERNAL_CATCH_TESTCASE2(TestName, ...) \
         static void TestName(); \
         CATCH_INTERNAL_SUPPRESS_ETD_WARNINGS \
         namespace{ Catch::AutoReg INTERNAL_CATCH_UNIQUE_NAME( autoRegistrar )( &TestName, CATCH_INTERNAL_LINEINFO, Catch::NameAndDesc( __VA_ARGS__ ) ); } \
         CATCH_INTERNAL_UNSUPPRESS_ETD_WARNINGS \
         static void TestName()
-    #define INTERNAL_CATCH_TESTCASE( ... ) \
+#define INTERNAL_CATCH_TESTCASE(...) \
         INTERNAL_CATCH_TESTCASE2( INTERNAL_CATCH_UNIQUE_NAME( ____C_A_T_C_H____T_E_S_T____ ), __VA_ARGS__ )
 
-    ///////////////////////////////////////////////////////////////////////////////
-    #define INTERNAL_CATCH_METHOD_AS_TEST_CASE( QualifiedMethod, ... ) \
+///////////////////////////////////////////////////////////////////////////////
+#define INTERNAL_CATCH_METHOD_AS_TEST_CASE(QualifiedMethod, ...) \
         CATCH_INTERNAL_SUPPRESS_ETD_WARNINGS \
         namespace{ Catch::AutoReg INTERNAL_CATCH_UNIQUE_NAME( autoRegistrar )( &QualifiedMethod, "&" #QualifiedMethod, Catch::NameAndDesc( __VA_ARGS__ ), CATCH_INTERNAL_LINEINFO ); } \
         CATCH_INTERNAL_UNSUPPRESS_ETD_WARNINGS
 
-    ///////////////////////////////////////////////////////////////////////////////
-    #define INTERNAL_CATCH_TEST_CASE_METHOD2( TestName, ClassName, ... )\
+///////////////////////////////////////////////////////////////////////////////
+#define INTERNAL_CATCH_TEST_CASE_METHOD2(TestName, ClassName, ...)\
         CATCH_INTERNAL_SUPPRESS_ETD_WARNINGS \
         namespace{ \
             struct TestName : ClassName{ \
@@ -794,17 +794,17 @@ void registerTestCaseFunction
         } \
         CATCH_INTERNAL_UNSUPPRESS_ETD_WARNINGS \
         void TestName::test()
-    #define INTERNAL_CATCH_TEST_CASE_METHOD( ClassName, ... ) \
+#define INTERNAL_CATCH_TEST_CASE_METHOD(ClassName, ...) \
         INTERNAL_CATCH_TEST_CASE_METHOD2( INTERNAL_CATCH_UNIQUE_NAME( ____C_A_T_C_H____T_E_S_T____ ), ClassName, __VA_ARGS__ )
 
-    ///////////////////////////////////////////////////////////////////////////////
-    #define INTERNAL_CATCH_REGISTER_TESTCASE( Function, ... ) \
+///////////////////////////////////////////////////////////////////////////////
+#define INTERNAL_CATCH_REGISTER_TESTCASE(Function, ...) \
         CATCH_INTERNAL_SUPPRESS_ETD_WARNINGS \
         Catch::AutoReg( Function, CATCH_INTERNAL_LINEINFO, Catch::NameAndDesc( __VA_ARGS__ ) ); \
         CATCH_INTERNAL_UNSUPPRESS_ETD_WARNINGS
 
 #else
-    ///////////////////////////////////////////////////////////////////////////////
+                                                                                                                        ///////////////////////////////////////////////////////////////////////////////
     #define INTERNAL_CATCH_TESTCASE2( TestName, Name, Desc ) \
         static void TestName(); \
         CATCH_INTERNAL_SUPPRESS_ETD_WARNINGS \
@@ -853,50 +853,54 @@ void registerTestCaseFunction
 
 namespace Catch {
 
-    // ResultWas::OfType enum
-    struct ResultWas { enum OfType {
-        Unknown = -1,
-        Ok = 0,
-        Info = 1,
-        Warning = 2,
+// ResultWas::OfType enum
+struct ResultWas {
+  enum OfType {
+    Unknown = -1,
+    Ok = 0,
+    Info = 1,
+    Warning = 2,
 
-        FailureBit = 0x10,
+    FailureBit = 0x10,
 
-        ExpressionFailed = FailureBit | 1,
-        ExplicitFailure = FailureBit | 2,
+    ExpressionFailed = FailureBit | 1,
+    ExplicitFailure = FailureBit | 2,
 
-        Exception = 0x100 | FailureBit,
+    Exception = 0x100 | FailureBit,
 
-        ThrewException = Exception | 1,
-        DidntThrowException = Exception | 2,
+    ThrewException = Exception | 1,
+    DidntThrowException = Exception | 2,
 
-        FatalErrorCondition = 0x200 | FailureBit
+    FatalErrorCondition = 0x200 | FailureBit
 
-    }; };
+  };
+};
 
-    inline bool isOk( ResultWas::OfType resultType ) {
-        return ( resultType & ResultWas::FailureBit ) == 0;
-    }
-    inline bool isJustInfo( int flags ) {
-        return flags == ResultWas::Info;
-    }
+inline bool isOk(ResultWas::OfType resultType) {
+  return (resultType & ResultWas::FailureBit) == 0;
+}
+inline bool isJustInfo(int flags) {
+  return flags == ResultWas::Info;
+}
 
-    // ResultDisposition::Flags enum
-    struct ResultDisposition { enum Flags {
-        Normal = 0x01,
+// ResultDisposition::Flags enum
+struct ResultDisposition {
+  enum Flags {
+    Normal = 0x01,
 
-        ContinueOnFailure = 0x02,   // Failures fail test, but execution continues
-        FalseTest = 0x04,           // Prefix expression with !
-        SuppressFail = 0x08         // Failures are reported but do not fail the test
-    }; };
+    ContinueOnFailure = 0x02,   // Failures fail test, but execution continues
+    FalseTest = 0x04,           // Prefix expression with !
+    SuppressFail = 0x08         // Failures are reported but do not fail the test
+  };
+};
 
-    inline ResultDisposition::Flags operator | ( ResultDisposition::Flags lhs, ResultDisposition::Flags rhs ) {
-        return static_cast<ResultDisposition::Flags>( static_cast<int>( lhs ) | static_cast<int>( rhs ) );
-    }
+inline ResultDisposition::Flags operator|(ResultDisposition::Flags lhs, ResultDisposition::Flags rhs) {
+  return static_cast<ResultDisposition::Flags>( static_cast<int>( lhs ) | static_cast<int>( rhs ));
+}
 
-    inline bool shouldContinueOnFailure( int flags )    { return ( flags & ResultDisposition::ContinueOnFailure ) != 0; }
-    inline bool isFalseTest( int flags )                { return ( flags & ResultDisposition::FalseTest ) != 0; }
-    inline bool shouldSuppressFailure( int flags )      { return ( flags & ResultDisposition::SuppressFail ) != 0; }
+inline bool shouldContinueOnFailure(int flags) { return (flags & ResultDisposition::ContinueOnFailure) != 0; }
+inline bool isFalseTest(int flags) { return (flags & ResultDisposition::FalseTest) != 0; }
+inline bool shouldSuppressFailure(int flags) { return (flags & ResultDisposition::SuppressFail) != 0; }
 
 } // end namespace Catch
 
@@ -907,114 +911,116 @@ namespace Catch {
 
 namespace Catch {
 
-    struct STATIC_ASSERT_Expression_Too_Complex_Please_Rewrite_As_Binary_Comparison;
+struct STATIC_ASSERT_Expression_Too_Complex_Please_Rewrite_As_Binary_Comparison;
 
-    struct DecomposedExpression
-    {
-        virtual ~DecomposedExpression() {}
-        virtual bool isBinaryExpression() const {
-            return false;
-        }
-        virtual void reconstructExpression( std::string& dest ) const = 0;
+struct DecomposedExpression {
+  virtual ~DecomposedExpression() {}
+  virtual bool isBinaryExpression() const {
+    return false;
+  }
+  virtual void reconstructExpression(std::string &dest) const = 0;
 
-        // Only simple binary comparisons can be decomposed.
-        // If more complex check is required then wrap sub-expressions in parentheses.
-        template<typename T> STATIC_ASSERT_Expression_Too_Complex_Please_Rewrite_As_Binary_Comparison& operator + ( T const& );
-        template<typename T> STATIC_ASSERT_Expression_Too_Complex_Please_Rewrite_As_Binary_Comparison& operator - ( T const& );
-        template<typename T> STATIC_ASSERT_Expression_Too_Complex_Please_Rewrite_As_Binary_Comparison& operator * ( T const& );
-        template<typename T> STATIC_ASSERT_Expression_Too_Complex_Please_Rewrite_As_Binary_Comparison& operator / ( T const& );
-        template<typename T> STATIC_ASSERT_Expression_Too_Complex_Please_Rewrite_As_Binary_Comparison& operator % ( T const& );
-        template<typename T> STATIC_ASSERT_Expression_Too_Complex_Please_Rewrite_As_Binary_Comparison& operator && ( T const& );
-        template<typename T> STATIC_ASSERT_Expression_Too_Complex_Please_Rewrite_As_Binary_Comparison& operator || ( T const& );
+  // Only simple binary comparisons can be decomposed.
+  // If more complex check is required then wrap sub-expressions in parentheses.
+  template<typename T>
+  STATIC_ASSERT_Expression_Too_Complex_Please_Rewrite_As_Binary_Comparison &operator+(T const &);
+  template<typename T>
+  STATIC_ASSERT_Expression_Too_Complex_Please_Rewrite_As_Binary_Comparison &operator-(T const &);
+  template<typename T>
+  STATIC_ASSERT_Expression_Too_Complex_Please_Rewrite_As_Binary_Comparison &operator*(T const &);
+  template<typename T>
+  STATIC_ASSERT_Expression_Too_Complex_Please_Rewrite_As_Binary_Comparison &operator/(T const &);
+  template<typename T>
+  STATIC_ASSERT_Expression_Too_Complex_Please_Rewrite_As_Binary_Comparison &operator%(T const &);
+  template<typename T>
+  STATIC_ASSERT_Expression_Too_Complex_Please_Rewrite_As_Binary_Comparison &operator&&(T const &);
+  template<typename T>
+  STATIC_ASSERT_Expression_Too_Complex_Please_Rewrite_As_Binary_Comparison &operator||(T const &);
 
-	private:
-		DecomposedExpression& operator = (DecomposedExpression const&);
-    };
+ private:
+  DecomposedExpression &operator=(DecomposedExpression const &);
+};
 
-    struct AssertionInfo
-    {
-        AssertionInfo() {}
-        AssertionInfo(  std::string const& _macroName,
-                        SourceLineInfo const& _lineInfo,
-                        std::string const& _capturedExpression,
-                        ResultDisposition::Flags _resultDisposition );
+struct AssertionInfo {
+  AssertionInfo() {}
+  AssertionInfo(std::string const &_macroName,
+                SourceLineInfo const &_lineInfo,
+                std::string const &_capturedExpression,
+                ResultDisposition::Flags _resultDisposition);
 
-        std::string macroName;
-        SourceLineInfo lineInfo;
-        std::string capturedExpression;
-        ResultDisposition::Flags resultDisposition;
-    };
+  std::string macroName;
+  SourceLineInfo lineInfo;
+  std::string capturedExpression;
+  ResultDisposition::Flags resultDisposition;
+};
 
-    struct AssertionResultData
-    {
-        AssertionResultData() : decomposedExpression( CATCH_NULL )
-                              , resultType( ResultWas::Unknown )
-                              , negated( false )
-                              , parenthesized( false ) {}
+struct AssertionResultData {
+  AssertionResultData()
+      : decomposedExpression(CATCH_NULL), resultType(ResultWas::Unknown), negated(false), parenthesized(false) {}
 
-        void negate( bool parenthesize ) {
-            negated = !negated;
-            parenthesized = parenthesize;
-            if( resultType == ResultWas::Ok )
-                resultType = ResultWas::ExpressionFailed;
-            else if( resultType == ResultWas::ExpressionFailed )
-                resultType = ResultWas::Ok;
-        }
+  void negate(bool parenthesize) {
+    negated = !negated;
+    parenthesized = parenthesize;
+    if (resultType == ResultWas::Ok)
+      resultType = ResultWas::ExpressionFailed;
+    else if (resultType == ResultWas::ExpressionFailed)
+      resultType = ResultWas::Ok;
+  }
 
-        std::string const& reconstructExpression() const {
-            if( decomposedExpression != CATCH_NULL ) {
-                decomposedExpression->reconstructExpression( reconstructedExpression );
-                if( parenthesized ) {
-                    reconstructedExpression.insert( 0, 1, '(' );
-                    reconstructedExpression.append( 1, ')' );
-                }
-                if( negated ) {
-                    reconstructedExpression.insert( 0, 1, '!' );
-                }
-                decomposedExpression = CATCH_NULL;
-            }
-            return reconstructedExpression;
-        }
+  std::string const &reconstructExpression() const {
+    if (decomposedExpression != CATCH_NULL) {
+      decomposedExpression->reconstructExpression(reconstructedExpression);
+      if (parenthesized) {
+        reconstructedExpression.insert(0, 1, '(');
+        reconstructedExpression.append(1, ')');
+      }
+      if (negated) {
+        reconstructedExpression.insert(0, 1, '!');
+      }
+      decomposedExpression = CATCH_NULL;
+    }
+    return reconstructedExpression;
+  }
 
-        mutable DecomposedExpression const* decomposedExpression;
-        mutable std::string reconstructedExpression;
-        std::string message;
-        ResultWas::OfType resultType;
-        bool negated;
-        bool parenthesized;
-    };
+  mutable DecomposedExpression const *decomposedExpression;
+  mutable std::string reconstructedExpression;
+  std::string message;
+  ResultWas::OfType resultType;
+  bool negated;
+  bool parenthesized;
+};
 
-    class AssertionResult {
-    public:
-        AssertionResult();
-        AssertionResult( AssertionInfo const& info, AssertionResultData const& data );
-        ~AssertionResult();
+class AssertionResult {
+ public:
+  AssertionResult();
+  AssertionResult(AssertionInfo const &info, AssertionResultData const &data);
+  ~AssertionResult();
 #  ifdef CATCH_CONFIG_CPP11_GENERATED_METHODS
-         AssertionResult( AssertionResult const& )              = default;
-         AssertionResult( AssertionResult && )                  = default;
-         AssertionResult& operator = ( AssertionResult const& ) = default;
-         AssertionResult& operator = ( AssertionResult && )     = default;
+  AssertionResult(AssertionResult const &) = default;
+  AssertionResult(AssertionResult &&) = default;
+  AssertionResult &operator=(AssertionResult const &) = default;
+  AssertionResult &operator=(AssertionResult &&) = default;
 #  endif
 
-        bool isOk() const;
-        bool succeeded() const;
-        ResultWas::OfType getResultType() const;
-        bool hasExpression() const;
-        bool hasMessage() const;
-        std::string getExpression() const;
-        std::string getExpressionInMacro() const;
-        bool hasExpandedExpression() const;
-        std::string getExpandedExpression() const;
-        std::string getMessage() const;
-        SourceLineInfo getSourceInfo() const;
-        std::string getTestMacroName() const;
-        void discardDecomposedExpression() const;
-        void expandDecomposedExpression() const;
+  bool isOk() const;
+  bool succeeded() const;
+  ResultWas::OfType getResultType() const;
+  bool hasExpression() const;
+  bool hasMessage() const;
+  std::string getExpression() const;
+  std::string getExpressionInMacro() const;
+  bool hasExpandedExpression() const;
+  std::string getExpandedExpression() const;
+  std::string getMessage() const;
+  SourceLineInfo getSourceInfo() const;
+  std::string getTestMacroName() const;
+  void discardDecomposedExpression() const;
+  void expandDecomposedExpression() const;
 
-    protected:
-        AssertionInfo m_info;
-        AssertionResultData m_resultData;
-    };
+ protected:
+  AssertionInfo m_info;
+  AssertionResultData m_resultData;
+};
 
 } // end namespace Catch
 
@@ -1023,158 +1029,165 @@ namespace Catch {
 
 namespace Catch {
 namespace Matchers {
-    namespace Impl {
+namespace Impl {
 
-        template<typename ArgT> struct MatchAllOf;
-        template<typename ArgT> struct MatchAnyOf;
-        template<typename ArgT> struct MatchNotOf;
+template<typename ArgT>
+struct MatchAllOf;
+template<typename ArgT>
+struct MatchAnyOf;
+template<typename ArgT>
+struct MatchNotOf;
 
-        class MatcherUntypedBase {
-        public:
-            std::string toString() const {
-                if( m_cachedToString.empty() )
-                    m_cachedToString = describe();
-                return m_cachedToString;
-            }
+class MatcherUntypedBase {
+ public:
+  std::string toString() const {
+    if (m_cachedToString.empty())
+      m_cachedToString = describe();
+    return m_cachedToString;
+  }
 
-        protected:
-            virtual ~MatcherUntypedBase();
-            virtual std::string describe() const = 0;
-            mutable std::string m_cachedToString;
-        private:
-            MatcherUntypedBase& operator = ( MatcherUntypedBase const& );
-        };
+ protected:
+  virtual ~MatcherUntypedBase();
+  virtual std::string describe() const = 0;
+  mutable std::string m_cachedToString;
+ private:
+  MatcherUntypedBase &operator=(MatcherUntypedBase const &);
+};
 
-        template<typename ObjectT>
-        struct MatcherMethod {
-            virtual bool match( ObjectT const& arg ) const = 0;
-        };
-        template<typename PtrT>
-        struct MatcherMethod<PtrT*> {
-            virtual bool match( PtrT* arg ) const = 0;
-        };
+template<typename ObjectT>
+struct MatcherMethod {
+  virtual bool match(ObjectT const &arg) const = 0;
+};
+template<typename PtrT>
+struct MatcherMethod<PtrT *> {
+  virtual bool match(PtrT *arg) const = 0;
+};
 
-        template<typename ObjectT, typename ComparatorT = ObjectT>
-        struct MatcherBase : MatcherUntypedBase, MatcherMethod<ObjectT> {
+template<typename ObjectT, typename ComparatorT = ObjectT>
+struct MatcherBase : MatcherUntypedBase, MatcherMethod<ObjectT> {
 
-            MatchAllOf<ComparatorT> operator && ( MatcherBase const& other ) const;
-            MatchAnyOf<ComparatorT> operator || ( MatcherBase const& other ) const;
-            MatchNotOf<ComparatorT> operator ! () const;
-        };
+  MatchAllOf<ComparatorT> operator&&(MatcherBase const &other) const;
+  MatchAnyOf<ComparatorT> operator||(MatcherBase const &other) const;
+  MatchNotOf<ComparatorT> operator!() const;
+};
 
-        template<typename ArgT>
-        struct MatchAllOf : MatcherBase<ArgT> {
-            virtual bool match( ArgT const& arg ) const CATCH_OVERRIDE {
-                for( std::size_t i = 0; i < m_matchers.size(); ++i ) {
-                    if (!m_matchers[i]->match(arg))
-                        return false;
-                }
-                return true;
-            }
-            virtual std::string describe() const CATCH_OVERRIDE {
-                std::string description;
-                description.reserve( 4 + m_matchers.size()*32 );
-                description += "( ";
-                for( std::size_t i = 0; i < m_matchers.size(); ++i ) {
-                    if( i != 0 )
-                        description += " and ";
-                    description += m_matchers[i]->toString();
-                }
-                description += " )";
-                return description;
-            }
-
-            MatchAllOf<ArgT>& operator && ( MatcherBase<ArgT> const& other ) {
-                m_matchers.push_back( &other );
-                return *this;
-            }
-
-            std::vector<MatcherBase<ArgT> const*> m_matchers;
-        };
-        template<typename ArgT>
-        struct MatchAnyOf : MatcherBase<ArgT> {
-
-            virtual bool match( ArgT const& arg ) const CATCH_OVERRIDE {
-                for( std::size_t i = 0; i < m_matchers.size(); ++i ) {
-                    if (m_matchers[i]->match(arg))
-                        return true;
-                }
-                return false;
-            }
-            virtual std::string describe() const CATCH_OVERRIDE {
-                std::string description;
-                description.reserve( 4 + m_matchers.size()*32 );
-                description += "( ";
-                for( std::size_t i = 0; i < m_matchers.size(); ++i ) {
-                    if( i != 0 )
-                        description += " or ";
-                    description += m_matchers[i]->toString();
-                }
-                description += " )";
-                return description;
-            }
-
-            MatchAnyOf<ArgT>& operator || ( MatcherBase<ArgT> const& other ) {
-                m_matchers.push_back( &other );
-                return *this;
-            }
-
-            std::vector<MatcherBase<ArgT> const*> m_matchers;
-        };
-
-        template<typename ArgT>
-        struct MatchNotOf : MatcherBase<ArgT> {
-
-            MatchNotOf( MatcherBase<ArgT> const& underlyingMatcher ) : m_underlyingMatcher( underlyingMatcher ) {}
-
-            virtual bool match( ArgT const& arg ) const CATCH_OVERRIDE {
-                return !m_underlyingMatcher.match( arg );
-            }
-
-            virtual std::string describe() const CATCH_OVERRIDE {
-                return "not " + m_underlyingMatcher.toString();
-            }
-            MatcherBase<ArgT> const& m_underlyingMatcher;
-        };
-
-        template<typename ObjectT, typename ComparatorT>
-        MatchAllOf<ComparatorT> MatcherBase<ObjectT, ComparatorT>::operator && ( MatcherBase const& other ) const {
-            return MatchAllOf<ComparatorT>() && *this && other;
-        }
-        template<typename ObjectT, typename ComparatorT>
-        MatchAnyOf<ComparatorT> MatcherBase<ObjectT, ComparatorT>::operator || ( MatcherBase const& other ) const {
-            return MatchAnyOf<ComparatorT>() || *this || other;
-        }
-        template<typename ObjectT, typename ComparatorT>
-        MatchNotOf<ComparatorT> MatcherBase<ObjectT, ComparatorT>::operator ! () const {
-            return MatchNotOf<ComparatorT>( *this );
-        }
-
-    } // namespace Impl
-
-    // The following functions create the actual matcher objects.
-    // This allows the types to be inferred
-    // - deprecated: prefer ||, && and !
-    template<typename T>
-    inline Impl::MatchNotOf<T> Not( Impl::MatcherBase<T> const& underlyingMatcher ) {
-        return Impl::MatchNotOf<T>( underlyingMatcher );
+template<typename ArgT>
+struct MatchAllOf : MatcherBase<ArgT> {
+  virtual bool match(ArgT const &arg) const CATCH_OVERRIDE {
+    for (std::size_t i = 0; i < m_matchers.size(); ++i) {
+      if (!m_matchers[i]->match(arg))
+        return false;
     }
-    template<typename T>
-    inline Impl::MatchAllOf<T> AllOf( Impl::MatcherBase<T> const& m1, Impl::MatcherBase<T> const& m2 ) {
-        return Impl::MatchAllOf<T>() && m1 && m2;
+    return true;
+  }
+  virtual std::string describe() const CATCH_OVERRIDE {
+    std::string description;
+    description.reserve(4 + m_matchers.size() * 32);
+    description += "( ";
+    for (std::size_t i = 0; i < m_matchers.size(); ++i) {
+      if (i != 0)
+        description += " and ";
+      description += m_matchers[i]->toString();
     }
-    template<typename T>
-    inline Impl::MatchAllOf<T> AllOf( Impl::MatcherBase<T> const& m1, Impl::MatcherBase<T> const& m2, Impl::MatcherBase<T> const& m3 ) {
-        return Impl::MatchAllOf<T>() && m1 && m2 && m3;
+    description += " )";
+    return description;
+  }
+
+  MatchAllOf<ArgT> &operator&&(MatcherBase<ArgT> const &other) {
+    m_matchers.push_back(&other);
+    return *this;
+  }
+
+  std::vector<MatcherBase<ArgT> const *> m_matchers;
+};
+template<typename ArgT>
+struct MatchAnyOf : MatcherBase<ArgT> {
+
+  virtual bool match(ArgT const &arg) const CATCH_OVERRIDE {
+    for (std::size_t i = 0; i < m_matchers.size(); ++i) {
+      if (m_matchers[i]->match(arg))
+        return true;
     }
-    template<typename T>
-    inline Impl::MatchAnyOf<T> AnyOf( Impl::MatcherBase<T> const& m1, Impl::MatcherBase<T> const& m2 ) {
-        return Impl::MatchAnyOf<T>() || m1 || m2;
+    return false;
+  }
+  virtual std::string describe() const CATCH_OVERRIDE {
+    std::string description;
+    description.reserve(4 + m_matchers.size() * 32);
+    description += "( ";
+    for (std::size_t i = 0; i < m_matchers.size(); ++i) {
+      if (i != 0)
+        description += " or ";
+      description += m_matchers[i]->toString();
     }
-    template<typename T>
-    inline Impl::MatchAnyOf<T> AnyOf( Impl::MatcherBase<T> const& m1, Impl::MatcherBase<T> const& m2, Impl::MatcherBase<T> const& m3 ) {
-        return Impl::MatchAnyOf<T>() || m1 || m2 || m3;
-    }
+    description += " )";
+    return description;
+  }
+
+  MatchAnyOf<ArgT> &operator||(MatcherBase<ArgT> const &other) {
+    m_matchers.push_back(&other);
+    return *this;
+  }
+
+  std::vector<MatcherBase<ArgT> const *> m_matchers;
+};
+
+template<typename ArgT>
+struct MatchNotOf : MatcherBase<ArgT> {
+
+  MatchNotOf(MatcherBase<ArgT> const &underlyingMatcher) : m_underlyingMatcher(underlyingMatcher) {}
+
+  virtual bool match(ArgT const &arg) const CATCH_OVERRIDE {
+    return !m_underlyingMatcher.match(arg);
+  }
+
+  virtual std::string describe() const CATCH_OVERRIDE {
+    return "not " + m_underlyingMatcher.toString();
+  }
+  MatcherBase<ArgT> const &m_underlyingMatcher;
+};
+
+template<typename ObjectT, typename ComparatorT>
+MatchAllOf<ComparatorT> MatcherBase<ObjectT, ComparatorT>::operator&&(MatcherBase const &other) const {
+  return MatchAllOf<ComparatorT>() && *this && other;
+}
+template<typename ObjectT, typename ComparatorT>
+MatchAnyOf<ComparatorT> MatcherBase<ObjectT, ComparatorT>::operator||(MatcherBase const &other) const {
+  return MatchAnyOf<ComparatorT>() || *this || other;
+}
+template<typename ObjectT, typename ComparatorT>
+MatchNotOf<ComparatorT> MatcherBase<ObjectT, ComparatorT>::operator!() const {
+  return MatchNotOf<ComparatorT>(*this);
+}
+
+} // namespace Impl
+
+// The following functions create the actual matcher objects.
+// This allows the types to be inferred
+// - deprecated: prefer ||, && and !
+template<typename T>
+inline Impl::MatchNotOf<T> Not(Impl::MatcherBase<T> const &underlyingMatcher) {
+  return Impl::MatchNotOf<T>(underlyingMatcher);
+}
+template<typename T>
+inline Impl::MatchAllOf<T> AllOf(Impl::MatcherBase<T> const &m1, Impl::MatcherBase<T> const &m2) {
+  return Impl::MatchAllOf<T>() && m1 && m2;
+}
+template<typename T>
+inline Impl::MatchAllOf<T> AllOf(Impl::MatcherBase<T> const &m1,
+                                 Impl::MatcherBase<T> const &m2,
+                                 Impl::MatcherBase<T> const &m3) {
+  return Impl::MatchAllOf<T>() && m1 && m2 && m3;
+}
+template<typename T>
+inline Impl::MatchAnyOf<T> AnyOf(Impl::MatcherBase<T> const &m1, Impl::MatcherBase<T> const &m2) {
+  return Impl::MatchAnyOf<T>() || m1 || m2;
+}
+template<typename T>
+inline Impl::MatchAnyOf<T> AnyOf(Impl::MatcherBase<T> const &m1,
+                                 Impl::MatcherBase<T> const &m2,
+                                 Impl::MatcherBase<T> const &m3) {
+  return Impl::MatchAnyOf<T>() || m1 || m2 || m3;
+}
 
 } // namespace Matchers
 
@@ -1185,77 +1198,78 @@ using Matchers::Impl::MatcherBase;
 
 namespace Catch {
 
-    struct TestFailureException{};
+struct TestFailureException {};
 
-    template<typename T> class ExpressionLhs;
+template<typename T>
+class ExpressionLhs;
 
-    struct CopyableStream {
-        CopyableStream() {}
-        CopyableStream( CopyableStream const& other ) {
-            oss << other.oss.str();
-        }
-        CopyableStream& operator=( CopyableStream const& other ) {
-            oss.str(std::string());
-            oss << other.oss.str();
-            return *this;
-        }
-        std::ostringstream oss;
-    };
+struct CopyableStream {
+  CopyableStream() {}
+  CopyableStream(CopyableStream const &other) {
+    oss << other.oss.str();
+  }
+  CopyableStream &operator=(CopyableStream const &other) {
+    oss.str(std::string());
+    oss << other.oss.str();
+    return *this;
+  }
+  std::ostringstream oss;
+};
 
-    class ResultBuilder : public DecomposedExpression {
-    public:
-        ResultBuilder(  char const* macroName,
-                        SourceLineInfo const& lineInfo,
-                        char const* capturedExpression,
-                        ResultDisposition::Flags resultDisposition,
-                        char const* secondArg = "" );
-        ~ResultBuilder();
+class ResultBuilder : public DecomposedExpression {
+ public:
+  ResultBuilder(char const *macroName,
+                SourceLineInfo const &lineInfo,
+                char const *capturedExpression,
+                ResultDisposition::Flags resultDisposition,
+                char const *secondArg = "");
+  ~ResultBuilder();
 
-        template<typename T>
-        ExpressionLhs<T const&> operator <= ( T const& operand );
-        ExpressionLhs<bool> operator <= ( bool value );
+  template<typename T>
+  ExpressionLhs<T const &> operator<=(T const &operand);
+  ExpressionLhs<bool> operator<=(bool value);
 
-        template<typename T>
-        ResultBuilder& operator << ( T const& value ) {
-            m_stream.oss << value;
-            return *this;
-        }
+  template<typename T>
+  ResultBuilder &operator<<(T const &value) {
+    m_stream.oss << value;
+    return *this;
+  }
 
-        ResultBuilder& setResultType( ResultWas::OfType result );
-        ResultBuilder& setResultType( bool result );
+  ResultBuilder &setResultType(ResultWas::OfType result);
+  ResultBuilder &setResultType(bool result);
 
-        void endExpression( DecomposedExpression const& expr );
+  void endExpression(DecomposedExpression const &expr);
 
-        virtual void reconstructExpression( std::string& dest ) const CATCH_OVERRIDE;
+  virtual void reconstructExpression(std::string &dest) const CATCH_OVERRIDE;
 
-        AssertionResult build() const;
-        AssertionResult build( DecomposedExpression const& expr ) const;
+  AssertionResult build() const;
+  AssertionResult build(DecomposedExpression const &expr) const;
 
-        void useActiveException( ResultDisposition::Flags resultDisposition = ResultDisposition::Normal );
-        void captureResult( ResultWas::OfType resultType );
-        void captureExpression();
-        void captureExpectedException( std::string const& expectedMessage );
-        void captureExpectedException( Matchers::Impl::MatcherBase<std::string> const& matcher );
-        void handleResult( AssertionResult const& result );
-        void react();
-        bool shouldDebugBreak() const;
-        bool allowThrows() const;
+  void useActiveException(ResultDisposition::Flags resultDisposition = ResultDisposition::Normal);
+  void captureResult(ResultWas::OfType resultType);
+  void captureExpression();
+  void captureExpectedException(std::string const &expectedMessage);
+  void captureExpectedException(Matchers::Impl::MatcherBase<std::string> const &matcher);
+  void handleResult(AssertionResult const &result);
+  void react();
+  bool shouldDebugBreak() const;
+  bool allowThrows() const;
 
-        template<typename ArgT, typename MatcherT>
-        void captureMatch( ArgT const& arg, MatcherT const& matcher, char const* matcherString );
+  template<typename ArgT, typename MatcherT>
+  void captureMatch(ArgT const &arg, MatcherT const &matcher, char const *matcherString);
 
-        void setExceptionGuard();
-        void unsetExceptionGuard();
+  void setExceptionGuard();
+  void unsetExceptionGuard();
 
-    private:
-        AssertionInfo m_assertionInfo;
-        AssertionResultData m_data;
-        CopyableStream m_stream;
+ private:
+  AssertionInfo m_assertionInfo;
+  AssertionResultData m_data;
+  CopyableStream m_stream;
 
-        bool m_shouldDebugBreak;
-        bool m_shouldThrow;
-        bool m_guardException;
-    };
+  bool m_shouldDebugBreak;
+  bool m_shouldThrow;
+  bool m_guardException;
+};
 
 } // namespace Catch
 
@@ -1267,7 +1281,7 @@ namespace Catch {
 #define TWOBLUECUBES_CATCH_EVALUATE_HPP_INCLUDED
 
 #ifdef _MSC_VER
-#pragma warning(push)
+                                                                                                                        #pragma warning(push)
 #pragma warning(disable:4389) // '==' : signed/unsigned mismatch
 #pragma warning(disable:4312) // Converting int to T* using reinterpret_cast (issue on x64 platform)
 #endif
@@ -1277,193 +1291,228 @@ namespace Catch {
 namespace Catch {
 namespace Internal {
 
-    enum Operator {
-        IsEqualTo,
-        IsNotEqualTo,
-        IsLessThan,
-        IsGreaterThan,
-        IsLessThanOrEqualTo,
-        IsGreaterThanOrEqualTo
-    };
+enum Operator {
+  IsEqualTo,
+  IsNotEqualTo,
+  IsLessThan,
+  IsGreaterThan,
+  IsLessThanOrEqualTo,
+  IsGreaterThanOrEqualTo
+};
 
-    template<Operator Op> struct OperatorTraits             { static const char* getName(){ return "*error*"; } };
-    template<> struct OperatorTraits<IsEqualTo>             { static const char* getName(){ return "=="; } };
-    template<> struct OperatorTraits<IsNotEqualTo>          { static const char* getName(){ return "!="; } };
-    template<> struct OperatorTraits<IsLessThan>            { static const char* getName(){ return "<"; } };
-    template<> struct OperatorTraits<IsGreaterThan>         { static const char* getName(){ return ">"; } };
-    template<> struct OperatorTraits<IsLessThanOrEqualTo>   { static const char* getName(){ return "<="; } };
-    template<> struct OperatorTraits<IsGreaterThanOrEqualTo>{ static const char* getName(){ return ">="; } };
+template<Operator Op>
+struct OperatorTraits { static const char *getName() { return "*error*"; }};
+template<>
+struct OperatorTraits<IsEqualTo> { static const char *getName() { return "=="; }};
+template<>
+struct OperatorTraits<IsNotEqualTo> { static const char *getName() { return "!="; }};
+template<>
+struct OperatorTraits<IsLessThan> { static const char *getName() { return "<"; }};
+template<>
+struct OperatorTraits<IsGreaterThan> { static const char *getName() { return ">"; }};
+template<>
+struct OperatorTraits<IsLessThanOrEqualTo> { static const char *getName() { return "<="; }};
+template<>
+struct OperatorTraits<IsGreaterThanOrEqualTo> { static const char *getName() { return ">="; }};
 
-    template<typename T>
-    inline T& opCast(T const& t) { return const_cast<T&>(t); }
+template<typename T>
+inline T &opCast(T const &t) { return const_cast<T &>(t); }
 
 // nullptr_t support based on pull request #154 from Konstantin Baumann
 #ifdef CATCH_CONFIG_CPP11_NULLPTR
-    inline std::nullptr_t opCast(std::nullptr_t) { return nullptr; }
+inline std::nullptr_t opCast(std::nullptr_t) { return nullptr; }
 #endif // CATCH_CONFIG_CPP11_NULLPTR
 
-    // So the compare overloads can be operator agnostic we convey the operator as a template
-    // enum, which is used to specialise an Evaluator for doing the comparison.
-    template<typename T1, typename T2, Operator Op>
-    class Evaluator{};
+// So the compare overloads can be operator agnostic we convey the operator as a template
+// enum, which is used to specialise an Evaluator for doing the comparison.
+template<typename T1, typename T2, Operator Op>
+class Evaluator {};
 
-    template<typename T1, typename T2>
-    struct Evaluator<T1, T2, IsEqualTo> {
-        static bool evaluate( T1 const& lhs, T2 const& rhs) {
-            return bool( opCast( lhs ) ==  opCast( rhs ) );
-        }
-    };
-    template<typename T1, typename T2>
-    struct Evaluator<T1, T2, IsNotEqualTo> {
-        static bool evaluate( T1 const& lhs, T2 const& rhs ) {
-            return bool( opCast( lhs ) != opCast( rhs ) );
-        }
-    };
-    template<typename T1, typename T2>
-    struct Evaluator<T1, T2, IsLessThan> {
-        static bool evaluate( T1 const& lhs, T2 const& rhs ) {
-            return bool( opCast( lhs ) < opCast( rhs ) );
-        }
-    };
-    template<typename T1, typename T2>
-    struct Evaluator<T1, T2, IsGreaterThan> {
-        static bool evaluate( T1 const& lhs, T2 const& rhs ) {
-            return bool( opCast( lhs ) > opCast( rhs ) );
-        }
-    };
-    template<typename T1, typename T2>
-    struct Evaluator<T1, T2, IsGreaterThanOrEqualTo> {
-        static bool evaluate( T1 const& lhs, T2 const& rhs ) {
-            return bool( opCast( lhs ) >= opCast( rhs ) );
-        }
-    };
-    template<typename T1, typename T2>
-    struct Evaluator<T1, T2, IsLessThanOrEqualTo> {
-        static bool evaluate( T1 const& lhs, T2 const& rhs ) {
-            return bool( opCast( lhs ) <= opCast( rhs ) );
-        }
-    };
+template<typename T1, typename T2>
+struct Evaluator<T1, T2, IsEqualTo> {
+  static bool evaluate(T1 const &lhs, T2 const &rhs) {
+    return bool(opCast(lhs) == opCast(rhs));
+  }
+};
+template<typename T1, typename T2>
+struct Evaluator<T1, T2, IsNotEqualTo> {
+  static bool evaluate(T1 const &lhs, T2 const &rhs) {
+    return bool(opCast(lhs) != opCast(rhs));
+  }
+};
+template<typename T1, typename T2>
+struct Evaluator<T1, T2, IsLessThan> {
+  static bool evaluate(T1 const &lhs, T2 const &rhs) {
+    return bool(opCast(lhs) < opCast(rhs));
+  }
+};
+template<typename T1, typename T2>
+struct Evaluator<T1, T2, IsGreaterThan> {
+  static bool evaluate(T1 const &lhs, T2 const &rhs) {
+    return bool(opCast(lhs) > opCast(rhs));
+  }
+};
+template<typename T1, typename T2>
+struct Evaluator<T1, T2, IsGreaterThanOrEqualTo> {
+  static bool evaluate(T1 const &lhs, T2 const &rhs) {
+    return bool(opCast(lhs) >= opCast(rhs));
+  }
+};
+template<typename T1, typename T2>
+struct Evaluator<T1, T2, IsLessThanOrEqualTo> {
+  static bool evaluate(T1 const &lhs, T2 const &rhs) {
+    return bool(opCast(lhs) <= opCast(rhs));
+  }
+};
 
-    template<Operator Op, typename T1, typename T2>
-    bool applyEvaluator( T1 const& lhs, T2 const& rhs ) {
-        return Evaluator<T1, T2, Op>::evaluate( lhs, rhs );
-    }
+template<Operator Op, typename T1, typename T2>
+bool applyEvaluator(T1 const &lhs, T2 const &rhs) {
+  return Evaluator<T1, T2, Op>::evaluate(lhs, rhs);
+}
 
-    // This level of indirection allows us to specialise for integer types
-    // to avoid signed/ unsigned warnings
+// This level of indirection allows us to specialise for integer types
+// to avoid signed/ unsigned warnings
 
-    // "base" overload
-    template<Operator Op, typename T1, typename T2>
-    bool compare( T1 const& lhs, T2 const& rhs ) {
-        return Evaluator<T1, T2, Op>::evaluate( lhs, rhs );
-    }
+// "base" overload
+template<Operator Op, typename T1, typename T2>
+bool compare(T1 const &lhs, T2 const &rhs) {
+  return Evaluator<T1, T2, Op>::evaluate(lhs, rhs);
+}
 
-    // unsigned X to int
-    template<Operator Op> bool compare( unsigned int lhs, int rhs ) {
-        return applyEvaluator<Op>( lhs, static_cast<unsigned int>( rhs ) );
-    }
-    template<Operator Op> bool compare( unsigned long lhs, int rhs ) {
-        return applyEvaluator<Op>( lhs, static_cast<unsigned int>( rhs ) );
-    }
-    template<Operator Op> bool compare( unsigned char lhs, int rhs ) {
-        return applyEvaluator<Op>( lhs, static_cast<unsigned int>( rhs ) );
-    }
+// unsigned X to int
+template<Operator Op>
+bool compare(unsigned int lhs, int rhs) {
+  return applyEvaluator<Op>(lhs, static_cast<unsigned int>( rhs ));
+}
+template<Operator Op>
+bool compare(unsigned long lhs, int rhs) {
+  return applyEvaluator<Op>(lhs, static_cast<unsigned int>( rhs ));
+}
+template<Operator Op>
+bool compare(unsigned char lhs, int rhs) {
+  return applyEvaluator<Op>(lhs, static_cast<unsigned int>( rhs ));
+}
 
-    // unsigned X to long
-    template<Operator Op> bool compare( unsigned int lhs, long rhs ) {
-        return applyEvaluator<Op>( lhs, static_cast<unsigned long>( rhs ) );
-    }
-    template<Operator Op> bool compare( unsigned long lhs, long rhs ) {
-        return applyEvaluator<Op>( lhs, static_cast<unsigned long>( rhs ) );
-    }
-    template<Operator Op> bool compare( unsigned char lhs, long rhs ) {
-        return applyEvaluator<Op>( lhs, static_cast<unsigned long>( rhs ) );
-    }
+// unsigned X to long
+template<Operator Op>
+bool compare(unsigned int lhs, long rhs) {
+  return applyEvaluator<Op>(lhs, static_cast<unsigned long>( rhs ));
+}
+template<Operator Op>
+bool compare(unsigned long lhs, long rhs) {
+  return applyEvaluator<Op>(lhs, static_cast<unsigned long>( rhs ));
+}
+template<Operator Op>
+bool compare(unsigned char lhs, long rhs) {
+  return applyEvaluator<Op>(lhs, static_cast<unsigned long>( rhs ));
+}
 
-    // int to unsigned X
-    template<Operator Op> bool compare( int lhs, unsigned int rhs ) {
-        return applyEvaluator<Op>( static_cast<unsigned int>( lhs ), rhs );
-    }
-    template<Operator Op> bool compare( int lhs, unsigned long rhs ) {
-        return applyEvaluator<Op>( static_cast<unsigned int>( lhs ), rhs );
-    }
-    template<Operator Op> bool compare( int lhs, unsigned char rhs ) {
-        return applyEvaluator<Op>( static_cast<unsigned int>( lhs ), rhs );
-    }
+// int to unsigned X
+template<Operator Op>
+bool compare(int lhs, unsigned int rhs) {
+  return applyEvaluator<Op>(static_cast<unsigned int>( lhs ), rhs);
+}
+template<Operator Op>
+bool compare(int lhs, unsigned long rhs) {
+  return applyEvaluator<Op>(static_cast<unsigned int>( lhs ), rhs);
+}
+template<Operator Op>
+bool compare(int lhs, unsigned char rhs) {
+  return applyEvaluator<Op>(static_cast<unsigned int>( lhs ), rhs);
+}
 
-    // long to unsigned X
-    template<Operator Op> bool compare( long lhs, unsigned int rhs ) {
-        return applyEvaluator<Op>( static_cast<unsigned long>( lhs ), rhs );
-    }
-    template<Operator Op> bool compare( long lhs, unsigned long rhs ) {
-        return applyEvaluator<Op>( static_cast<unsigned long>( lhs ), rhs );
-    }
-    template<Operator Op> bool compare( long lhs, unsigned char rhs ) {
-        return applyEvaluator<Op>( static_cast<unsigned long>( lhs ), rhs );
-    }
+// long to unsigned X
+template<Operator Op>
+bool compare(long lhs, unsigned int rhs) {
+  return applyEvaluator<Op>(static_cast<unsigned long>( lhs ), rhs);
+}
+template<Operator Op>
+bool compare(long lhs, unsigned long rhs) {
+  return applyEvaluator<Op>(static_cast<unsigned long>( lhs ), rhs);
+}
+template<Operator Op>
+bool compare(long lhs, unsigned char rhs) {
+  return applyEvaluator<Op>(static_cast<unsigned long>( lhs ), rhs);
+}
 
-    // pointer to long (when comparing against NULL)
-    template<Operator Op, typename T> bool compare( long lhs, T* rhs ) {
-        return Evaluator<T*, T*, Op>::evaluate( reinterpret_cast<T*>( lhs ), rhs );
-    }
-    template<Operator Op, typename T> bool compare( T* lhs, long rhs ) {
-        return Evaluator<T*, T*, Op>::evaluate( lhs, reinterpret_cast<T*>( rhs ) );
-    }
+// pointer to long (when comparing against NULL)
+template<Operator Op, typename T>
+bool compare(long lhs, T *rhs) {
+  return Evaluator<T *, T *, Op>::evaluate(reinterpret_cast<T *>( lhs ), rhs);
+}
+template<Operator Op, typename T>
+bool compare(T *lhs, long rhs) {
+  return Evaluator<T *, T *, Op>::evaluate(lhs, reinterpret_cast<T *>( rhs ));
+}
 
-    // pointer to int (when comparing against NULL)
-    template<Operator Op, typename T> bool compare( int lhs, T* rhs ) {
-        return Evaluator<T*, T*, Op>::evaluate( reinterpret_cast<T*>( lhs ), rhs );
-    }
-    template<Operator Op, typename T> bool compare( T* lhs, int rhs ) {
-        return Evaluator<T*, T*, Op>::evaluate( lhs, reinterpret_cast<T*>( rhs ) );
-    }
+// pointer to int (when comparing against NULL)
+template<Operator Op, typename T>
+bool compare(int lhs, T *rhs) {
+  return Evaluator<T *, T *, Op>::evaluate(reinterpret_cast<T *>( lhs ), rhs);
+}
+template<Operator Op, typename T>
+bool compare(T *lhs, int rhs) {
+  return Evaluator<T *, T *, Op>::evaluate(lhs, reinterpret_cast<T *>( rhs ));
+}
 
 #ifdef CATCH_CONFIG_CPP11_LONG_LONG
-    // long long to unsigned X
-    template<Operator Op> bool compare( long long lhs, unsigned int rhs ) {
-        return applyEvaluator<Op>( static_cast<unsigned long>( lhs ), rhs );
-    }
-    template<Operator Op> bool compare( long long lhs, unsigned long rhs ) {
-        return applyEvaluator<Op>( static_cast<unsigned long>( lhs ), rhs );
-    }
-    template<Operator Op> bool compare( long long lhs, unsigned long long rhs ) {
-        return applyEvaluator<Op>( static_cast<unsigned long>( lhs ), rhs );
-    }
-    template<Operator Op> bool compare( long long lhs, unsigned char rhs ) {
-        return applyEvaluator<Op>( static_cast<unsigned long>( lhs ), rhs );
-    }
+// long long to unsigned X
+template<Operator Op>
+bool compare(long long lhs, unsigned int rhs) {
+  return applyEvaluator<Op>(static_cast<unsigned long>( lhs ), rhs);
+}
+template<Operator Op>
+bool compare(long long lhs, unsigned long rhs) {
+  return applyEvaluator<Op>(static_cast<unsigned long>( lhs ), rhs);
+}
+template<Operator Op>
+bool compare(long long lhs, unsigned long long rhs) {
+  return applyEvaluator<Op>(static_cast<unsigned long>( lhs ), rhs);
+}
+template<Operator Op>
+bool compare(long long lhs, unsigned char rhs) {
+  return applyEvaluator<Op>(static_cast<unsigned long>( lhs ), rhs);
+}
 
-    // unsigned long long to X
-    template<Operator Op> bool compare( unsigned long long lhs, int rhs ) {
-        return applyEvaluator<Op>( static_cast<long>( lhs ), rhs );
-    }
-    template<Operator Op> bool compare( unsigned long long lhs, long rhs ) {
-        return applyEvaluator<Op>( static_cast<long>( lhs ), rhs );
-    }
-    template<Operator Op> bool compare( unsigned long long lhs, long long rhs ) {
-        return applyEvaluator<Op>( static_cast<long>( lhs ), rhs );
-    }
-    template<Operator Op> bool compare( unsigned long long lhs, char rhs ) {
-        return applyEvaluator<Op>( static_cast<long>( lhs ), rhs );
-    }
+// unsigned long long to X
+template<Operator Op>
+bool compare(unsigned long long lhs, int rhs) {
+  return applyEvaluator<Op>(static_cast<long>( lhs ), rhs);
+}
+template<Operator Op>
+bool compare(unsigned long long lhs, long rhs) {
+  return applyEvaluator<Op>(static_cast<long>( lhs ), rhs);
+}
+template<Operator Op>
+bool compare(unsigned long long lhs, long long rhs) {
+  return applyEvaluator<Op>(static_cast<long>( lhs ), rhs);
+}
+template<Operator Op>
+bool compare(unsigned long long lhs, char rhs) {
+  return applyEvaluator<Op>(static_cast<long>( lhs ), rhs);
+}
 
-    // pointer to long long (when comparing against NULL)
-    template<Operator Op, typename T> bool compare( long long lhs, T* rhs ) {
-        return Evaluator<T*, T*, Op>::evaluate( reinterpret_cast<T*>( lhs ), rhs );
-    }
-    template<Operator Op, typename T> bool compare( T* lhs, long long rhs ) {
-        return Evaluator<T*, T*, Op>::evaluate( lhs, reinterpret_cast<T*>( rhs ) );
-    }
+// pointer to long long (when comparing against NULL)
+template<Operator Op, typename T>
+bool compare(long long lhs, T *rhs) {
+  return Evaluator<T *, T *, Op>::evaluate(reinterpret_cast<T *>( lhs ), rhs);
+}
+template<Operator Op, typename T>
+bool compare(T *lhs, long long rhs) {
+  return Evaluator<T *, T *, Op>::evaluate(lhs, reinterpret_cast<T *>( rhs ));
+}
 #endif // CATCH_CONFIG_CPP11_LONG_LONG
 
 #ifdef CATCH_CONFIG_CPP11_NULLPTR
-    // pointer to nullptr_t (when comparing against nullptr)
-    template<Operator Op, typename T> bool compare( std::nullptr_t, T* rhs ) {
-        return Evaluator<T*, T*, Op>::evaluate( nullptr, rhs );
-    }
-    template<Operator Op, typename T> bool compare( T* lhs, std::nullptr_t ) {
-        return Evaluator<T*, T*, Op>::evaluate( lhs, nullptr );
-    }
+// pointer to nullptr_t (when comparing against nullptr)
+template<Operator Op, typename T>
+bool compare(std::nullptr_t, T *rhs) {
+  return Evaluator<T *, T *, Op>::evaluate(nullptr, rhs);
+}
+template<Operator Op, typename T>
+bool compare(T *lhs, std::nullptr_t) {
+  return Evaluator<T *, T *, Op>::evaluate(lhs, nullptr);
+}
 #endif // CATCH_CONFIG_CPP11_NULLPTR
 
 } // end of namespace Internal
@@ -1483,7 +1532,7 @@ namespace Internal {
 #include <cstddef>
 
 #ifdef __OBJC__
-// #included from: catch_objc_arc.hpp
+                                                                                                                        // #included from: catch_objc_arc.hpp
 #define TWOBLUECUBES_CATCH_OBJC_ARC_HPP_INCLUDED
 
 #import <Foundation/Foundation.h>
@@ -1540,66 +1589,67 @@ namespace Catch {
 
 // Why we're here.
 template<typename T>
-std::string toString( T const& value );
+std::string toString(T const &value);
 
 // Built in overloads
 
-std::string toString( std::string const& value );
-std::string toString( std::wstring const& value );
-std::string toString( const char* const value );
-std::string toString( char* const value );
-std::string toString( const wchar_t* const value );
-std::string toString( wchar_t* const value );
-std::string toString( int value );
-std::string toString( unsigned long value );
-std::string toString( unsigned int value );
-std::string toString( const double value );
-std::string toString( const float value );
-std::string toString( bool value );
-std::string toString( char value );
-std::string toString( signed char value );
-std::string toString( unsigned char value );
+std::string toString(std::string const &value);
+std::string toString(std::wstring const &value);
+std::string toString(const char *const value);
+std::string toString(char *const value);
+std::string toString(const wchar_t *const value);
+std::string toString(wchar_t *const value);
+std::string toString(int value);
+std::string toString(unsigned long value);
+std::string toString(unsigned int value);
+std::string toString(const double value);
+std::string toString(const float value);
+std::string toString(bool value);
+std::string toString(char value);
+std::string toString(signed char value);
+std::string toString(unsigned char value);
 
 #ifdef CATCH_CONFIG_CPP11_LONG_LONG
-std::string toString( long long value );
-std::string toString( unsigned long long value );
+std::string toString(long long value);
+std::string toString(unsigned long long value);
 #endif
 
 #ifdef CATCH_CONFIG_CPP11_NULLPTR
-std::string toString( std::nullptr_t );
+std::string toString(std::nullptr_t);
 #endif
 
 #ifdef __OBJC__
-    std::string toString( NSString const * const& nsstring );
+                                                                                                                        std::string toString( NSString const * const& nsstring );
     std::string toString( NSString * CATCH_ARC_STRONG const& nsstring );
     std::string toString( NSObject* const& nsObject );
 #endif
 
 namespace Detail {
 
-    extern const std::string unprintableString;
+extern const std::string unprintableString;
 
- #if !defined(CATCH_CONFIG_CPP11_STREAM_INSERTABLE_CHECK)
-    struct BorgType {
-        template<typename T> BorgType( T const& );
-    };
+#if !defined(CATCH_CONFIG_CPP11_STREAM_INSERTABLE_CHECK)
+struct BorgType {
+  template<typename T>
+  BorgType(T const &);
+};
 
-    struct TrueType { char sizer[1]; };
-    struct FalseType { char sizer[2]; };
+struct TrueType { char sizer[1]; };
+struct FalseType { char sizer[2]; };
 
-    TrueType& testStreamable( std::ostream& );
-    FalseType testStreamable( FalseType );
+TrueType &testStreamable(std::ostream &);
+FalseType testStreamable(FalseType);
 
-    FalseType operator<<( std::ostream const&, BorgType const& );
+FalseType operator<<(std::ostream const &, BorgType const &);
 
-    template<typename T>
-    struct IsStreamInsertable {
-        static std::ostream &s;
-        static T  const&t;
-        enum { value = sizeof( testStreamable(s << t) ) == sizeof( TrueType ) };
-    };
+template<typename T>
+struct IsStreamInsertable {
+  static std::ostream &s;
+  static T const &t;
+  enum { value = sizeof(testStreamable(s << t)) == sizeof(TrueType) };
+};
 #else
-    template<typename T>
+                                                                                                                        template<typename T>
     class IsStreamInsertable {
         template<typename SS, typename TT>
         static auto test(int)
@@ -1614,86 +1664,83 @@ namespace Detail {
 #endif
 
 #if defined(CATCH_CONFIG_CPP11_IS_ENUM)
-    template<typename T,
-             bool IsEnum = std::is_enum<T>::value
-             >
-    struct EnumStringMaker
-    {
-        static std::string convert( T const& ) { return unprintableString; }
-    };
+template<typename T,
+    bool IsEnum = std::is_enum<T>::value
+>
+struct EnumStringMaker {
+  static std::string convert(T const &) { return unprintableString; }
+};
 
-    template<typename T>
-    struct EnumStringMaker<T,true>
-    {
-        static std::string convert( T const& v )
-        {
-            return ::Catch::toString(
-                static_cast<typename std::underlying_type<T>::type>(v)
-                );
-        }
-    };
+template<typename T>
+struct EnumStringMaker<T, true> {
+  static std::string convert(T const &v) {
+    return ::Catch::toString(
+        static_cast<typename std::underlying_type<T>::type>(v)
+    );
+  }
+};
 #endif
-    template<bool C>
-    struct StringMakerBase {
+template<bool C>
+struct StringMakerBase {
 #if defined(CATCH_CONFIG_CPP11_IS_ENUM)
-        template<typename T>
-        static std::string convert( T const& v )
-        {
-            return EnumStringMaker<T>::convert( v );
-        }
+  template<typename T>
+  static std::string convert(T const &v) {
+    return EnumStringMaker<T>::convert(v);
+  }
 #else
-        template<typename T>
+                                                                                                                          template<typename T>
         static std::string convert( T const& ) { return unprintableString; }
 #endif
-    };
+};
 
-    template<>
-    struct StringMakerBase<true> {
-        template<typename T>
-        static std::string convert( T const& _value ) {
-            std::ostringstream oss;
-            oss << _value;
-            return oss.str();
-        }
-    };
+template<>
+struct StringMakerBase<true> {
+  template<typename T>
+  static std::string convert(T const &_value) {
+    std::ostringstream oss;
+    oss << _value;
+    return oss.str();
+  }
+};
 
-    std::string rawMemoryToString( const void *object, std::size_t size );
+std::string rawMemoryToString(const void *object, std::size_t size);
 
-    template<typename T>
-    inline std::string rawMemoryToString( const T& object ) {
-      return rawMemoryToString( &object, sizeof(object) );
-    }
+template<typename T>
+inline std::string rawMemoryToString(const T &object) {
+  return rawMemoryToString(&object, sizeof(object));
+}
 
 } // end namespace Detail
 
 template<typename T>
 struct StringMaker :
-    Detail::StringMakerBase<Detail::IsStreamInsertable<T>::value> {};
+    Detail::StringMakerBase<Detail::IsStreamInsertable<T>::value> {
+};
 
 template<typename T>
-struct StringMaker<T*> {
-    template<typename U>
-    static std::string convert( U* p ) {
-        if( !p )
-            return "NULL";
-        else
-            return Detail::rawMemoryToString( p );
-    }
+struct StringMaker<T *> {
+  template<typename U>
+  static std::string convert(U *p) {
+    if (!p)
+      return "NULL";
+    else
+      return Detail::rawMemoryToString(p);
+  }
 };
 
 template<typename R, typename C>
 struct StringMaker<R C::*> {
-    static std::string convert( R C::* p ) {
-        if( !p )
-            return "NULL";
-        else
-            return Detail::rawMemoryToString( p );
-    }
+  static std::string convert(R C::* p) {
+    if (!p)
+      return "NULL";
+    else
+      return Detail::rawMemoryToString(p);
+  }
 };
 
 namespace Detail {
-    template<typename InputIterator>
-    std::string rangeToString( InputIterator first, InputIterator last );
+template<typename InputIterator>
+std::string rangeToString(InputIterator first, InputIterator last);
 }
 
 //template<typename T, typename Allocator>
@@ -1704,57 +1751,55 @@ namespace Detail {
 //};
 
 template<typename T, typename Allocator>
-std::string toString( std::vector<T,Allocator> const& v ) {
-    return Detail::rangeToString( v.begin(), v.end() );
+std::string toString(std::vector<T, Allocator> const &v) {
+  return Detail::rangeToString(v.begin(), v.end());
 }
 
 #ifdef CATCH_CONFIG_CPP11_TUPLE
 
 // toString for tuples
 namespace TupleDetail {
-  template<
-      typename Tuple,
-      std::size_t N = 0,
-      bool = (N < std::tuple_size<Tuple>::value)
-      >
-  struct ElementPrinter {
-      static void print( const Tuple& tuple, std::ostream& os )
-      {
-          os << ( N ? ", " : " " )
-             << Catch::toString(std::get<N>(tuple));
-          ElementPrinter<Tuple,N+1>::print(tuple,os);
-      }
-  };
+template<
+    typename Tuple,
+    std::size_t N = 0,
+    bool = (N < std::tuple_size<Tuple>::value)
+>
+struct ElementPrinter {
+  static void print(const Tuple &tuple, std::ostream &os) {
+    os << (N ? ", " : " ")
+       << Catch::toString(std::get<N>(tuple));
+    ElementPrinter<Tuple, N + 1>::print(tuple, os);
+  }
+};
 
-  template<
-      typename Tuple,
-      std::size_t N
-      >
-  struct ElementPrinter<Tuple,N,false> {
-      static void print( const Tuple&, std::ostream& ) {}
-  };
+template<
+    typename Tuple,
+    std::size_t N
+>
+struct ElementPrinter<Tuple, N, false> {
+  static void print(const Tuple &, std::ostream &) {}
+};
 
 }
 
 template<typename ...Types>
 struct StringMaker<std::tuple<Types...>> {
 
-    static std::string convert( const std::tuple<Types...>& tuple )
-    {
-        std::ostringstream os;
-        os << '{';
-        TupleDetail::ElementPrinter<std::tuple<Types...>>::print( tuple, os );
-        os << " }";
-        return os.str();
-    }
+  static std::string convert(const std::tuple<Types...> &tuple) {
+    std::ostringstream os;
+    os << '{';
+    TupleDetail::ElementPrinter<std::tuple<Types...>>::print(tuple, os);
+    os << " }";
+    return os.str();
+  }
 };
 #endif // CATCH_CONFIG_CPP11_TUPLE
 
 namespace Detail {
-    template<typename T>
-    std::string makeString( T const& value ) {
-        return StringMaker<T>::convert( value );
-    }
+template<typename T>
+std::string makeString(T const &value) {
+  return StringMaker<T>::convert(value);
+}
 } // end namespace Detail
 
 /// \brief converts any type to a string
@@ -1765,23 +1810,23 @@ namespace Detail {
 /// Overload (not specialise) this template for custom typs that you don't want
 /// to provide an ostream overload for.
 template<typename T>
-std::string toString( T const& value ) {
-    return StringMaker<T>::convert( value );
+std::string toString(T const &value) {
+  return StringMaker<T>::convert(value);
 }
 
-    namespace Detail {
-    template<typename InputIterator>
-    std::string rangeToString( InputIterator first, InputIterator last ) {
-        std::ostringstream oss;
-        oss << "{ ";
-        if( first != last ) {
-            oss << Catch::toString( *first );
-            for( ++first ; first != last ; ++first )
-                oss << ", " << Catch::toString( *first );
-        }
-        oss << " }";
-        return oss.str();
-    }
+namespace Detail {
+template<typename InputIterator>
+std::string rangeToString(InputIterator first, InputIterator last) {
+  std::ostringstream oss;
+  oss << "{ ";
+  if (first != last) {
+    oss << Catch::toString(*first);
+    for (++first; first != last; ++first)
+      oss << ", " << Catch::toString(*first);
+  }
+  oss << " }";
+  return oss.str();
+}
 }
 
 } // end namespace Catch
@@ -1798,149 +1843,149 @@ class MatchExpression;
 // for also capturing those and RHS (if any)
 template<typename T>
 class ExpressionLhs : public DecomposedExpression {
-public:
-    ExpressionLhs( ResultBuilder& rb, T lhs ) : m_rb( rb ), m_lhs( lhs ), m_truthy(false) {}
+ public:
+  ExpressionLhs(ResultBuilder &rb, T lhs) : m_rb(rb), m_lhs(lhs), m_truthy(false) {}
 
-    ExpressionLhs& operator = ( const ExpressionLhs& );
+  ExpressionLhs &operator=(const ExpressionLhs &);
 
-    template<typename RhsT>
-    BinaryExpression<T, Internal::IsEqualTo, RhsT const&>
-    operator == ( RhsT const& rhs ) {
-        return captureExpression<Internal::IsEqualTo>( rhs );
-    }
+  template<typename RhsT>
+  BinaryExpression<T, Internal::IsEqualTo, RhsT const &>
+  operator==(RhsT const &rhs) {
+    return captureExpression<Internal::IsEqualTo>(rhs);
+  }
 
-    template<typename RhsT>
-    BinaryExpression<T, Internal::IsNotEqualTo, RhsT const&>
-    operator != ( RhsT const& rhs ) {
-        return captureExpression<Internal::IsNotEqualTo>( rhs );
-    }
+  template<typename RhsT>
+  BinaryExpression<T, Internal::IsNotEqualTo, RhsT const &>
+  operator!=(RhsT const &rhs) {
+    return captureExpression<Internal::IsNotEqualTo>(rhs);
+  }
 
-    template<typename RhsT>
-    BinaryExpression<T, Internal::IsLessThan, RhsT const&>
-    operator < ( RhsT const& rhs ) {
-        return captureExpression<Internal::IsLessThan>( rhs );
-    }
+  template<typename RhsT>
+  BinaryExpression<T, Internal::IsLessThan, RhsT const &>
+  operator<(RhsT const &rhs) {
+    return captureExpression<Internal::IsLessThan>(rhs);
+  }
 
-    template<typename RhsT>
-    BinaryExpression<T, Internal::IsGreaterThan, RhsT const&>
-    operator > ( RhsT const& rhs ) {
-        return captureExpression<Internal::IsGreaterThan>( rhs );
-    }
+  template<typename RhsT>
+  BinaryExpression<T, Internal::IsGreaterThan, RhsT const &>
+  operator>(RhsT const &rhs) {
+    return captureExpression<Internal::IsGreaterThan>(rhs);
+  }
 
-    template<typename RhsT>
-    BinaryExpression<T, Internal::IsLessThanOrEqualTo, RhsT const&>
-    operator <= ( RhsT const& rhs ) {
-        return captureExpression<Internal::IsLessThanOrEqualTo>( rhs );
-    }
+  template<typename RhsT>
+  BinaryExpression<T, Internal::IsLessThanOrEqualTo, RhsT const &>
+  operator<=(RhsT const &rhs) {
+    return captureExpression<Internal::IsLessThanOrEqualTo>(rhs);
+  }
 
-    template<typename RhsT>
-    BinaryExpression<T, Internal::IsGreaterThanOrEqualTo, RhsT const&>
-    operator >= ( RhsT const& rhs ) {
-        return captureExpression<Internal::IsGreaterThanOrEqualTo>( rhs );
-    }
+  template<typename RhsT>
+  BinaryExpression<T, Internal::IsGreaterThanOrEqualTo, RhsT const &>
+  operator>=(RhsT const &rhs) {
+    return captureExpression<Internal::IsGreaterThanOrEqualTo>(rhs);
+  }
 
-    BinaryExpression<T, Internal::IsEqualTo, bool> operator == ( bool rhs ) {
-        return captureExpression<Internal::IsEqualTo>( rhs );
-    }
+  BinaryExpression<T, Internal::IsEqualTo, bool> operator==(bool rhs) {
+    return captureExpression<Internal::IsEqualTo>(rhs);
+  }
 
-    BinaryExpression<T, Internal::IsNotEqualTo, bool> operator != ( bool rhs ) {
-        return captureExpression<Internal::IsNotEqualTo>( rhs );
-    }
+  BinaryExpression<T, Internal::IsNotEqualTo, bool> operator!=(bool rhs) {
+    return captureExpression<Internal::IsNotEqualTo>(rhs);
+  }
 
-    void endExpression() {
-        m_truthy = m_lhs ? true : false;
-        m_rb
-            .setResultType( m_truthy )
-            .endExpression( *this );
-    }
+  void endExpression() {
+    m_truthy = m_lhs ? true : false;
+    m_rb
+        .setResultType(m_truthy)
+        .endExpression(*this);
+  }
 
-    virtual void reconstructExpression( std::string& dest ) const CATCH_OVERRIDE {
-        dest = Catch::toString( m_truthy );
-    }
+  virtual void reconstructExpression(std::string &dest) const CATCH_OVERRIDE {
+    dest = Catch::toString(m_truthy);
+  }
 
-private:
-    template<Internal::Operator Op, typename RhsT>
-    BinaryExpression<T, Op, RhsT&> captureExpression( RhsT& rhs ) const {
-        return BinaryExpression<T, Op, RhsT&>( m_rb, m_lhs, rhs );
-    }
+ private:
+  template<Internal::Operator Op, typename RhsT>
+  BinaryExpression<T, Op, RhsT &> captureExpression(RhsT &rhs) const {
+    return BinaryExpression<T, Op, RhsT &>(m_rb, m_lhs, rhs);
+  }
 
-    template<Internal::Operator Op>
-    BinaryExpression<T, Op, bool> captureExpression( bool rhs ) const {
-        return BinaryExpression<T, Op, bool>( m_rb, m_lhs, rhs );
-    }
+  template<Internal::Operator Op>
+  BinaryExpression<T, Op, bool> captureExpression(bool rhs) const {
+    return BinaryExpression<T, Op, bool>(m_rb, m_lhs, rhs);
+  }
 
-private:
-    ResultBuilder& m_rb;
-    T m_lhs;
-    bool m_truthy;
+ private:
+  ResultBuilder &m_rb;
+  T m_lhs;
+  bool m_truthy;
 };
 
 template<typename LhsT, Internal::Operator Op, typename RhsT>
 class BinaryExpression : public DecomposedExpression {
-public:
-    BinaryExpression( ResultBuilder& rb, LhsT lhs, RhsT rhs )
-        : m_rb( rb ), m_lhs( lhs ), m_rhs( rhs ) {}
+ public:
+  BinaryExpression(ResultBuilder &rb, LhsT lhs, RhsT rhs)
+      : m_rb(rb), m_lhs(lhs), m_rhs(rhs) {}
 
-    BinaryExpression& operator = ( BinaryExpression& );
+  BinaryExpression &operator=(BinaryExpression &);
 
-    void endExpression() const {
-        m_rb
-            .setResultType( Internal::compare<Op>( m_lhs, m_rhs ) )
-            .endExpression( *this );
-    }
+  void endExpression() const {
+    m_rb
+        .setResultType(Internal::compare<Op>(m_lhs, m_rhs))
+        .endExpression(*this);
+  }
 
-    virtual bool isBinaryExpression() const CATCH_OVERRIDE {
-        return true;
-    }
+  virtual bool isBinaryExpression() const CATCH_OVERRIDE {
+    return true;
+  }
 
-    virtual void reconstructExpression( std::string& dest ) const CATCH_OVERRIDE {
-        std::string lhs = Catch::toString( m_lhs );
-        std::string rhs = Catch::toString( m_rhs );
-        char delim = lhs.size() + rhs.size() < 40 &&
-                     lhs.find('\n') == std::string::npos &&
-                     rhs.find('\n') == std::string::npos ? ' ' : '\n';
-        dest.reserve( 7 + lhs.size() + rhs.size() );
-                   // 2 for spaces around operator
-                   // 2 for operator
-                   // 2 for parentheses (conditionally added later)
-                   // 1 for negation (conditionally added later)
-        dest = lhs;
-        dest += delim;
-        dest += Internal::OperatorTraits<Op>::getName();
-        dest += delim;
-        dest += rhs;
-    }
+  virtual void reconstructExpression(std::string &dest) const CATCH_OVERRIDE {
+    std::string lhs = Catch::toString(m_lhs);
+    std::string rhs = Catch::toString(m_rhs);
+    char delim = lhs.size() + rhs.size() < 40 &&
+        lhs.find('\n') == std::string::npos &&
+        rhs.find('\n') == std::string::npos ? ' ' : '\n';
+    dest.reserve(7 + lhs.size() + rhs.size());
+    // 2 for spaces around operator
+    // 2 for operator
+    // 2 for parentheses (conditionally added later)
+    // 1 for negation (conditionally added later)
+    dest = lhs;
+    dest += delim;
+    dest += Internal::OperatorTraits<Op>::getName();
+    dest += delim;
+    dest += rhs;
+  }
 
-private:
-    ResultBuilder& m_rb;
-    LhsT m_lhs;
-    RhsT m_rhs;
+ private:
+  ResultBuilder &m_rb;
+  LhsT m_lhs;
+  RhsT m_rhs;
 };
 
 template<typename ArgT, typename MatcherT>
 class MatchExpression : public DecomposedExpression {
-public:
-    MatchExpression( ArgT arg, MatcherT matcher, char const* matcherString )
-        : m_arg( arg ), m_matcher( matcher ), m_matcherString( matcherString ) {}
+ public:
+  MatchExpression(ArgT arg, MatcherT matcher, char const *matcherString)
+      : m_arg(arg), m_matcher(matcher), m_matcherString(matcherString) {}
 
-    virtual bool isBinaryExpression() const CATCH_OVERRIDE {
-        return true;
-    }
+  virtual bool isBinaryExpression() const CATCH_OVERRIDE {
+    return true;
+  }
 
-    virtual void reconstructExpression( std::string& dest ) const CATCH_OVERRIDE {
-        std::string matcherAsString = m_matcher.toString();
-        dest = Catch::toString( m_arg );
-        dest += ' ';
-        if( matcherAsString == Detail::unprintableString )
-            dest += m_matcherString;
-        else
-            dest += matcherAsString;
-    }
+  virtual void reconstructExpression(std::string &dest) const CATCH_OVERRIDE {
+    std::string matcherAsString = m_matcher.toString();
+    dest = Catch::toString(m_arg);
+    dest += ' ';
+    if (matcherAsString == Detail::unprintableString)
+      dest += m_matcherString;
+    else
+      dest += matcherAsString;
+  }
 
-private:
-    ArgT m_arg;
-    MatcherT m_matcher;
-    char const* m_matcherString;
+ private:
+  ArgT m_arg;
+  MatcherT m_matcher;
+  char const *m_matcherString;
 };
 
 } // end namespace Catch
@@ -1948,22 +1993,22 @@ private:
 
 namespace Catch {
 
-    template<typename T>
-    inline ExpressionLhs<T const&> ResultBuilder::operator <= ( T const& operand ) {
-        return ExpressionLhs<T const&>( *this, operand );
-    }
+template<typename T>
+inline ExpressionLhs<T const &> ResultBuilder::operator<=(T const &operand) {
+  return ExpressionLhs<T const &>(*this, operand);
+}
 
-    inline ExpressionLhs<bool> ResultBuilder::operator <= ( bool value ) {
-        return ExpressionLhs<bool>( *this, value );
-    }
+inline ExpressionLhs<bool> ResultBuilder::operator<=(bool value) {
+  return ExpressionLhs<bool>(*this, value);
+}
 
-    template<typename ArgT, typename MatcherT>
-    inline void ResultBuilder::captureMatch( ArgT const& arg, MatcherT const& matcher,
-                                             char const* matcherString ) {
-        MatchExpression<ArgT const&, MatcherT const&> expr( arg, matcher, matcherString );
-        setResultType( matcher.match( arg ) );
-        endExpression( expr );
-    }
+template<typename ArgT, typename MatcherT>
+inline void ResultBuilder::captureMatch(ArgT const &arg, MatcherT const &matcher,
+                                        char const *matcherString) {
+  MatchExpression<ArgT const &, MatcherT const &> expr(arg, matcher, matcherString);
+  setResultType(matcher.match(arg));
+  endExpression(expr);
+}
 
 } // namespace Catch
 
@@ -1974,52 +2019,51 @@ namespace Catch {
 
 namespace Catch {
 
-    struct MessageInfo {
-        MessageInfo(    std::string const& _macroName,
-                        SourceLineInfo const& _lineInfo,
-                        ResultWas::OfType _type );
+struct MessageInfo {
+  MessageInfo(std::string const &_macroName,
+              SourceLineInfo const &_lineInfo,
+              ResultWas::OfType _type);
 
-        std::string macroName;
-        SourceLineInfo lineInfo;
-        ResultWas::OfType type;
-        std::string message;
-        unsigned int sequence;
+  std::string macroName;
+  SourceLineInfo lineInfo;
+  ResultWas::OfType type;
+  std::string message;
+  unsigned int sequence;
 
-        bool operator == ( MessageInfo const& other ) const {
-            return sequence == other.sequence;
-        }
-        bool operator < ( MessageInfo const& other ) const {
-            return sequence < other.sequence;
-        }
-    private:
-        static unsigned int globalCount;
-    };
+  bool operator==(MessageInfo const &other) const {
+    return sequence == other.sequence;
+  }
+  bool operator<(MessageInfo const &other) const {
+    return sequence < other.sequence;
+  }
+ private:
+  static unsigned int globalCount;
+};
 
-    struct MessageBuilder {
-        MessageBuilder( std::string const& macroName,
-                        SourceLineInfo const& lineInfo,
-                        ResultWas::OfType type )
-        : m_info( macroName, lineInfo, type )
-        {}
+struct MessageBuilder {
+  MessageBuilder(std::string const &macroName,
+                 SourceLineInfo const &lineInfo,
+                 ResultWas::OfType type)
+      : m_info(macroName, lineInfo, type) {}
 
-        template<typename T>
-        MessageBuilder& operator << ( T const& value ) {
-            m_stream << value;
-            return *this;
-        }
+  template<typename T>
+  MessageBuilder &operator<<(T const &value) {
+    m_stream << value;
+    return *this;
+  }
 
-        MessageInfo m_info;
-        std::ostringstream m_stream;
-    };
+  MessageInfo m_info;
+  std::ostringstream m_stream;
+};
 
-    class ScopedMessage {
-    public:
-        ScopedMessage( MessageBuilder const& builder );
-        ScopedMessage( ScopedMessage const& other );
-        ~ScopedMessage();
+class ScopedMessage {
+ public:
+  ScopedMessage(MessageBuilder const &builder);
+  ScopedMessage(ScopedMessage const &other);
+  ~ScopedMessage();
 
-        MessageInfo m_info;
-    };
+  MessageInfo m_info;
+};
 
 } // end namespace Catch
 
@@ -2030,36 +2074,36 @@ namespace Catch {
 
 namespace Catch {
 
-    class TestCase;
-    class AssertionResult;
-    struct AssertionInfo;
-    struct SectionInfo;
-    struct SectionEndInfo;
-    struct MessageInfo;
-    class ScopedMessageBuilder;
-    struct Counts;
+class TestCase;
+class AssertionResult;
+struct AssertionInfo;
+struct SectionInfo;
+struct SectionEndInfo;
+struct MessageInfo;
+class ScopedMessageBuilder;
+struct Counts;
 
-    struct IResultCapture {
+struct IResultCapture {
 
-        virtual ~IResultCapture();
+  virtual ~IResultCapture();
 
-        virtual void assertionEnded( AssertionResult const& result ) = 0;
-        virtual bool sectionStarted(    SectionInfo const& sectionInfo,
-                                        Counts& assertions ) = 0;
-        virtual void sectionEnded( SectionEndInfo const& endInfo ) = 0;
-        virtual void sectionEndedEarly( SectionEndInfo const& endInfo ) = 0;
-        virtual void pushScopedMessage( MessageInfo const& message ) = 0;
-        virtual void popScopedMessage( MessageInfo const& message ) = 0;
+  virtual void assertionEnded(AssertionResult const &result) = 0;
+  virtual bool sectionStarted(SectionInfo const &sectionInfo,
+                              Counts &assertions) = 0;
+  virtual void sectionEnded(SectionEndInfo const &endInfo) = 0;
+  virtual void sectionEndedEarly(SectionEndInfo const &endInfo) = 0;
+  virtual void pushScopedMessage(MessageInfo const &message) = 0;
+  virtual void popScopedMessage(MessageInfo const &message) = 0;
 
-        virtual std::string getCurrentTestName() const = 0;
-        virtual const AssertionResult* getLastResult() const = 0;
+  virtual std::string getCurrentTestName() const = 0;
+  virtual const AssertionResult *getLastResult() const = 0;
 
-        virtual void exceptionEarlyReported() = 0;
+  virtual void exceptionEarlyReported() = 0;
 
-        virtual void handleFatalErrorCondition( std::string const& message ) = 0;
-    };
+  virtual void handleFatalErrorCondition(std::string const &message) = 0;
+};
 
-    IResultCapture& getResultCapture();
+IResultCapture &getResultCapture();
 }
 
 // #included from: catch_debugger.h
@@ -2075,7 +2119,7 @@ namespace Catch {
 #elif defined(linux) || defined(__linux) || defined(__linux__)
 #  define CATCH_PLATFORM_LINUX
 #elif defined(WIN32) || defined(__WIN32__) || defined(_WIN32) || defined(_MSC_VER)
-#  define CATCH_PLATFORM_WINDOWS
+                                                                                                                        #  define CATCH_PLATFORM_WINDOWS
 #  if !defined(NOMINMAX) && !defined(CATCH_CONFIG_NO_NOMINMAX)
 #    define CATCH_DEFINES_NOMINMAX
 #  endif
@@ -2086,15 +2130,15 @@ namespace Catch {
 
 #include <string>
 
-namespace Catch{
+namespace Catch {
 
-    bool isDebuggerActive();
-    void writeToDebugConsole( std::string const& text );
+bool isDebuggerActive();
+void writeToDebugConsole(std::string const &text);
 }
 
 #ifdef CATCH_PLATFORM_MAC
 
-    // The following code snippet based on:
+                                                                                                                        // The following code snippet based on:
     // http://cocoawithlove.com/2008/03/break-into-debugger.html
     #if defined(__ppc64__) || defined(__ppc__)
         #define CATCH_TRAP() \
@@ -2105,43 +2149,43 @@ namespace Catch{
     #endif
 
 #elif defined(CATCH_PLATFORM_LINUX)
-    // If we can use inline assembler, do it because this allows us to break
-    // directly at the location of the failing check instead of breaking inside
-    // raise() called from it, i.e. one stack frame below.
-    #if defined(__GNUC__) && (defined(__i386) || defined(__x86_64))
-        #define CATCH_TRAP() asm volatile ("int $3")
-    #else // Fall back to the generic way.
-        #include <signal.h>
+// If we can use inline assembler, do it because this allows us to break
+// directly at the location of the failing check instead of breaking inside
+// raise() called from it, i.e. one stack frame below.
+#if defined(__GNUC__) && (defined(__i386) || defined(__x86_64))
+#define CATCH_TRAP() asm volatile ("int $3")
+#else // Fall back to the generic way.
+                                                                                                                        #include <signal.h>
 
         #define CATCH_TRAP() raise(SIGTRAP)
-    #endif
+#endif
 #elif defined(_MSC_VER)
-    #define CATCH_TRAP() __debugbreak()
+                                                                                                                        #define CATCH_TRAP() __debugbreak()
 #elif defined(__MINGW32__)
     extern "C" __declspec(dllimport) void __stdcall DebugBreak();
     #define CATCH_TRAP() DebugBreak()
 #endif
 
 #ifdef CATCH_TRAP
-    #define CATCH_BREAK_INTO_DEBUGGER() if( Catch::isDebuggerActive() ) { CATCH_TRAP(); }
+#define CATCH_BREAK_INTO_DEBUGGER() if( Catch::isDebuggerActive() ) { CATCH_TRAP(); }
 #else
-    #define CATCH_BREAK_INTO_DEBUGGER() Catch::alwaysTrue();
+#define CATCH_BREAK_INTO_DEBUGGER() Catch::alwaysTrue();
 #endif
 
 // #included from: catch_interfaces_runner.h
 #define TWOBLUECUBES_CATCH_INTERFACES_RUNNER_H_INCLUDED
 
 namespace Catch {
-    class TestCase;
+class TestCase;
 
-    struct IRunner {
-        virtual ~IRunner();
-        virtual bool aborting() const = 0;
-    };
+struct IRunner {
+  virtual ~IRunner();
+  virtual bool aborting() const = 0;
+};
 }
 
 #if defined(CATCH_CONFIG_FAST_COMPILE)
-///////////////////////////////////////////////////////////////////////////////
+                                                                                                                        ///////////////////////////////////////////////////////////////////////////////
 // We can speedup compilation significantly by breaking into debugger lower in
 // the callstack, because then we don't have to expand CATCH_BREAK_INTO_DEBUGGER
 // macro in each assertion
@@ -2180,13 +2224,13 @@ namespace Catch {
 // and/or an exception thrown and takes appropriate action.
 // This needs to be done as a macro so the debugger will stop in the user
 // source code rather than in Catch library code
-#define INTERNAL_CATCH_REACT( resultBuilder ) \
+#define INTERNAL_CATCH_REACT(resultBuilder) \
     if( resultBuilder.shouldDebugBreak() ) CATCH_BREAK_INTO_DEBUGGER(); \
     resultBuilder.react();
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////
-#define INTERNAL_CATCH_TEST( macroName, resultDisposition, expr ) \
+#define INTERNAL_CATCH_TEST(macroName, resultDisposition, expr) \
     do { \
         Catch::ResultBuilder __catchResult( macroName, CATCH_INTERNAL_LINEINFO, #expr, resultDisposition ); \
         try { \
@@ -2199,20 +2243,20 @@ namespace Catch {
         } \
         INTERNAL_CATCH_REACT( __catchResult ) \
     } while( Catch::isTrue( false && static_cast<bool>( !!(expr) ) ) ) // expr here is never evaluated at runtime but it forces the compiler to give it a look
-    // The double negation silences MSVC's C4800 warning, the static_cast forces short-circuit evaluation if the type has overloaded &&.
+// The double negation silences MSVC's C4800 warning, the static_cast forces short-circuit evaluation if the type has overloaded &&.
 
 ///////////////////////////////////////////////////////////////////////////////
-#define INTERNAL_CATCH_IF( macroName, resultDisposition, expr ) \
+#define INTERNAL_CATCH_IF(macroName, resultDisposition, expr) \
     INTERNAL_CATCH_TEST( macroName, resultDisposition, expr ); \
     if( Catch::getResultCapture().getLastResult()->succeeded() )
 
 ///////////////////////////////////////////////////////////////////////////////
-#define INTERNAL_CATCH_ELSE( macroName, resultDisposition, expr ) \
+#define INTERNAL_CATCH_ELSE(macroName, resultDisposition, expr) \
     INTERNAL_CATCH_TEST( macroName, resultDisposition, expr ); \
     if( !Catch::getResultCapture().getLastResult()->succeeded() )
 
 ///////////////////////////////////////////////////////////////////////////////
-#define INTERNAL_CATCH_NO_THROW( macroName, resultDisposition, expr ) \
+#define INTERNAL_CATCH_NO_THROW(macroName, resultDisposition, expr) \
     do { \
         Catch::ResultBuilder __catchResult( macroName, CATCH_INTERNAL_LINEINFO, #expr, resultDisposition ); \
         try { \
@@ -2226,7 +2270,7 @@ namespace Catch {
     } while( Catch::alwaysFalse() )
 
 ///////////////////////////////////////////////////////////////////////////////
-#define INTERNAL_CATCH_THROWS( macroName, resultDisposition, matcher, expr ) \
+#define INTERNAL_CATCH_THROWS(macroName, resultDisposition, matcher, expr) \
     do { \
         Catch::ResultBuilder __catchResult( macroName, CATCH_INTERNAL_LINEINFO, #expr, resultDisposition, #matcher ); \
         if( __catchResult.allowThrows() ) \
@@ -2243,7 +2287,7 @@ namespace Catch {
     } while( Catch::alwaysFalse() )
 
 ///////////////////////////////////////////////////////////////////////////////
-#define INTERNAL_CATCH_THROWS_AS( macroName, exceptionType, resultDisposition, expr ) \
+#define INTERNAL_CATCH_THROWS_AS(macroName, exceptionType, resultDisposition, expr) \
     do { \
         Catch::ResultBuilder __catchResult( macroName, CATCH_INTERNAL_LINEINFO, #expr ", " #exceptionType, resultDisposition ); \
         if( __catchResult.allowThrows() ) \
@@ -2264,7 +2308,7 @@ namespace Catch {
 
 ///////////////////////////////////////////////////////////////////////////////
 #ifdef CATCH_CONFIG_VARIADIC_MACROS
-    #define INTERNAL_CATCH_MSG( macroName, messageType, resultDisposition, ... ) \
+#define INTERNAL_CATCH_MSG(macroName, messageType, resultDisposition, ...) \
         do { \
             Catch::ResultBuilder __catchResult( macroName, CATCH_INTERNAL_LINEINFO, "", resultDisposition ); \
             __catchResult << __VA_ARGS__ + ::Catch::StreamEndStop(); \
@@ -2272,7 +2316,7 @@ namespace Catch {
             INTERNAL_CATCH_REACT( __catchResult ) \
         } while( Catch::alwaysFalse() )
 #else
-    #define INTERNAL_CATCH_MSG( macroName, messageType, resultDisposition, log ) \
+                                                                                                                        #define INTERNAL_CATCH_MSG( macroName, messageType, resultDisposition, log ) \
         do { \
             Catch::ResultBuilder __catchResult( macroName, CATCH_INTERNAL_LINEINFO, "", resultDisposition ); \
             __catchResult << log + ::Catch::StreamEndStop(); \
@@ -2282,11 +2326,11 @@ namespace Catch {
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////
-#define INTERNAL_CATCH_INFO( macroName, log ) \
+#define INTERNAL_CATCH_INFO(macroName, log) \
     Catch::ScopedMessage INTERNAL_CATCH_UNIQUE_NAME( scopedMessage ) = Catch::MessageBuilder( macroName, CATCH_INTERNAL_LINEINFO, Catch::ResultWas::Info ) << log;
 
 ///////////////////////////////////////////////////////////////////////////////
-#define INTERNAL_CHECK_THAT( macroName, matcher, resultDisposition, arg ) \
+#define INTERNAL_CHECK_THAT(macroName, matcher, resultDisposition, arg) \
     do { \
         Catch::ResultBuilder __catchResult( macroName, CATCH_INTERNAL_LINEINFO, #arg ", " #matcher, resultDisposition ); \
         try { \
@@ -2310,93 +2354,92 @@ namespace Catch {
 
 namespace Catch {
 
-    struct Counts {
-        Counts() : passed( 0 ), failed( 0 ), failedButOk( 0 ) {}
+struct Counts {
+  Counts() : passed(0), failed(0), failedButOk(0) {}
 
-        Counts operator - ( Counts const& other ) const {
-            Counts diff;
-            diff.passed = passed - other.passed;
-            diff.failed = failed - other.failed;
-            diff.failedButOk = failedButOk - other.failedButOk;
-            return diff;
-        }
-        Counts& operator += ( Counts const& other ) {
-            passed += other.passed;
-            failed += other.failed;
-            failedButOk += other.failedButOk;
-            return *this;
-        }
+  Counts operator-(Counts const &other) const {
+    Counts diff;
+    diff.passed = passed - other.passed;
+    diff.failed = failed - other.failed;
+    diff.failedButOk = failedButOk - other.failedButOk;
+    return diff;
+  }
+  Counts &operator+=(Counts const &other) {
+    passed += other.passed;
+    failed += other.failed;
+    failedButOk += other.failedButOk;
+    return *this;
+  }
 
-        std::size_t total() const {
-            return passed + failed + failedButOk;
-        }
-        bool allPassed() const {
-            return failed == 0 && failedButOk == 0;
-        }
-        bool allOk() const {
-            return failed == 0;
-        }
+  std::size_t total() const {
+    return passed + failed + failedButOk;
+  }
+  bool allPassed() const {
+    return failed == 0 && failedButOk == 0;
+  }
+  bool allOk() const {
+    return failed == 0;
+  }
 
-        std::size_t passed;
-        std::size_t failed;
-        std::size_t failedButOk;
-    };
+  std::size_t passed;
+  std::size_t failed;
+  std::size_t failedButOk;
+};
 
-    struct Totals {
+struct Totals {
 
-        Totals operator - ( Totals const& other ) const {
-            Totals diff;
-            diff.assertions = assertions - other.assertions;
-            diff.testCases = testCases - other.testCases;
-            return diff;
-        }
+  Totals operator-(Totals const &other) const {
+    Totals diff;
+    diff.assertions = assertions - other.assertions;
+    diff.testCases = testCases - other.testCases;
+    return diff;
+  }
 
-        Totals delta( Totals const& prevTotals ) const {
-            Totals diff = *this - prevTotals;
-            if( diff.assertions.failed > 0 )
-                ++diff.testCases.failed;
-            else if( diff.assertions.failedButOk > 0 )
-                ++diff.testCases.failedButOk;
-            else
-                ++diff.testCases.passed;
-            return diff;
-        }
+  Totals delta(Totals const &prevTotals) const {
+    Totals diff = *this - prevTotals;
+    if (diff.assertions.failed > 0)
+      ++diff.testCases.failed;
+    else if (diff.assertions.failedButOk > 0)
+      ++diff.testCases.failedButOk;
+    else
+      ++diff.testCases.passed;
+    return diff;
+  }
 
-        Totals& operator += ( Totals const& other ) {
-            assertions += other.assertions;
-            testCases += other.testCases;
-            return *this;
-        }
+  Totals &operator+=(Totals const &other) {
+    assertions += other.assertions;
+    testCases += other.testCases;
+    return *this;
+  }
 
-        Counts assertions;
-        Counts testCases;
-    };
+  Counts assertions;
+  Counts testCases;
+};
 }
 
 #include <string>
 
 namespace Catch {
 
-    struct SectionInfo {
-        SectionInfo
-            (   SourceLineInfo const& _lineInfo,
-                std::string const& _name,
-                std::string const& _description = std::string() );
+struct SectionInfo {
+  SectionInfo
+      (SourceLineInfo const &_lineInfo,
+       std::string const &_name,
+       std::string const &_description = std::string());
 
-        std::string name;
-        std::string description;
-        SourceLineInfo lineInfo;
-    };
+  std::string name;
+  std::string description;
+  SourceLineInfo lineInfo;
+};
 
-    struct SectionEndInfo {
-        SectionEndInfo( SectionInfo const& _sectionInfo, Counts const& _prevAssertions, double _durationInSeconds )
-        : sectionInfo( _sectionInfo ), prevAssertions( _prevAssertions ), durationInSeconds( _durationInSeconds )
-        {}
+struct SectionEndInfo {
+  SectionEndInfo(SectionInfo const &_sectionInfo, Counts const &_prevAssertions, double _durationInSeconds)
+      : sectionInfo(_sectionInfo), prevAssertions(_prevAssertions), durationInSeconds(_durationInSeconds) {}
 
-        SectionInfo sectionInfo;
-        Counts prevAssertions;
-        double durationInSeconds;
-    };
+  SectionInfo sectionInfo;
+  Counts prevAssertions;
+  double durationInSeconds;
+};
 
 } // end namespace Catch
 
@@ -2405,28 +2448,28 @@ namespace Catch {
 
 #ifdef _MSC_VER
 
-namespace Catch {
+                                                                                                                        namespace Catch {
     typedef unsigned long long UInt64;
 }
 #else
 #include <stdint.h>
 namespace Catch {
-    typedef uint64_t UInt64;
+typedef uint64_t UInt64;
 }
 #endif
 
 namespace Catch {
-    class Timer {
-    public:
-        Timer() : m_ticks( 0 ) {}
-        void start();
-        unsigned int getElapsedMicroseconds() const;
-        unsigned int getElapsedMilliseconds() const;
-        double getElapsedSeconds() const;
+class Timer {
+ public:
+  Timer() : m_ticks(0) {}
+  void start();
+  unsigned int getElapsedMicroseconds() const;
+  unsigned int getElapsedMilliseconds() const;
+  double getElapsedSeconds() const;
 
-    private:
-        UInt64 m_ticks;
-    };
+ private:
+  UInt64 m_ticks;
+};
 
 } // namespace Catch
 
@@ -2434,30 +2477,30 @@ namespace Catch {
 
 namespace Catch {
 
-    class Section : NonCopyable {
-    public:
-        Section( SectionInfo const& info );
-        ~Section();
+class Section : NonCopyable {
+ public:
+  Section(SectionInfo const &info);
+  ~Section();
 
-        // This indicates whether the section should be executed or not
-        operator bool() const;
+  // This indicates whether the section should be executed or not
+  operator bool() const;
 
-    private:
-        SectionInfo m_info;
+ private:
+  SectionInfo m_info;
 
-        std::string m_name;
-        Counts m_assertions;
-        bool m_sectionIncluded;
-        Timer m_timer;
-    };
+  std::string m_name;
+  Counts m_assertions;
+  bool m_sectionIncluded;
+  Timer m_timer;
+};
 
 } // end namespace Catch
 
 #ifdef CATCH_CONFIG_VARIADIC_MACROS
-    #define INTERNAL_CATCH_SECTION( ... ) \
+#define INTERNAL_CATCH_SECTION(...) \
         if( Catch::Section const& INTERNAL_CATCH_UNIQUE_NAME( catch_internal_Section ) = Catch::SectionInfo( CATCH_INTERNAL_LINEINFO, __VA_ARGS__ ) )
 #else
-    #define INTERNAL_CATCH_SECTION( name, desc ) \
+                                                                                                                        #define INTERNAL_CATCH_SECTION( name, desc ) \
         if( Catch::Section const& INTERNAL_CATCH_UNIQUE_NAME( catch_internal_Section ) = Catch::SectionInfo( CATCH_INTERNAL_LINEINFO, name, desc ) )
 #endif
 
@@ -2472,162 +2515,158 @@ namespace Catch {
 
 template<typename T>
 struct IGenerator {
-    virtual ~IGenerator() {}
-    virtual T getValue( std::size_t index ) const = 0;
-    virtual std::size_t size () const = 0;
+  virtual ~IGenerator() {}
+  virtual T getValue(std::size_t index) const = 0;
+  virtual std::size_t size() const = 0;
 };
 
 template<typename T>
 class BetweenGenerator : public IGenerator<T> {
-public:
-    BetweenGenerator( T from, T to ) : m_from( from ), m_to( to ){}
+ public:
+  BetweenGenerator(T from, T to) : m_from(from), m_to(to) {}
 
-    virtual T getValue( std::size_t index ) const {
-        return m_from+static_cast<int>( index );
-    }
+  virtual T getValue(std::size_t index) const {
+    return m_from + static_cast<int>( index );
+  }
 
-    virtual std::size_t size() const {
-        return static_cast<std::size_t>( 1+m_to-m_from );
-    }
+  virtual std::size_t size() const {
+    return static_cast<std::size_t>( 1 + m_to - m_from );
+  }
 
-private:
+ private:
 
-    T m_from;
-    T m_to;
+  T m_from;
+  T m_to;
 };
 
 template<typename T>
 class ValuesGenerator : public IGenerator<T> {
-public:
-    ValuesGenerator(){}
+ public:
+  ValuesGenerator() {}
 
-    void add( T value ) {
-        m_values.push_back( value );
-    }
+  void add(T value) {
+    m_values.push_back(value);
+  }
 
-    virtual T getValue( std::size_t index ) const {
-        return m_values[index];
-    }
+  virtual T getValue(std::size_t index) const {
+    return m_values[index];
+  }
 
-    virtual std::size_t size() const {
-        return m_values.size();
-    }
+  virtual std::size_t size() const {
+    return m_values.size();
+  }
 
-private:
-    std::vector<T> m_values;
+ private:
+  std::vector<T> m_values;
 };
 
 template<typename T>
 class CompositeGenerator {
-public:
-    CompositeGenerator() : m_totalSize( 0 ) {}
+ public:
+  CompositeGenerator() : m_totalSize(0) {}
 
-    // *** Move semantics, similar to auto_ptr ***
-    CompositeGenerator( CompositeGenerator& other )
-    :   m_fileInfo( other.m_fileInfo ),
-        m_totalSize( 0 )
-    {
-        move( other );
+  // *** Move semantics, similar to auto_ptr ***
+  CompositeGenerator(CompositeGenerator &other)
+      : m_fileInfo(other.m_fileInfo),
+        m_totalSize(0) {
+    move(other);
+  }
+
+  CompositeGenerator &setFileInfo(const char *fileInfo) {
+    m_fileInfo = fileInfo;
+    return *this;
+  }
+
+  ~CompositeGenerator() {
+    deleteAll(m_composed);
+  }
+
+  operator T() const {
+    size_t overallIndex = getCurrentContext().getGeneratorIndex(m_fileInfo, m_totalSize);
+
+    typename std::vector<const IGenerator<T> *>::const_iterator it = m_composed.begin();
+    typename std::vector<const IGenerator<T> *>::const_iterator itEnd = m_composed.end();
+    for (size_t index = 0; it != itEnd; ++it) {
+      const IGenerator<T> *generator = *it;
+      if (overallIndex >= index && overallIndex < index + generator->size()) {
+        return generator->getValue(overallIndex - index);
+      }
+      index += generator->size();
     }
+    CATCH_INTERNAL_ERROR("Indexed past end of generated range");
+    return T(); // Suppress spurious "not all control paths return a value" warning in Visual Studio - if you know how to fix this please do so
+  }
 
-    CompositeGenerator& setFileInfo( const char* fileInfo ) {
-        m_fileInfo = fileInfo;
-        return *this;
-    }
+  void add(const IGenerator<T> *generator) {
+    m_totalSize += generator->size();
+    m_composed.push_back(generator);
+  }
 
-    ~CompositeGenerator() {
-        deleteAll( m_composed );
-    }
+  CompositeGenerator &then(CompositeGenerator &other) {
+    move(other);
+    return *this;
+  }
 
-    operator T () const {
-        size_t overallIndex = getCurrentContext().getGeneratorIndex( m_fileInfo, m_totalSize );
+  CompositeGenerator &then(T value) {
+    ValuesGenerator<T> *valuesGen = new ValuesGenerator<T>();
+    valuesGen->add(value);
+    add(valuesGen);
+    return *this;
+  }
 
-        typename std::vector<const IGenerator<T>*>::const_iterator it = m_composed.begin();
-        typename std::vector<const IGenerator<T>*>::const_iterator itEnd = m_composed.end();
-        for( size_t index = 0; it != itEnd; ++it )
-        {
-            const IGenerator<T>* generator = *it;
-            if( overallIndex >= index && overallIndex < index + generator->size() )
-            {
-                return generator->getValue( overallIndex-index );
-            }
-            index += generator->size();
-        }
-        CATCH_INTERNAL_ERROR( "Indexed past end of generated range" );
-        return T(); // Suppress spurious "not all control paths return a value" warning in Visual Studio - if you know how to fix this please do so
-    }
+ private:
 
-    void add( const IGenerator<T>* generator ) {
-        m_totalSize += generator->size();
-        m_composed.push_back( generator );
-    }
+  void move(CompositeGenerator &other) {
+    m_composed.insert(m_composed.end(), other.m_composed.begin(), other.m_composed.end());
+    m_totalSize += other.m_totalSize;
+    other.m_composed.clear();
+  }
 
-    CompositeGenerator& then( CompositeGenerator& other ) {
-        move( other );
-        return *this;
-    }
-
-    CompositeGenerator& then( T value ) {
-        ValuesGenerator<T>* valuesGen = new ValuesGenerator<T>();
-        valuesGen->add( value );
-        add( valuesGen );
-        return *this;
-    }
-
-private:
-
-    void move( CompositeGenerator& other ) {
-        m_composed.insert( m_composed.end(), other.m_composed.begin(), other.m_composed.end() );
-        m_totalSize += other.m_totalSize;
-        other.m_composed.clear();
-    }
-
-    std::vector<const IGenerator<T>*> m_composed;
-    std::string m_fileInfo;
-    size_t m_totalSize;
+  std::vector<const IGenerator<T> *> m_composed;
+  std::string m_fileInfo;
+  size_t m_totalSize;
 };
 
-namespace Generators
-{
-    template<typename T>
-    CompositeGenerator<T> between( T from, T to ) {
-        CompositeGenerator<T> generators;
-        generators.add( new BetweenGenerator<T>( from, to ) );
-        return generators;
-    }
+namespace Generators {
+template<typename T>
+CompositeGenerator<T> between(T from, T to) {
+  CompositeGenerator<T> generators;
+  generators.add(new BetweenGenerator<T>(from, to));
+  return generators;
+}
 
-    template<typename T>
-    CompositeGenerator<T> values( T val1, T val2 ) {
-        CompositeGenerator<T> generators;
-        ValuesGenerator<T>* valuesGen = new ValuesGenerator<T>();
-        valuesGen->add( val1 );
-        valuesGen->add( val2 );
-        generators.add( valuesGen );
-        return generators;
-    }
+template<typename T>
+CompositeGenerator<T> values(T val1, T val2) {
+  CompositeGenerator<T> generators;
+  ValuesGenerator<T> *valuesGen = new ValuesGenerator<T>();
+  valuesGen->add(val1);
+  valuesGen->add(val2);
+  generators.add(valuesGen);
+  return generators;
+}
 
-    template<typename T>
-    CompositeGenerator<T> values( T val1, T val2, T val3 ){
-        CompositeGenerator<T> generators;
-        ValuesGenerator<T>* valuesGen = new ValuesGenerator<T>();
-        valuesGen->add( val1 );
-        valuesGen->add( val2 );
-        valuesGen->add( val3 );
-        generators.add( valuesGen );
-        return generators;
-    }
+template<typename T>
+CompositeGenerator<T> values(T val1, T val2, T val3) {
+  CompositeGenerator<T> generators;
+  ValuesGenerator<T> *valuesGen = new ValuesGenerator<T>();
+  valuesGen->add(val1);
+  valuesGen->add(val2);
+  valuesGen->add(val3);
+  generators.add(valuesGen);
+  return generators;
+}
 
-    template<typename T>
-    CompositeGenerator<T> values( T val1, T val2, T val3, T val4 ) {
-        CompositeGenerator<T> generators;
-        ValuesGenerator<T>* valuesGen = new ValuesGenerator<T>();
-        valuesGen->add( val1 );
-        valuesGen->add( val2 );
-        valuesGen->add( val3 );
-        valuesGen->add( val4 );
-        generators.add( valuesGen );
-        return generators;
-    }
+template<typename T>
+CompositeGenerator<T> values(T val1, T val2, T val3, T val4) {
+  CompositeGenerator<T> generators;
+  ValuesGenerator<T> *valuesGen = new ValuesGenerator<T>();
+  valuesGen->add(val1);
+  valuesGen->add(val2);
+  valuesGen->add(val3);
+  valuesGen->add(val4);
+  generators.add(valuesGen);
+  return generators;
+}
 
 } // end namespace Generators
 
@@ -2635,10 +2674,10 @@ using namespace Generators;
 
 } // end namespace Catch
 
-#define INTERNAL_CATCH_LINESTR2( line ) #line
-#define INTERNAL_CATCH_LINESTR( line ) INTERNAL_CATCH_LINESTR2( line )
+#define INTERNAL_CATCH_LINESTR2(line) #line
+#define INTERNAL_CATCH_LINESTR(line) INTERNAL_CATCH_LINESTR2( line )
 
-#define INTERNAL_CATCH_GENERATE( expr ) expr.setFileInfo( __FILE__ "(" INTERNAL_CATCH_LINESTR( __LINE__ ) ")" )
+#define INTERNAL_CATCH_GENERATE(expr) expr.setFileInfo( __FILE__ "(" INTERNAL_CATCH_LINESTR( __LINE__ ) ")" )
 
 // #included from: internal/catch_interfaces_exception.h
 #define TWOBLUECUBES_CATCH_INTERFACES_EXCEPTION_H_INCLUDED
@@ -2653,99 +2692,100 @@ using namespace Generators;
 
 namespace Catch {
 
-    class TestCase;
-    struct ITestCaseRegistry;
-    struct IExceptionTranslatorRegistry;
-    struct IExceptionTranslator;
-    struct IReporterRegistry;
-    struct IReporterFactory;
-    struct ITagAliasRegistry;
+class TestCase;
+struct ITestCaseRegistry;
+struct IExceptionTranslatorRegistry;
+struct IExceptionTranslator;
+struct IReporterRegistry;
+struct IReporterFactory;
+struct ITagAliasRegistry;
 
-    struct IRegistryHub {
-        virtual ~IRegistryHub();
+struct IRegistryHub {
+  virtual ~IRegistryHub();
 
-        virtual IReporterRegistry const& getReporterRegistry() const = 0;
-        virtual ITestCaseRegistry const& getTestCaseRegistry() const = 0;
-        virtual ITagAliasRegistry const& getTagAliasRegistry() const = 0;
+  virtual IReporterRegistry const &getReporterRegistry() const = 0;
+  virtual ITestCaseRegistry const &getTestCaseRegistry() const = 0;
+  virtual ITagAliasRegistry const &getTagAliasRegistry() const = 0;
 
-        virtual IExceptionTranslatorRegistry& getExceptionTranslatorRegistry() = 0;
-    };
+  virtual IExceptionTranslatorRegistry &getExceptionTranslatorRegistry() = 0;
+};
 
-    struct IMutableRegistryHub {
-        virtual ~IMutableRegistryHub();
-        virtual void registerReporter( std::string const& name, Ptr<IReporterFactory> const& factory ) = 0;
-        virtual void registerListener( Ptr<IReporterFactory> const& factory ) = 0;
-        virtual void registerTest( TestCase const& testInfo ) = 0;
-        virtual void registerTranslator( const IExceptionTranslator* translator ) = 0;
-        virtual void registerTagAlias( std::string const& alias, std::string const& tag, SourceLineInfo const& lineInfo ) = 0;
-    };
+struct IMutableRegistryHub {
+  virtual ~IMutableRegistryHub();
+  virtual void registerReporter(std::string const &name, Ptr<IReporterFactory> const &factory) = 0;
+  virtual void registerListener(Ptr<IReporterFactory> const &factory) = 0;
+  virtual void registerTest(TestCase const &testInfo) = 0;
+  virtual void registerTranslator(const IExceptionTranslator *translator) = 0;
+  virtual void registerTagAlias(std::string const &alias, std::string const &tag, SourceLineInfo const &lineInfo) = 0;
+};
 
-    IRegistryHub& getRegistryHub();
-    IMutableRegistryHub& getMutableRegistryHub();
-    void cleanUp();
-    std::string translateActiveException();
+IRegistryHub &getRegistryHub();
+IMutableRegistryHub &getMutableRegistryHub();
+void cleanUp();
+std::string translateActiveException();
 
 }
 
 namespace Catch {
 
-    typedef std::string(*exceptionTranslateFunction)();
+typedef std::string(*exceptionTranslateFunction)();
 
-    struct IExceptionTranslator;
-    typedef std::vector<const IExceptionTranslator*> ExceptionTranslators;
+struct IExceptionTranslator;
+typedef std::vector<const IExceptionTranslator *> ExceptionTranslators;
 
-    struct IExceptionTranslator {
-        virtual ~IExceptionTranslator();
-        virtual std::string translate( ExceptionTranslators::const_iterator it, ExceptionTranslators::const_iterator itEnd ) const = 0;
-    };
+struct IExceptionTranslator {
+  virtual ~IExceptionTranslator();
+  virtual std::string translate(ExceptionTranslators::const_iterator it,
+                                ExceptionTranslators::const_iterator itEnd) const = 0;
+};
 
-    struct IExceptionTranslatorRegistry {
-        virtual ~IExceptionTranslatorRegistry();
+struct IExceptionTranslatorRegistry {
+  virtual ~IExceptionTranslatorRegistry();
 
-        virtual std::string translateActiveException() const = 0;
-    };
+  virtual std::string translateActiveException() const = 0;
+};
 
-    class ExceptionTranslatorRegistrar {
-        template<typename T>
-        class ExceptionTranslator : public IExceptionTranslator {
-        public:
+class ExceptionTranslatorRegistrar {
+  template<typename T>
+  class ExceptionTranslator : public IExceptionTranslator {
+   public:
 
-            ExceptionTranslator( std::string(*translateFunction)( T& ) )
-            : m_translateFunction( translateFunction )
-            {}
+    ExceptionTranslator(std::string(*translateFunction)(T &))
+        : m_translateFunction(translateFunction) {}
 
-            virtual std::string translate( ExceptionTranslators::const_iterator it, ExceptionTranslators::const_iterator itEnd ) const CATCH_OVERRIDE {
-                try {
-                    if( it == itEnd )
-                        throw;
-                    else
-                        return (*it)->translate( it+1, itEnd );
-                }
-                catch( T& ex ) {
-                    return m_translateFunction( ex );
-                }
-            }
+    virtual std::string translate(ExceptionTranslators::const_iterator it,
+                                  ExceptionTranslators::const_iterator itEnd) const CATCH_OVERRIDE {
+      try {
+        if (it == itEnd)
+          throw;
+        else
+          return (*it)->translate(it + 1, itEnd);
+      }
+      catch (T &ex) {
+        return m_translateFunction(ex);
+      }
+    }
 
-        protected:
-            std::string(*m_translateFunction)( T& );
-        };
+   protected:
+    std::string (*m_translateFunction)(T &);
+  };
 
-    public:
-        template<typename T>
-        ExceptionTranslatorRegistrar( std::string(*translateFunction)( T& ) ) {
-            getMutableRegistryHub().registerTranslator
-                ( new ExceptionTranslator<T>( translateFunction ) );
-        }
-    };
+ public:
+  template<typename T>
+  ExceptionTranslatorRegistrar(std::string(*translateFunction)(T &)) {
+    getMutableRegistryHub().registerTranslator
+        (new ExceptionTranslator<T>(translateFunction));
+  }
+};
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-#define INTERNAL_CATCH_TRANSLATE_EXCEPTION2( translatorName, signature ) \
+#define INTERNAL_CATCH_TRANSLATE_EXCEPTION2(translatorName, signature) \
     static std::string translatorName( signature ); \
     namespace{ Catch::ExceptionTranslatorRegistrar INTERNAL_CATCH_UNIQUE_NAME( catch_internal_ExceptionRegistrar )( &translatorName ); }\
     static std::string translatorName( signature )
 
-#define INTERNAL_CATCH_TRANSLATE_EXCEPTION( signature ) INTERNAL_CATCH_TRANSLATE_EXCEPTION2( INTERNAL_CATCH_UNIQUE_NAME( catch_internal_ExceptionTranslator ), signature )
+#define INTERNAL_CATCH_TRANSLATE_EXCEPTION(signature) INTERNAL_CATCH_TRANSLATE_EXCEPTION2( INTERNAL_CATCH_UNIQUE_NAME( catch_internal_ExceptionTranslator ), signature )
 
 // #included from: internal/catch_approx.hpp
 #define TWOBLUECUBES_CATCH_APPROX_HPP_INCLUDED
@@ -2760,108 +2800,106 @@ namespace Catch {
 namespace Catch {
 namespace Detail {
 
-    class Approx {
-    public:
-        explicit Approx ( double value )
-        :   m_epsilon( std::numeric_limits<float>::epsilon()*100 ),
-            m_margin( 0.0 ),
-            m_scale( 1.0 ),
-            m_value( value )
-        {}
+class Approx {
+ public:
+  explicit Approx(double value)
+      : m_epsilon(std::numeric_limits<float>::epsilon() * 100),
+        m_margin(0.0),
+        m_scale(1.0),
+        m_value(value) {}
 
-        Approx( Approx const& other )
-        :   m_epsilon( other.m_epsilon ),
-            m_margin( other.m_margin ),
-            m_scale( other.m_scale ),
-            m_value( other.m_value )
-        {}
+  Approx(Approx const &other)
+      : m_epsilon(other.m_epsilon),
+        m_margin(other.m_margin),
+        m_scale(other.m_scale),
+        m_value(other.m_value) {}
 
-        static Approx custom() {
-            return Approx( 0 );
-        }
+  static Approx custom() {
+    return Approx(0);
+  }
 
 #if defined(CATCH_CONFIG_CPP11_TYPE_TRAITS)
 
-        template <typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
-        Approx operator()( T value ) {
-            Approx approx( static_cast<double>(value) );
-            approx.epsilon( m_epsilon );
-            approx.margin( m_margin );
-            approx.scale( m_scale );
-            return approx;
-        }
+  template<typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
+  Approx operator()(T value) {
+    Approx approx(static_cast<double>(value));
+    approx.epsilon(m_epsilon);
+    approx.margin(m_margin);
+    approx.scale(m_scale);
+    return approx;
+  }
 
-        template <typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
-        explicit Approx( T value ): Approx(static_cast<double>(value))
-        {}
+  template<typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
+  explicit Approx(T value): Approx(static_cast<double>(value)) {}
 
-        template <typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
-        friend bool operator == ( const T& lhs, Approx const& rhs ) {
-            // Thanks to Richard Harris for his help refining this formula
-            auto lhs_v = double(lhs);
-            bool relativeOK = std::fabs(lhs_v - rhs.m_value) < rhs.m_epsilon * (rhs.m_scale + (std::max)(std::fabs(lhs_v), std::fabs(rhs.m_value)));
-            if (relativeOK) {
-                return true;
-            }
-            return std::fabs(lhs_v - rhs.m_value) < rhs.m_margin;
-        }
+  template<typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
+  friend bool operator==(const T &lhs, Approx const &rhs) {
+    // Thanks to Richard Harris for his help refining this formula
+    auto lhs_v = double(lhs);
+    bool relativeOK = std::fabs(lhs_v - rhs.m_value)
+        < rhs.m_epsilon * (rhs.m_scale + (std::max)(std::fabs(lhs_v), std::fabs(rhs.m_value)));
+    if (relativeOK) {
+      return true;
+    }
+    return std::fabs(lhs_v - rhs.m_value) < rhs.m_margin;
+  }
 
-        template <typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
-        friend bool operator == ( Approx const& lhs, const T& rhs ) {
-            return operator==( rhs, lhs );
-        }
+  template<typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
+  friend bool operator==(Approx const &lhs, const T &rhs) {
+    return operator==(rhs, lhs);
+  }
 
-        template <typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
-        friend bool operator != ( T lhs, Approx const& rhs ) {
-            return !operator==( lhs, rhs );
-        }
+  template<typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
+  friend bool operator!=(T lhs, Approx const &rhs) {
+    return !operator==(lhs, rhs);
+  }
 
-        template <typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
-        friend bool operator != ( Approx const& lhs, T rhs ) {
-            return !operator==( rhs, lhs );
-        }
+  template<typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
+  friend bool operator!=(Approx const &lhs, T rhs) {
+    return !operator==(rhs, lhs);
+  }
 
-        template <typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
-        friend bool operator <= ( T lhs, Approx const& rhs ) {
-            return double(lhs) < rhs.m_value || lhs == rhs;
-        }
+  template<typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
+  friend bool operator<=(T lhs, Approx const &rhs) {
+    return double(lhs) < rhs.m_value || lhs == rhs;
+  }
 
-        template <typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
-        friend bool operator <= ( Approx const& lhs, T rhs ) {
-            return lhs.m_value < double(rhs) || lhs == rhs;
-        }
+  template<typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
+  friend bool operator<=(Approx const &lhs, T rhs) {
+    return lhs.m_value < double(rhs) || lhs == rhs;
+  }
 
-        template <typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
-        friend bool operator >= ( T lhs, Approx const& rhs ) {
-            return double(lhs) > rhs.m_value || lhs == rhs;
-        }
+  template<typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
+  friend bool operator>=(T lhs, Approx const &rhs) {
+    return double(lhs) > rhs.m_value || lhs == rhs;
+  }
 
-        template <typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
-        friend bool operator >= ( Approx const& lhs, T rhs ) {
-            return lhs.m_value > double(rhs) || lhs == rhs;
-        }
+  template<typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
+  friend bool operator>=(Approx const &lhs, T rhs) {
+    return lhs.m_value > double(rhs) || lhs == rhs;
+  }
 
-        template <typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
-        Approx& epsilon( T newEpsilon ) {
-            m_epsilon = double(newEpsilon);
-            return *this;
-        }
+  template<typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
+  Approx &epsilon(T newEpsilon) {
+    m_epsilon = double(newEpsilon);
+    return *this;
+  }
 
-        template <typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
-        Approx& margin( T newMargin ) {
-            m_margin = double(newMargin);
-            return *this;
-        }
+  template<typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
+  Approx &margin(T newMargin) {
+    m_margin = double(newMargin);
+    return *this;
+  }
 
-        template <typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
-        Approx& scale( T newScale ) {
-            m_scale = double(newScale);
-            return *this;
-        }
+  template<typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
+  Approx &scale(T newScale) {
+    m_scale = double(newScale);
+    return *this;
+  }
 
 #else
 
-        Approx operator()( double value ) {
+                                                                                                                          Approx operator()( double value ) {
             Approx approx( value );
             approx.epsilon( m_epsilon );
             approx.margin( m_margin );
@@ -2922,23 +2960,23 @@ namespace Detail {
         }
 #endif
 
-        std::string toString() const {
-            std::ostringstream oss;
-            oss << "Approx( " << Catch::toString( m_value ) << " )";
-            return oss.str();
-        }
+  std::string toString() const {
+    std::ostringstream oss;
+    oss << "Approx( " << Catch::toString(m_value) << " )";
+    return oss.str();
+  }
 
-    private:
-        double m_epsilon;
-        double m_margin;
-        double m_scale;
-        double m_value;
-    };
+ private:
+  double m_epsilon;
+  double m_margin;
+  double m_scale;
+  double m_value;
+};
 }
 
 template<>
-inline std::string toString<Detail::Approx>( Detail::Approx const& value ) {
-    return value.toString();
+inline std::string toString<Detail::Approx>(Detail::Approx const &value) {
+  return value.toString();
 }
 
 } // end namespace Catch
@@ -2949,52 +2987,52 @@ inline std::string toString<Detail::Approx>( Detail::Approx const& value ) {
 namespace Catch {
 namespace Matchers {
 
-    namespace StdString {
+namespace StdString {
 
-        struct CasedString
-        {
-            CasedString( std::string const& str, CaseSensitive::Choice caseSensitivity );
-            std::string adjustString( std::string const& str ) const;
-            std::string caseSensitivitySuffix() const;
+struct CasedString {
+  CasedString(std::string const &str, CaseSensitive::Choice caseSensitivity);
+  std::string adjustString(std::string const &str) const;
+  std::string caseSensitivitySuffix() const;
 
-            CaseSensitive::Choice m_caseSensitivity;
-            std::string m_str;
-        };
+  CaseSensitive::Choice m_caseSensitivity;
+  std::string m_str;
+};
 
-        struct StringMatcherBase : MatcherBase<std::string> {
-            StringMatcherBase( std::string const& operation, CasedString const& comparator );
-            virtual std::string describe() const CATCH_OVERRIDE;
+struct StringMatcherBase : MatcherBase<std::string> {
+  StringMatcherBase(std::string const &operation, CasedString const &comparator);
+  virtual std::string describe() const CATCH_OVERRIDE;
 
-            CasedString m_comparator;
-            std::string m_operation;
-        };
+  CasedString m_comparator;
+  std::string m_operation;
+};
 
-        struct EqualsMatcher : StringMatcherBase {
-            EqualsMatcher( CasedString const& comparator );
-            virtual bool match( std::string const& source ) const CATCH_OVERRIDE;
-        };
-        struct ContainsMatcher : StringMatcherBase {
-            ContainsMatcher( CasedString const& comparator );
-            virtual bool match( std::string const& source ) const CATCH_OVERRIDE;
-        };
-        struct StartsWithMatcher : StringMatcherBase {
-            StartsWithMatcher( CasedString const& comparator );
-            virtual bool match( std::string const& source ) const CATCH_OVERRIDE;
-        };
-        struct EndsWithMatcher : StringMatcherBase {
-            EndsWithMatcher( CasedString const& comparator );
-            virtual bool match( std::string const& source ) const CATCH_OVERRIDE;
-        };
+struct EqualsMatcher : StringMatcherBase {
+  EqualsMatcher(CasedString const &comparator);
+  virtual bool match(std::string const &source) const CATCH_OVERRIDE;
+};
+struct ContainsMatcher : StringMatcherBase {
+  ContainsMatcher(CasedString const &comparator);
+  virtual bool match(std::string const &source) const CATCH_OVERRIDE;
+};
+struct StartsWithMatcher : StringMatcherBase {
+  StartsWithMatcher(CasedString const &comparator);
+  virtual bool match(std::string const &source) const CATCH_OVERRIDE;
+};
+struct EndsWithMatcher : StringMatcherBase {
+  EndsWithMatcher(CasedString const &comparator);
+  virtual bool match(std::string const &source) const CATCH_OVERRIDE;
+};
 
-    } // namespace StdString
+} // namespace StdString
 
-    // The following functions create the actual matcher objects.
-    // This allows the types to be inferred
+// The following functions create the actual matcher objects.
+// This allows the types to be inferred
 
-    StdString::EqualsMatcher Equals( std::string const& str, CaseSensitive::Choice caseSensitivity = CaseSensitive::Yes );
-    StdString::ContainsMatcher Contains( std::string const& str, CaseSensitive::Choice caseSensitivity = CaseSensitive::Yes );
-    StdString::EndsWithMatcher EndsWith( std::string const& str, CaseSensitive::Choice caseSensitivity = CaseSensitive::Yes );
-    StdString::StartsWithMatcher StartsWith( std::string const& str, CaseSensitive::Choice caseSensitivity = CaseSensitive::Yes );
+StdString::EqualsMatcher Equals(std::string const &str, CaseSensitive::Choice caseSensitivity = CaseSensitive::Yes);
+StdString::ContainsMatcher Contains(std::string const &str, CaseSensitive::Choice caseSensitivity = CaseSensitive::Yes);
+StdString::EndsWithMatcher EndsWith(std::string const &str, CaseSensitive::Choice caseSensitivity = CaseSensitive::Yes);
+StdString::StartsWithMatcher StartsWith(std::string const &str,
+                                        CaseSensitive::Choice caseSensitivity = CaseSensitive::Yes);
 
 } // namespace Matchers
 } // namespace Catch
@@ -3005,87 +3043,87 @@ namespace Matchers {
 namespace Catch {
 namespace Matchers {
 
-    namespace Vector {
+namespace Vector {
 
-        template<typename T>
-        struct ContainsElementMatcher : MatcherBase<std::vector<T>, T> {
+template<typename T>
+struct ContainsElementMatcher : MatcherBase<std::vector<T>, T> {
 
-            ContainsElementMatcher(T const &comparator) : m_comparator( comparator) {}
+  ContainsElementMatcher(T const &comparator) : m_comparator(comparator) {}
 
-            bool match(std::vector<T> const &v) const CATCH_OVERRIDE {
-                return std::find(v.begin(), v.end(), m_comparator) != v.end();
-            }
+  bool match(std::vector<T> const &v) const CATCH_OVERRIDE {
+    return std::find(v.begin(), v.end(), m_comparator) != v.end();
+  }
 
-            virtual std::string describe() const CATCH_OVERRIDE {
-                return "Contains: " + Catch::toString( m_comparator );
-            }
+  virtual std::string describe() const CATCH_OVERRIDE {
+    return "Contains: " + Catch::toString(m_comparator);
+  }
 
-            T const& m_comparator;
-        };
+  T const &m_comparator;
+};
 
-        template<typename T>
-        struct ContainsMatcher : MatcherBase<std::vector<T>, std::vector<T> > {
+template<typename T>
+struct ContainsMatcher : MatcherBase<std::vector<T>, std::vector<T> > {
 
-            ContainsMatcher(std::vector<T> const &comparator) : m_comparator( comparator ) {}
+  ContainsMatcher(std::vector<T> const &comparator) : m_comparator(comparator) {}
 
-            bool match(std::vector<T> const &v) const CATCH_OVERRIDE {
-                // !TBD: see note in EqualsMatcher
-                if (m_comparator.size() > v.size())
-                    return false;
-                for (size_t i = 0; i < m_comparator.size(); ++i)
-                    if (std::find(v.begin(), v.end(), m_comparator[i]) == v.end())
-                        return false;
-                return true;
-            }
-            virtual std::string describe() const CATCH_OVERRIDE {
-                return "Contains: " + Catch::toString( m_comparator );
-            }
+  bool match(std::vector<T> const &v) const CATCH_OVERRIDE {
+    // !TBD: see note in EqualsMatcher
+    if (m_comparator.size() > v.size())
+      return false;
+    for (size_t i = 0; i < m_comparator.size(); ++i)
+      if (std::find(v.begin(), v.end(), m_comparator[i]) == v.end())
+        return false;
+    return true;
+  }
+  virtual std::string describe() const CATCH_OVERRIDE {
+    return "Contains: " + Catch::toString(m_comparator);
+  }
 
-            std::vector<T> const& m_comparator;
-        };
+  std::vector<T> const &m_comparator;
+};
 
-        template<typename T>
-        struct EqualsMatcher : MatcherBase<std::vector<T>, std::vector<T> > {
+template<typename T>
+struct EqualsMatcher : MatcherBase<std::vector<T>, std::vector<T> > {
 
-            EqualsMatcher(std::vector<T> const &comparator) : m_comparator( comparator ) {}
+  EqualsMatcher(std::vector<T> const &comparator) : m_comparator(comparator) {}
 
-            bool match(std::vector<T> const &v) const CATCH_OVERRIDE {
-                // !TBD: This currently works if all elements can be compared using !=
-                // - a more general approach would be via a compare template that defaults
-                // to using !=. but could be specialised for, e.g. std::vector<T> etc
-                // - then just call that directly
-                if (m_comparator.size() != v.size())
-                    return false;
-                for (size_t i = 0; i < v.size(); ++i)
-                    if (m_comparator[i] != v[i])
-                        return false;
-                return true;
-            }
-            virtual std::string describe() const CATCH_OVERRIDE {
-                return "Equals: " + Catch::toString( m_comparator );
-            }
-            std::vector<T> const& m_comparator;
-        };
+  bool match(std::vector<T> const &v) const CATCH_OVERRIDE {
+    // !TBD: This currently works if all elements can be compared using !=
+    // - a more general approach would be via a compare template that defaults
+    // to using !=. but could be specialised for, e.g. std::vector<T> etc
+    // - then just call that directly
+    if (m_comparator.size() != v.size())
+      return false;
+    for (size_t i = 0; i < v.size(); ++i)
+      if (m_comparator[i] != v[i])
+        return false;
+    return true;
+  }
+  virtual std::string describe() const CATCH_OVERRIDE {
+    return "Equals: " + Catch::toString(m_comparator);
+  }
+  std::vector<T> const &m_comparator;
+};
 
-    } // namespace Vector
+} // namespace Vector
 
-    // The following functions create the actual matcher objects.
-    // This allows the types to be inferred
+// The following functions create the actual matcher objects.
+// This allows the types to be inferred
 
-    template<typename T>
-    Vector::ContainsMatcher<T> Contains( std::vector<T> const& comparator ) {
-        return Vector::ContainsMatcher<T>( comparator );
-    }
+template<typename T>
+Vector::ContainsMatcher<T> Contains(std::vector<T> const &comparator) {
+  return Vector::ContainsMatcher<T>(comparator);
+}
 
-    template<typename T>
-    Vector::ContainsElementMatcher<T> VectorContains( T const& comparator ) {
-        return Vector::ContainsElementMatcher<T>( comparator );
-    }
+template<typename T>
+Vector::ContainsElementMatcher<T> VectorContains(T const &comparator) {
+  return Vector::ContainsElementMatcher<T>(comparator);
+}
 
-    template<typename T>
-    Vector::EqualsMatcher<T> Equals( std::vector<T> const& comparator ) {
-        return Vector::EqualsMatcher<T>( comparator );
-    }
+template<typename T>
+Vector::EqualsMatcher<T> Equals(std::vector<T> const &comparator) {
+  return Vector::EqualsMatcher<T>(comparator);
+}
 
 } // namespace Matchers
 } // namespace Catch
@@ -3100,104 +3138,102 @@ namespace Matchers {
 
 namespace Catch {
 
-    struct TagAlias {
-        TagAlias( std::string const& _tag, SourceLineInfo _lineInfo ) : tag( _tag ), lineInfo( _lineInfo ) {}
+struct TagAlias {
+  TagAlias(std::string const &_tag, SourceLineInfo _lineInfo) : tag(_tag), lineInfo(_lineInfo) {}
 
-        std::string tag;
-        SourceLineInfo lineInfo;
-    };
+  std::string tag;
+  SourceLineInfo lineInfo;
+};
 
-    struct RegistrarForTagAliases {
-        RegistrarForTagAliases( char const* alias, char const* tag, SourceLineInfo const& lineInfo );
-    };
+struct RegistrarForTagAliases {
+  RegistrarForTagAliases(char const *alias, char const *tag, SourceLineInfo const &lineInfo);
+};
 
 } // end namespace Catch
 
-#define CATCH_REGISTER_TAG_ALIAS( alias, spec ) namespace{ Catch::RegistrarForTagAliases INTERNAL_CATCH_UNIQUE_NAME( AutoRegisterTagAlias )( alias, spec, CATCH_INTERNAL_LINEINFO ); }
+#define CATCH_REGISTER_TAG_ALIAS(alias, spec) namespace{ Catch::RegistrarForTagAliases INTERNAL_CATCH_UNIQUE_NAME( AutoRegisterTagAlias )( alias, spec, CATCH_INTERNAL_LINEINFO ); }
 // #included from: catch_option.hpp
 #define TWOBLUECUBES_CATCH_OPTION_HPP_INCLUDED
 
 namespace Catch {
 
-    // An optional type
-    template<typename T>
-    class Option {
-    public:
-        Option() : nullableValue( CATCH_NULL ) {}
-        Option( T const& _value )
-        : nullableValue( new( storage ) T( _value ) )
-        {}
-        Option( Option const& _other )
-        : nullableValue( _other ? new( storage ) T( *_other ) : CATCH_NULL )
-        {}
+// An optional type
+template<typename T>
+class Option {
+ public:
+  Option() : nullableValue(CATCH_NULL) {}
+  Option(T const &_value)
+      : nullableValue(new(storage) T(_value)) {}
+  Option(Option const &_other)
+      : nullableValue(_other ? new(storage) T(*_other) : CATCH_NULL) {}
 
-        ~Option() {
-            reset();
-        }
+  ~Option() {
+    reset();
+  }
 
-        Option& operator= ( Option const& _other ) {
-            if( &_other != this ) {
-                reset();
-                if( _other )
-                    nullableValue = new( storage ) T( *_other );
-            }
-            return *this;
-        }
-        Option& operator = ( T const& _value ) {
-            reset();
-            nullableValue = new( storage ) T( _value );
-            return *this;
-        }
+  Option &operator=(Option const &_other) {
+    if (&_other != this) {
+      reset();
+      if (_other)
+        nullableValue = new(storage) T(*_other);
+    }
+    return *this;
+  }
+  Option &operator=(T const &_value) {
+    reset();
+    nullableValue = new(storage) T(_value);
+    return *this;
+  }
 
-        void reset() {
-            if( nullableValue )
-                nullableValue->~T();
-            nullableValue = CATCH_NULL;
-        }
+  void reset() {
+    if (nullableValue)
+      nullableValue->~T();
+    nullableValue = CATCH_NULL;
+  }
 
-        T& operator*() { return *nullableValue; }
-        T const& operator*() const { return *nullableValue; }
-        T* operator->() { return nullableValue; }
-        const T* operator->() const { return nullableValue; }
+  T &operator*() { return *nullableValue; }
+  T const &operator*() const { return *nullableValue; }
+  T *operator->() { return nullableValue; }
+  const T *operator->() const { return nullableValue; }
 
-        T valueOr( T const& defaultValue ) const {
-            return nullableValue ? *nullableValue : defaultValue;
-        }
+  T valueOr(T const &defaultValue) const {
+    return nullableValue ? *nullableValue : defaultValue;
+  }
 
-        bool some() const { return nullableValue != CATCH_NULL; }
-        bool none() const { return nullableValue == CATCH_NULL; }
+  bool some() const { return nullableValue != CATCH_NULL; }
+  bool none() const { return nullableValue == CATCH_NULL; }
 
-        bool operator !() const { return nullableValue == CATCH_NULL; }
-        operator SafeBool::type() const {
-            return SafeBool::makeSafe( some() );
-        }
+  bool operator!() const { return nullableValue == CATCH_NULL; }
+  operator SafeBool::type() const {
+    return SafeBool::makeSafe(some());
+  }
 
-    private:
-        T *nullableValue;
-        union {
-            char storage[sizeof(T)];
+ private:
+  T *nullableValue;
+  union {
+    char storage[sizeof(T)];
 
-            // These are here to force alignment for the storage
-            long double dummy1;
-            void (*dummy2)();
-            long double dummy3;
+    // These are here to force alignment for the storage
+    long double dummy1;
+    void (*dummy2)();
+    long double dummy3;
 #ifdef CATCH_CONFIG_CPP11_LONG_LONG
-            long long dummy4;
+    long long dummy4;
 #endif
-        };
-    };
+  };
+};
 
 } // end namespace Catch
 
 namespace Catch {
 
-    struct ITagAliasRegistry {
-        virtual ~ITagAliasRegistry();
-        virtual Option<TagAlias> find( std::string const& alias ) const = 0;
-        virtual std::string expandAliases( std::string const& unexpandedTestSpec ) const = 0;
+struct ITagAliasRegistry {
+  virtual ~ITagAliasRegistry();
+  virtual Option<TagAlias> find(std::string const &alias) const = 0;
+  virtual std::string expandAliases(std::string const &unexpandedTestSpec) const = 0;
 
-        static ITagAliasRegistry const& get();
-    };
+  static ITagAliasRegistry const &get();
+};
 
 } // end namespace Catch
 
@@ -3210,84 +3246,83 @@ namespace Catch {
 #include <set>
 
 #ifdef __clang__
-#pragma clang diagnostic push
+                                                                                                                        #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wpadded"
 #endif
 
 namespace Catch {
 
-    struct ITestCase;
+struct ITestCase;
 
-    struct TestCaseInfo {
-        enum SpecialProperties{
-            None = 0,
-            IsHidden = 1 << 1,
-            ShouldFail = 1 << 2,
-            MayFail = 1 << 3,
-            Throws = 1 << 4,
-            NonPortable = 1 << 5
-        };
+struct TestCaseInfo {
+  enum SpecialProperties {
+    None = 0,
+    IsHidden = 1 << 1,
+    ShouldFail = 1 << 2,
+    MayFail = 1 << 3,
+    Throws = 1 << 4,
+    NonPortable = 1 << 5
+  };
 
-        TestCaseInfo(   std::string const& _name,
-                        std::string const& _className,
-                        std::string const& _description,
-                        std::set<std::string> const& _tags,
-                        SourceLineInfo const& _lineInfo );
+  TestCaseInfo(std::string const &_name,
+               std::string const &_className,
+               std::string const &_description,
+               std::set<std::string> const &_tags,
+               SourceLineInfo const &_lineInfo);
 
-        TestCaseInfo( TestCaseInfo const& other );
+  TestCaseInfo(TestCaseInfo const &other);
 
-        friend void setTags( TestCaseInfo& testCaseInfo, std::set<std::string> const& tags );
+  friend void setTags(TestCaseInfo &testCaseInfo, std::set<std::string> const &tags);
 
-        bool isHidden() const;
-        bool throws() const;
-        bool okToFail() const;
-        bool expectedToFail() const;
+  bool isHidden() const;
+  bool throws() const;
+  bool okToFail() const;
+  bool expectedToFail() const;
 
-        std::string name;
-        std::string className;
-        std::string description;
-        std::set<std::string> tags;
-        std::set<std::string> lcaseTags;
-        std::string tagsAsString;
-        SourceLineInfo lineInfo;
-        SpecialProperties properties;
-    };
+  std::string name;
+  std::string className;
+  std::string description;
+  std::set<std::string> tags;
+  std::set<std::string> lcaseTags;
+  std::string tagsAsString;
+  SourceLineInfo lineInfo;
+  SpecialProperties properties;
+};
 
-    class TestCase : public TestCaseInfo {
-    public:
+class TestCase : public TestCaseInfo {
+ public:
 
-        TestCase( ITestCase* testCase, TestCaseInfo const& info );
-        TestCase( TestCase const& other );
+  TestCase(ITestCase *testCase, TestCaseInfo const &info);
+  TestCase(TestCase const &other);
 
-        TestCase withName( std::string const& _newName ) const;
+  TestCase withName(std::string const &_newName) const;
 
-        void invoke() const;
+  void invoke() const;
 
-        TestCaseInfo const& getTestCaseInfo() const;
+  TestCaseInfo const &getTestCaseInfo() const;
 
-        void swap( TestCase& other );
-        bool operator == ( TestCase const& other ) const;
-        bool operator < ( TestCase const& other ) const;
-        TestCase& operator = ( TestCase const& other );
+  void swap(TestCase &other);
+  bool operator==(TestCase const &other) const;
+  bool operator<(TestCase const &other) const;
+  TestCase &operator=(TestCase const &other);
 
-    private:
-        Ptr<ITestCase> test;
-    };
+ private:
+  Ptr<ITestCase> test;
+};
 
-    TestCase makeTestCase(  ITestCase* testCase,
-                            std::string const& className,
-                            std::string const& name,
-                            std::string const& description,
-                            SourceLineInfo const& lineInfo );
+TestCase makeTestCase(ITestCase *testCase,
+                      std::string const &className,
+                      std::string const &name,
+                      std::string const &description,
+                      SourceLineInfo const &lineInfo);
 }
 
 #ifdef __clang__
 #pragma clang diagnostic pop
 #endif
 
-
 #ifdef __OBJC__
-// #included from: internal/catch_objc.hpp
+                                                                                                                        // #included from: internal/catch_objc.hpp
 #define TWOBLUECUBES_CATCH_OBJC_HPP_INCLUDED
 
 #import <objc/runtime.h>
@@ -3485,7 +3520,7 @@ return @ desc; \
 
 #ifdef CATCH_IMPL
 
-// !TBD: Move the leak detector code into a separate header
+                                                                                                                        // !TBD: Move the leak detector code into a separate header
 #ifdef CATCH_CONFIG_WINDOWS_CRTDBG
 #include <crtdbg.h>
 class LeakDetector {
@@ -11290,7 +11325,7 @@ namespace Catch {
 #endif
 
 #ifdef CATCH_CONFIG_MAIN
-// #included from: internal/catch_default_main.hpp
+                                                                                                                        // #included from: internal/catch_default_main.hpp
 #define TWOBLUECUBES_CATCH_DEFAULT_MAIN_HPP_INCLUDED
 
 #ifndef __OBJC__
@@ -11338,7 +11373,7 @@ int main (int argc, char * const argv[]) {
 // If this config identifier is defined then all CATCH macros are prefixed with CATCH_
 #ifdef CATCH_CONFIG_PREFIX_ALL
 
-#if defined(CATCH_CONFIG_FAST_COMPILE)
+                                                                                                                        #if defined(CATCH_CONFIG_FAST_COMPILE)
 #define CATCH_REQUIRE( expr ) INTERNAL_CATCH_TEST_NO_TRY( "CATCH_REQUIRE", Catch::ResultDisposition::Normal, expr )
 #define CATCH_REQUIRE_FALSE( expr ) INTERNAL_CATCH_TEST_NO_TRY( "CATCH_REQUIRE_FALSE", Catch::ResultDisposition::Normal | Catch::ResultDisposition::FalseTest, expr )
 #else
@@ -11420,55 +11455,55 @@ int main (int argc, char * const argv[]) {
 #else
 
 #if defined(CATCH_CONFIG_FAST_COMPILE)
-#define REQUIRE( expr ) INTERNAL_CATCH_TEST_NO_TRY( "REQUIRE", Catch::ResultDisposition::Normal, expr )
+                                                                                                                        #define REQUIRE( expr ) INTERNAL_CATCH_TEST_NO_TRY( "REQUIRE", Catch::ResultDisposition::Normal, expr )
 #define REQUIRE_FALSE( expr ) INTERNAL_CATCH_TEST_NO_TRY( "REQUIRE_FALSE", Catch::ResultDisposition::Normal | Catch::ResultDisposition::FalseTest, expr )
 
 #else
-#define REQUIRE( expr ) INTERNAL_CATCH_TEST( "REQUIRE", Catch::ResultDisposition::Normal, expr  )
-#define REQUIRE_FALSE( expr ) INTERNAL_CATCH_TEST( "REQUIRE_FALSE", Catch::ResultDisposition::Normal | Catch::ResultDisposition::FalseTest, expr )
+#define REQUIRE(expr) INTERNAL_CATCH_TEST( "REQUIRE", Catch::ResultDisposition::Normal, expr  )
+#define REQUIRE_FALSE(expr) INTERNAL_CATCH_TEST( "REQUIRE_FALSE", Catch::ResultDisposition::Normal | Catch::ResultDisposition::FalseTest, expr )
 #endif
 
-#define REQUIRE_THROWS( expr ) INTERNAL_CATCH_THROWS( "REQUIRE_THROWS", Catch::ResultDisposition::Normal, "", expr )
-#define REQUIRE_THROWS_AS( expr, exceptionType ) INTERNAL_CATCH_THROWS_AS( "REQUIRE_THROWS_AS", exceptionType, Catch::ResultDisposition::Normal, expr )
-#define REQUIRE_THROWS_WITH( expr, matcher ) INTERNAL_CATCH_THROWS( "REQUIRE_THROWS_WITH", Catch::ResultDisposition::Normal, matcher, expr )
-#define REQUIRE_NOTHROW( expr ) INTERNAL_CATCH_NO_THROW( "REQUIRE_NOTHROW", Catch::ResultDisposition::Normal, expr )
+#define REQUIRE_THROWS(expr) INTERNAL_CATCH_THROWS( "REQUIRE_THROWS", Catch::ResultDisposition::Normal, "", expr )
+#define REQUIRE_THROWS_AS(expr, exceptionType) INTERNAL_CATCH_THROWS_AS( "REQUIRE_THROWS_AS", exceptionType, Catch::ResultDisposition::Normal, expr )
+#define REQUIRE_THROWS_WITH(expr, matcher) INTERNAL_CATCH_THROWS( "REQUIRE_THROWS_WITH", Catch::ResultDisposition::Normal, matcher, expr )
+#define REQUIRE_NOTHROW(expr) INTERNAL_CATCH_NO_THROW( "REQUIRE_NOTHROW", Catch::ResultDisposition::Normal, expr )
 
-#define CHECK( expr ) INTERNAL_CATCH_TEST( "CHECK", Catch::ResultDisposition::ContinueOnFailure, expr )
-#define CHECK_FALSE( expr ) INTERNAL_CATCH_TEST( "CHECK_FALSE", Catch::ResultDisposition::ContinueOnFailure | Catch::ResultDisposition::FalseTest, expr )
-#define CHECKED_IF( expr ) INTERNAL_CATCH_IF( "CHECKED_IF", Catch::ResultDisposition::ContinueOnFailure, expr )
-#define CHECKED_ELSE( expr ) INTERNAL_CATCH_ELSE( "CHECKED_ELSE", Catch::ResultDisposition::ContinueOnFailure, expr )
-#define CHECK_NOFAIL( expr ) INTERNAL_CATCH_TEST( "CHECK_NOFAIL", Catch::ResultDisposition::ContinueOnFailure | Catch::ResultDisposition::SuppressFail, expr )
+#define CHECK(expr) INTERNAL_CATCH_TEST( "CHECK", Catch::ResultDisposition::ContinueOnFailure, expr )
+#define CHECK_FALSE(expr) INTERNAL_CATCH_TEST( "CHECK_FALSE", Catch::ResultDisposition::ContinueOnFailure | Catch::ResultDisposition::FalseTest, expr )
+#define CHECKED_IF(expr) INTERNAL_CATCH_IF( "CHECKED_IF", Catch::ResultDisposition::ContinueOnFailure, expr )
+#define CHECKED_ELSE(expr) INTERNAL_CATCH_ELSE( "CHECKED_ELSE", Catch::ResultDisposition::ContinueOnFailure, expr )
+#define CHECK_NOFAIL(expr) INTERNAL_CATCH_TEST( "CHECK_NOFAIL", Catch::ResultDisposition::ContinueOnFailure | Catch::ResultDisposition::SuppressFail, expr )
 
-#define CHECK_THROWS( expr )  INTERNAL_CATCH_THROWS( "CHECK_THROWS", Catch::ResultDisposition::ContinueOnFailure, "", expr )
-#define CHECK_THROWS_AS( expr, exceptionType ) INTERNAL_CATCH_THROWS_AS( "CHECK_THROWS_AS", exceptionType, Catch::ResultDisposition::ContinueOnFailure, expr )
-#define CHECK_THROWS_WITH( expr, matcher ) INTERNAL_CATCH_THROWS( "CHECK_THROWS_WITH", Catch::ResultDisposition::ContinueOnFailure, matcher, expr )
-#define CHECK_NOTHROW( expr ) INTERNAL_CATCH_NO_THROW( "CHECK_NOTHROW", Catch::ResultDisposition::ContinueOnFailure, expr )
+#define CHECK_THROWS(expr)  INTERNAL_CATCH_THROWS( "CHECK_THROWS", Catch::ResultDisposition::ContinueOnFailure, "", expr )
+#define CHECK_THROWS_AS(expr, exceptionType) INTERNAL_CATCH_THROWS_AS( "CHECK_THROWS_AS", exceptionType, Catch::ResultDisposition::ContinueOnFailure, expr )
+#define CHECK_THROWS_WITH(expr, matcher) INTERNAL_CATCH_THROWS( "CHECK_THROWS_WITH", Catch::ResultDisposition::ContinueOnFailure, matcher, expr )
+#define CHECK_NOTHROW(expr) INTERNAL_CATCH_NO_THROW( "CHECK_NOTHROW", Catch::ResultDisposition::ContinueOnFailure, expr )
 
-#define CHECK_THAT( arg, matcher ) INTERNAL_CHECK_THAT( "CHECK_THAT", matcher, Catch::ResultDisposition::ContinueOnFailure, arg )
+#define CHECK_THAT(arg, matcher) INTERNAL_CHECK_THAT( "CHECK_THAT", matcher, Catch::ResultDisposition::ContinueOnFailure, arg )
 
 #if defined(CATCH_CONFIG_FAST_COMPILE)
 #define REQUIRE_THAT( arg, matcher ) INTERNAL_CHECK_THAT_NO_TRY( "REQUIRE_THAT", matcher, Catch::ResultDisposition::Normal, arg )
 #else
-#define REQUIRE_THAT( arg, matcher ) INTERNAL_CHECK_THAT( "REQUIRE_THAT", matcher, Catch::ResultDisposition::Normal, arg )
+#define REQUIRE_THAT(arg, matcher) INTERNAL_CHECK_THAT( "REQUIRE_THAT", matcher, Catch::ResultDisposition::Normal, arg )
 #endif
 
-#define INFO( msg ) INTERNAL_CATCH_INFO( "INFO", msg )
-#define WARN( msg ) INTERNAL_CATCH_MSG( "WARN", Catch::ResultWas::Warning, Catch::ResultDisposition::ContinueOnFailure, msg )
-#define SCOPED_INFO( msg ) INTERNAL_CATCH_INFO( "INFO", msg )
-#define CAPTURE( msg ) INTERNAL_CATCH_INFO( "CAPTURE", #msg " := " << Catch::toString(msg) )
-#define SCOPED_CAPTURE( msg ) INTERNAL_CATCH_INFO( "CAPTURE", #msg " := " << Catch::toString(msg) )
+#define INFO(msg) INTERNAL_CATCH_INFO( "INFO", msg )
+#define WARN(msg) INTERNAL_CATCH_MSG( "WARN", Catch::ResultWas::Warning, Catch::ResultDisposition::ContinueOnFailure, msg )
+#define SCOPED_INFO(msg) INTERNAL_CATCH_INFO( "INFO", msg )
+#define CAPTURE(msg) INTERNAL_CATCH_INFO( "CAPTURE", #msg " := " << Catch::toString(msg) )
+#define SCOPED_CAPTURE(msg) INTERNAL_CATCH_INFO( "CAPTURE", #msg " := " << Catch::toString(msg) )
 
 #ifdef CATCH_CONFIG_VARIADIC_MACROS
-#define TEST_CASE( ... ) INTERNAL_CATCH_TESTCASE( __VA_ARGS__ )
-#define TEST_CASE_METHOD( className, ... ) INTERNAL_CATCH_TEST_CASE_METHOD( className, __VA_ARGS__ )
-#define METHOD_AS_TEST_CASE( method, ... ) INTERNAL_CATCH_METHOD_AS_TEST_CASE( method, __VA_ARGS__ )
-#define REGISTER_TEST_CASE( Function, ... ) INTERNAL_CATCH_REGISTER_TESTCASE( Function, __VA_ARGS__ )
-#define SECTION( ... ) INTERNAL_CATCH_SECTION( __VA_ARGS__ )
-#define FAIL( ... ) INTERNAL_CATCH_MSG( "FAIL", Catch::ResultWas::ExplicitFailure, Catch::ResultDisposition::Normal, __VA_ARGS__ )
-#define FAIL_CHECK( ... ) INTERNAL_CATCH_MSG( "FAIL_CHECK", Catch::ResultWas::ExplicitFailure, Catch::ResultDisposition::ContinueOnFailure, __VA_ARGS__ )
-#define SUCCEED( ... ) INTERNAL_CATCH_MSG( "SUCCEED", Catch::ResultWas::Ok, Catch::ResultDisposition::ContinueOnFailure, __VA_ARGS__ )
+#define TEST_CASE(...) INTERNAL_CATCH_TESTCASE( __VA_ARGS__ )
+#define TEST_CASE_METHOD(className, ...) INTERNAL_CATCH_TEST_CASE_METHOD( className, __VA_ARGS__ )
+#define METHOD_AS_TEST_CASE(method, ...) INTERNAL_CATCH_METHOD_AS_TEST_CASE( method, __VA_ARGS__ )
+#define REGISTER_TEST_CASE(Function, ...) INTERNAL_CATCH_REGISTER_TESTCASE( Function, __VA_ARGS__ )
+#define SECTION(...) INTERNAL_CATCH_SECTION( __VA_ARGS__ )
+#define FAIL(...) INTERNAL_CATCH_MSG( "FAIL", Catch::ResultWas::ExplicitFailure, Catch::ResultDisposition::Normal, __VA_ARGS__ )
+#define FAIL_CHECK(...) INTERNAL_CATCH_MSG( "FAIL_CHECK", Catch::ResultWas::ExplicitFailure, Catch::ResultDisposition::ContinueOnFailure, __VA_ARGS__ )
+#define SUCCEED(...) INTERNAL_CATCH_MSG( "SUCCEED", Catch::ResultWas::Ok, Catch::ResultDisposition::ContinueOnFailure, __VA_ARGS__ )
 #else
-#define TEST_CASE( name, description ) INTERNAL_CATCH_TESTCASE( name, description )
+                                                                                                                        #define TEST_CASE( name, description ) INTERNAL_CATCH_TESTCASE( name, description )
     #define TEST_CASE_METHOD( className, name, description ) INTERNAL_CATCH_TEST_CASE_METHOD( className, name, description )
     #define METHOD_AS_TEST_CASE( method, name, description ) INTERNAL_CATCH_METHOD_AS_TEST_CASE( method, name, description )
     #define REGISTER_TEST_CASE( method, name, description ) INTERNAL_CATCH_REGISTER_TESTCASE( method, name, description )
@@ -11479,28 +11514,28 @@ int main (int argc, char * const argv[]) {
 #endif
 #define ANON_TEST_CASE() INTERNAL_CATCH_TESTCASE( "", "" )
 
-#define REGISTER_REPORTER( name, reporterType ) INTERNAL_CATCH_REGISTER_REPORTER( name, reporterType )
-#define REGISTER_LEGACY_REPORTER( name, reporterType ) INTERNAL_CATCH_REGISTER_LEGACY_REPORTER( name, reporterType )
+#define REGISTER_REPORTER(name, reporterType) INTERNAL_CATCH_REGISTER_REPORTER( name, reporterType )
+#define REGISTER_LEGACY_REPORTER(name, reporterType) INTERNAL_CATCH_REGISTER_LEGACY_REPORTER( name, reporterType )
 
-#define GENERATE( expr) INTERNAL_CATCH_GENERATE( expr )
+#define GENERATE(expr) INTERNAL_CATCH_GENERATE( expr )
 
 #endif
 
-#define CATCH_TRANSLATE_EXCEPTION( signature ) INTERNAL_CATCH_TRANSLATE_EXCEPTION( signature )
+#define CATCH_TRANSLATE_EXCEPTION(signature) INTERNAL_CATCH_TRANSLATE_EXCEPTION( signature )
 
 // "BDD-style" convenience wrappers
 #ifdef CATCH_CONFIG_VARIADIC_MACROS
-#define SCENARIO( ... ) TEST_CASE( "Scenario: " __VA_ARGS__ )
-#define SCENARIO_METHOD( className, ... ) INTERNAL_CATCH_TEST_CASE_METHOD( className, "Scenario: " __VA_ARGS__ )
+#define SCENARIO(...) TEST_CASE( "Scenario: " __VA_ARGS__ )
+#define SCENARIO_METHOD(className, ...) INTERNAL_CATCH_TEST_CASE_METHOD( className, "Scenario: " __VA_ARGS__ )
 #else
-#define SCENARIO( name, tags ) TEST_CASE( "Scenario: " name, tags )
+                                                                                                                        #define SCENARIO( name, tags ) TEST_CASE( "Scenario: " name, tags )
 #define SCENARIO_METHOD( className, name, tags ) INTERNAL_CATCH_TEST_CASE_METHOD( className, "Scenario: " name, tags )
 #endif
-#define GIVEN( desc )    SECTION( std::string("   Given: ") + desc, "" )
-#define WHEN( desc )     SECTION( std::string("    When: ") + desc, "" )
-#define AND_WHEN( desc ) SECTION( std::string("And when: ") + desc, "" )
-#define THEN( desc )     SECTION( std::string("    Then: ") + desc, "" )
-#define AND_THEN( desc ) SECTION( std::string("     And: ") + desc, "" )
+#define GIVEN(desc)    SECTION( std::string("   Given: ") + desc, "" )
+#define WHEN(desc)     SECTION( std::string("    When: ") + desc, "" )
+#define AND_WHEN(desc) SECTION( std::string("And when: ") + desc, "" )
+#define THEN(desc)     SECTION( std::string("    Then: ") + desc, "" )
+#define AND_THEN(desc) SECTION( std::string("     And: ") + desc, "" )
 
 using Catch::Detail::Approx;
 
