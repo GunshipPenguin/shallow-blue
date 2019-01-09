@@ -114,7 +114,7 @@ extern U64 _bishopMasks[64];
 
 /**
  * @name Rook and bishop magic values for magic table lookups
- * 
+ *
  * @{
  */
 const U64 _rookMagics[64] = {
@@ -153,6 +153,8 @@ const U64 _bishopMagics[64] = {
 /**
  * @name Number of bits in the magic bitboard table index for rooks
  * and bishops
+ * @brief Indexed by [square] with each value being the number of
+ * bits required for that square
  *
  * @{
  */
