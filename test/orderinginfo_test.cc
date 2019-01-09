@@ -1,16 +1,14 @@
 #include "catch.hpp"
 #include "orderinginfo.h"
-#include "transptable.h"
-#include "transptableentry.h"
 
 TEST_CASE("OrderingInfo class works correctly") {
   // Empty transposition table to use in OrderingInfo constructor when a TT is not required
   const TranspTable emptyTt;
-  const TranspTable* emptyTtPointer = const_cast<TranspTable*>(&emptyTt);
+  const TranspTable *emptyTtPointer = const_cast<TranspTable *>(&emptyTt);
 
   SECTION("OrderingInfo stores and adjusts ply information correctly") {
     OrderingInfo orderingInfo(emptyTtPointer);
-    
+
     REQUIRE(orderingInfo.getPly() == 0);
 
     orderingInfo.incrementPly();
@@ -22,8 +20,8 @@ TEST_CASE("OrderingInfo class works correctly") {
 
   SECTION("OrderingInfo stores transposition table information correctly") {
     TranspTable tt;
-    TranspTable* ttPointer = const_cast<TranspTable*>(&tt);   
-    
+    TranspTable *ttPointer = const_cast<TranspTable *>(&tt);
+
     // Dummy Transposition table entry and values
     int score = 1;
     int depth = 2;
@@ -35,7 +33,7 @@ TEST_CASE("OrderingInfo class works correctly") {
     Board board;
     ZKey zkey(board);
     ttPointer->set(zkey, entry);
-    
+
     OrderingInfo orderingInfo(ttPointer);
 
     REQUIRE(orderingInfo.getTt()->getEntry(zkey)->getScore() == 1);

@@ -1,10 +1,8 @@
 #include "board.h"
 #include "movegen.h"
-#include "defs.h"
 #include "catch.hpp"
-#include "attacks.h"
 
-int perft(int depth, const Board& board) {
+int perft(int depth, const Board &board) {
   if (depth == 0) {
     return 1;
   }
@@ -24,7 +22,6 @@ int perft(int depth, const Board& board) {
 
 TEST_CASE("Perft is correct", "[perft]") {
   Board board;
-  Attacks::init();
 
   SECTION("Perft is correct from the starting position") {
     board.setToStartPos();

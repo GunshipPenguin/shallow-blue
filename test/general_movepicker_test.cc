@@ -1,12 +1,10 @@
 #include "catch.hpp"
 #include "generalmovepicker.h"
-#include "transptableentry.h"
 
 TEST_CASE("GeneralMovePicker works as expected") {
-  MovePicker::init();
   Board board;
   TranspTable tt;
-  OrderingInfo orderingInfo(const_cast<TranspTable*>(&tt));
+  OrderingInfo orderingInfo(const_cast<TranspTable *>(&tt));
 
   SECTION("GeneralMovePicker returns the hash move first") {
     board.setToFen("7k/8/8/8/4p3/8/5N2/K7 w - -");
@@ -19,7 +17,7 @@ TEST_CASE("GeneralMovePicker works as expected") {
     TranspTableEntry ttEntry(20, 2, TranspTableEntry::EXACT, hashMove);
     tt.set(board.getZKey(), ttEntry);
 
-    GeneralMovePicker movePicker(const_cast<OrderingInfo*>(&orderingInfo), const_cast<Board*>(&board), &moves);
+    GeneralMovePicker movePicker(const_cast<OrderingInfo *>(&orderingInfo), const_cast<Board *>(&board), &moves);
 
     REQUIRE(movePicker.hasNext());
     REQUIRE(movePicker.getNext() == hashMove);
@@ -30,7 +28,7 @@ TEST_CASE("GeneralMovePicker works as expected") {
 
     MoveGen movegen(board);
     MoveList moves = movegen.getLegalMoves();
-    GeneralMovePicker movePicker(const_cast<OrderingInfo*>(&orderingInfo), const_cast<Board*>(&board), &moves);
+    GeneralMovePicker movePicker(const_cast<OrderingInfo *>(&orderingInfo), const_cast<Board *>(&board), &moves);
 
     // f2 x e4
     Move m1(f2, e4, KNIGHT, Move::CAPTURE);
@@ -56,7 +54,7 @@ TEST_CASE("GeneralMovePicker works as expected") {
 
     MoveGen movegen(board);
     MoveList moves = movegen.getLegalMoves();
-    GeneralMovePicker movePicker(const_cast<OrderingInfo*>(&orderingInfo), const_cast<Board*>(&board), &moves);
+    GeneralMovePicker movePicker(const_cast<OrderingInfo *>(&orderingInfo), const_cast<Board *>(&board), &moves);
 
     // Queen promotion
     Move m1(c7, c8, PAWN, Move::PROMOTION);
@@ -95,7 +93,7 @@ TEST_CASE("GeneralMovePicker works as expected") {
     orderingInfo.updateKillers(0, killer2);
     orderingInfo.updateKillers(0, killer1);
 
-    GeneralMovePicker movePicker(const_cast<OrderingInfo*>(&orderingInfo), const_cast<Board*>(&board), &moves);
+    GeneralMovePicker movePicker(const_cast<OrderingInfo *>(&orderingInfo), const_cast<Board *>(&board), &moves);
 
     REQUIRE(movePicker.hasNext());
     REQUIRE(movePicker.getNext() == killer1);
@@ -115,8 +113,8 @@ TEST_CASE("GeneralMovePicker works as expected") {
     orderingInfo.incrementHistory(WHITE, h1, f2, 2);
     orderingInfo.incrementHistory(WHITE, h1, g3, 1);
 
-    GeneralMovePicker movePicker(const_cast<OrderingInfo*>(&orderingInfo), const_cast<Board*>(&board), &moves);
-    
+    GeneralMovePicker movePicker(const_cast<OrderingInfo *>(&orderingInfo), const_cast<Board *>(&board), &moves);
+
     REQUIRE(movePicker.hasNext());
     REQUIRE(movePicker.getNext() == Move(c4, c5, PAWN));
 
