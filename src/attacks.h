@@ -21,22 +21,19 @@ void _initKingAttacks();
 /**@}*/
 
 /**
- * @brief Returns a bitboard containing all possible rook moves
+ * @name Rook/Bishop attack precalculation functions
+ * @brief These functions calculate rook and bishop attacks for the given
+ * square and the given set of blockers
  *
- * @param square Square to calculate rook moves from
- * @param blockers A bitboard containing any blocking pieces
- * @return A bitboard containing all possible rook moves
- */
-U64 _getRookAttacksSlow(int square, U64 blockers);
-
-/**
- * @brief Returns a bitboard containing all possible bishop moves
+ * Note that these functions should only be used for precalculating attack
+ * bitboards to put in magic tables. The much faster _getRookAttacks and
+ * _getBishopAttacks should be used in all other scenarios.
  *
- * @param square Square to calculate bishop moves from
- * @param blockers A bitboard containing any blocking pieces
- * @return A bitboard containing all possible bishop moves
+ * @{
  */
-U64 _getBishopAttacksSlow(int square, U64 blockers);
+U64 _getRookAttacksSlow(int, U64);
+U64 _getBishopAttacksSlow(int, U64);
+/**@}*/
 
 /**
  * @name Rook/bishop magic table precalculation functions
@@ -63,11 +60,12 @@ void _initBishopMasks();
 /**@}*/
 
 /**
+ * @name Rook/Bishop attack bitboard generation functions
  * @brief Gets rook/bishop attacks on the given square with the given blocker
  * pieces
  *
- * Internally this uses the fancy magic bitboard technique to lookup attacks
- * from a preinitialized attack table
+ * Internally these functions use the fancy magic bitboard technique to lookup
+ * attacks from a preinitialized attack table
  *
  * @{
  */
@@ -120,7 +118,7 @@ extern U64 _bishopMasks[64];
  */
 const extern U64 _rookMagics[64];
 const extern U64 _bishopMagics[64];
-/*@}*/
+/**@}*/
 
 /**
  * @name Number of bits in the magic bitboard table index for rooks
@@ -149,7 +147,7 @@ void init();
  * @return U64 A bitboard containing all possible square that the non
  * sliding piece can move to
  */
-U64 getNonSlidingAttacks(PieceType, int, Color= WHITE);
+U64 getNonSlidingAttacks(PieceType, int, Color=WHITE);
 
 /**
  * @brief Gets a bitboard containing all possible squares that the given
