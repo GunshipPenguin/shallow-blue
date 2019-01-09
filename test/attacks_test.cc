@@ -3,8 +3,6 @@
 #include "catch.hpp"
 
 TEST_CASE("AttackTable output is correct") {
-  Attacks::init();
-
   SECTION("Attack values are correct for white and black pawns") {
     REQUIRE(Attacks::getNonSlidingAttacks(PAWN, 8, WHITE) == 0x20000);
     REQUIRE(Attacks::getNonSlidingAttacks(PAWN, 9, WHITE) == 0x50000);

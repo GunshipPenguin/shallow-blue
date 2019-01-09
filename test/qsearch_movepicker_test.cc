@@ -3,7 +3,6 @@
 #include <iostream>
 
 TEST_CASE("QSearchMovePicker works as expected") {
-  MovePicker::init();
   Board board;
 
   SECTION("QSearchMovePicker does not return non captures") {
@@ -14,7 +13,7 @@ TEST_CASE("QSearchMovePicker works as expected") {
     QSearchMovePicker movePicker(&moves);
 
     // 3 captures for white on the test board
-    for (int i=0;i<3;i++) {
+    for (int i = 0; i < 3; i++) {
       REQUIRE(movePicker.hasNext());
       movePicker.getNext();
     }
@@ -53,7 +52,7 @@ TEST_CASE("QSearchMovePicker works as expected") {
     Move m4(d4, e6, KNIGHT, Move::CAPTURE);
     m4.setCapturedPieceType(BISHOP);
     REQUIRE(movePicker.getNext() == m4);
-    
+
     // b3xb7
     REQUIRE(movePicker.hasNext());
     Move m5(b3, b7, ROOK, Move::CAPTURE);

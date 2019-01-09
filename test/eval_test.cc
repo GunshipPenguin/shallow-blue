@@ -1,9 +1,7 @@
 #include "eval.h"
 #include "catch.hpp"
-#include "defs.h"
 
 TEST_CASE("Evaluation functions work properly") {
-  Eval::init();
   Board board;
 
   SECTION("Eval returns 0 for black and white from the start pos") {
@@ -37,7 +35,7 @@ TEST_CASE("Evaluation functions work properly") {
     // Three pawns on one file for white (counts as two doubled pawns)
     board.setToFen("rnbqkbnr/pppp1ppp/8/4p3/2B1P3/4P3/PPP1P1PP/RNBQK1NR b KQkq -");
     REQUIRE(Eval::doubledPawns(board, WHITE) == 2);
-    REQUIRE(Eval::doubledPawns(board, BLACK) == 0);  
+    REQUIRE(Eval::doubledPawns(board, BLACK) == 0);
   }
 
   SECTION("Isolated pawn calculations are correct") {

@@ -81,8 +81,8 @@ PSquareTable Board::getPSquareTable() const {
 
 bool Board::colorIsInCheck(Color color) const {
   int kingSquare = _bitscanForward(getPieces(color, KING));
-
-  // Prevent a crash if no king is on board (eg. during testing)
+  
+  // Don't choke in testing scenarios where there is no king
   if (kingSquare == -1) {
     return false;
   }

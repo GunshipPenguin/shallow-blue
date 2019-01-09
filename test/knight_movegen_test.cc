@@ -1,12 +1,10 @@
 #include "board.h"
 #include "movegen.h"
 #include "catch.hpp"
-#include "attacks.h"
 
 TEST_CASE("Knight move generation is correct") {
   Board board;
   MoveGen movegen;
-  Attacks::init();
 
   SECTION("Knight move generation is correct in the middle of a clear board") {
     board.setToFen("8/8/8/3N4/8/8/8/8 w - -");

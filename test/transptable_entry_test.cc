@@ -1,6 +1,5 @@
 #include "catch.hpp"
 #include "transptableentry.h"
-#include "defs.h"
 
 TEST_CASE("Transposition table entries work as expected") {
   Board board;

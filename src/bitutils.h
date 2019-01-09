@@ -54,25 +54,61 @@ inline int _bitscanReverse(U64 board) {
   if (board == ZERO) {
     return -1;
   }
-  return __builtin_clzll(board) + 1;
+  return 63 - __builtin_clzll(board);
 }
 
 /**
- * @brief Moves all set bits in the given bitboard one square east and returns the new bitboard, discarding those that fall off the edge.
- * @param  board Board to move bits east on.
- * @return A bitboard with all set bits moved one square east, bits falling off the edge discarded
- */
-inline U64 _eastOne(U64 board) {
-  return ((board << ONE) & (~FILE_A));
+* @brief Moves all set bits in the given bitboard n squares east and returns
+* the new bitboard, discarding those that fall off the edge.
+*
+* @param board Board to move bits east on
+* @param n Number of squares to move east
+* @return A bitboard with all set bits moved one square east, bits falling off the edge discarded
+*/
+inline U64 _eastN(U64 board, int n) {
+  U64 newBoard = board;
+  for (int i = 0; i < n; i++) {
+    newBoard = ((newBoard << 1) & (~FILE_A));
+  }
+
+  return newBoard;
 }
 
 /**
- * @brief Moves all set bits in the given bitboard one square west and returns the new bitboard, discarding those that fall off the edge.
- * @param  board Board to move bits west on.
+ * @brief Moves all set bits in the given bitboard n squares west and returns the new
+ * bitboard, discarding those that fall off the edge.
+ *
+ * @param board Board to move bits west on
+ * @param n Number of squares to move west
  * @return A bitboard with all set bits moved one square west, bits falling off the edge discarded
  */
-inline U64 _westOne(U64 board) {
-  return ((board >> ONE) & (~FILE_H));
+inline U64 _westN(U64 board, int n) {
+  U64 newBoard = board;
+  for (int i = 0; i < n; i++) {
+    newBoard = ((newBoard >> 1) & (~FILE_H));
+  }
+
+  return newBoard;
+}
+
+/**
+ * @brief Returns the zero indexed row of the given square
+ *
+ * @param square A square in little endian rank file mapping form
+ * @return The zero indexed row of the square
+ */
+inline int _row(int square) {
+  return square / 8;
+}
+
+/**
+ * @brief Returns the zero indexed column of the given square.
+ *
+ * @param square A square in little endian rank file mapping form
+ * @return The zero indexed row of the squares
+ */
+inline int _col(int square) {
+  return square % 8;
 }
 
 #endif

@@ -1,6 +1,5 @@
 #include "catch.hpp"
 #include "move.h"
-#include "defs.h"
 
 TEST_CASE("Move representation is correct") {
   SECTION("Getters in Move work as expected") {
@@ -73,7 +72,6 @@ TEST_CASE("Move.getNotation works properly") {
 
     Move bishopPromotion(55, 63, PAWN, Move::PROMOTION);
     bishopPromotion.setPromotionPieceType(BISHOP);
-
 
     REQUIRE(queenPromotion.getNotation() == "h7h8q");
     REQUIRE(knightPromotion.getNotation() == "h7h8n");

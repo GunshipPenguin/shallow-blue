@@ -1,8 +1,6 @@
 #include "board.h"
 #include "movegen.h"
-#include "defs.h"
 #include "catch.hpp"
-#include "attacks.h"
 
 unsigned long long perft(int depth, const Board& board) {
   if (depth == 0) {
@@ -26,7 +24,6 @@ unsigned long long perft(int depth, const Board& board) {
 
 TEST_CASE("Perft is correct", "[perft]") {
   Board board;
-  Attacks::init();
 
   SECTION("Perft is correct from the starting position") {
     board.setToStartPos();
