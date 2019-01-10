@@ -2,8 +2,6 @@
 #include "bitutils.h"
 #include "attacks.h"
 #include <sstream>
-#include <iostream>
-#include <stdexcept>
 
 Board::Board() {
   setToFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
@@ -22,7 +20,7 @@ U64 Board::getAllPieces(Color color) const {
 }
 
 U64 Board::getAttackable(Color color) const {
-  return _attackable[color];
+  return _allPieces[color] & ~_pieces[color][KING];
 }
 
 U64 Board::getOccupied() const {
@@ -30,7 +28,7 @@ U64 Board::getOccupied() const {
 }
 
 U64 Board::getNotOccupied() const {
-  return _notOccupied;
+  return ~_occupied;
 }
 
 U64 Board::getEnPassant() const {
@@ -63,7 +61,7 @@ U64 Board::getAttacksForSquare(PieceType pieceType, Color color, int square) con
       break;
     case KING: attacks = _getKingAttacksForSquare(square, own);
       break;
-    default: throw std::logic_error("Invalid piece type");
+    default: fatal("Invalid piece type");
   }
 
   return attacks;
@@ -83,7 +81,7 @@ PSquareTable Board::getPSquareTable() const {
 
 bool Board::colorIsInCheck(Color color) const {
   int kingSquare = _bitscanForward(getPieces(color, KING));
-
+  
   // Don't choke in testing scenarios where there is no king
   if (kingSquare == -1) {
     return false;
@@ -193,6 +191,28 @@ std::string Board::getStringRep() const {
     squaresProcessed++;
 
     if ((squaresProcessed % 8 == 0) && (squaresProcessed != 64)) {
+      switch (squaresProcessed / 8) {
+        case 1:
+          stringRep += "        ";
+          stringRep += getActivePlayer() == WHITE ? "White" : "Black";
+          stringRep += " to Move";
+          break;
+        case 2:
+          stringRep += "        Halfmove Clock: ";
+          stringRep += std::to_string(_halfmoveClock);
+          break;
+        case 3:
+          stringRep += "        Castling Rights: ";
+          stringRep += _castlingRights & 1 ? "K" : "";
+          stringRep += _castlingRights & 2 ? "Q" : "";
+          stringRep += _castlingRights & 4 ? "k" : "";
+          stringRep += _castlingRights & 8 ? "q" : "";
+          break;
+        case 4:
+          stringRep += "        En Passant Square: ";
+          stringRep += _enPassant == ZERO ? "-" : Move::indexToNotation(_bitscanForward(_enPassant));
+          break;
+      }
       stringRep += "\n" + std::to_string(--rank) + "  ";
       boardPos -= 16;
     }
@@ -212,17 +232,11 @@ void Board::_clearBitBoards() {
 
     _allPieces[WHITE] = ZERO;
     _allPieces[BLACK] = ZERO;
-
-    _attackable[WHITE] = ZERO;
-    _attackable[BLACK] = ZERO;
   }
 
   _enPassant = ZERO;
 
   _occupied = ZERO;
-  _notOccupied = ZERO;
-
-  return;
 }
 
 void Board::setToFen(std::string fenString) {
@@ -304,7 +318,6 @@ void Board::_updateNonPieceBitBoards() {
     _pieces[WHITE][BISHOP] | \
     _pieces[WHITE][QUEEN] | \
     _pieces[WHITE][KING];
-  _attackable[WHITE] = _allPieces[WHITE] & ~_pieces[WHITE][KING];
 
   _allPieces[BLACK] = _pieces[BLACK][PAWN] | \
     _pieces[BLACK][ROOK] | \
@@ -312,10 +325,8 @@ void Board::_updateNonPieceBitBoards() {
     _pieces[BLACK][BISHOP] | \
     _pieces[BLACK][QUEEN] | \
     _pieces[BLACK][KING];
-  _attackable[BLACK] = _allPieces[BLACK] & ~_pieces[BLACK][KING];
 
   _occupied = _allPieces[WHITE] | _allPieces[BLACK];
-  _notOccupied = ~_occupied;
 }
 
 PieceType Board::getPieceAtSquare(Color color, int squareIndex) const {
@@ -330,15 +341,22 @@ PieceType Board::getPieceAtSquare(Color color, int squareIndex) const {
   else if (square & _pieces[color][KING]) piece = KING;
   else if (square & _pieces[color][QUEEN]) piece = QUEEN;
   else
-    throw std::logic_error((color == WHITE ? std::string("White") : std::string("Black")) +
+    fatal((color == WHITE ? std::string("White") : std::string("Black")) +
         " piece at square " + std::to_string(squareIndex) + " does not exist");
 
   return piece;
 }
 
 void Board::_movePiece(Color color, PieceType pieceType, int from, int to) {
-  _removePiece(color, pieceType, from);
-  _addPiece(color, pieceType, to);
+  U64 squareMask =  (ONE << to) | (ONE << from);
+
+  _pieces[color][pieceType] ^= squareMask;
+  _allPieces[color] ^= squareMask;
+
+  _occupied ^= squareMask;
+
+  _zKey.movePiece(color, pieceType, from, to);
+  _pst.movePiece(color, pieceType, from, to);
 }
 
 void Board::_removePiece(Color color, PieceType pieceType, int squareIndex) {
@@ -348,11 +366,6 @@ void Board::_removePiece(Color color, PieceType pieceType, int squareIndex) {
   _allPieces[color] ^= square;
 
   _occupied ^= square;
-  _notOccupied = ~_occupied;
-
-  if (pieceType != KING) {
-    _attackable[color] ^= square;
-  }
 
   _zKey.flipPiece(color, pieceType, squareIndex);
   _pst.removePiece(color, pieceType, squareIndex);
@@ -365,24 +378,20 @@ void Board::_addPiece(Color color, PieceType pieceType, int squareIndex) {
   _allPieces[color] |= square;
 
   _occupied |= square;
-  _notOccupied = ~_occupied;
-
-  if (pieceType != KING) {
-    _attackable[color] ^= square;
-  }
 
   _zKey.flipPiece(color, pieceType, squareIndex);
   _pst.addPiece(color, pieceType, squareIndex);
 }
 
 void Board::doMove(Move move) {
-  unsigned int flags = move.getFlags();
-
-  // En passant always cleared after a move
-  _zKey.clearEnPassant();
-  _enPassant = ZERO;
+  // Clear En passant info after each move if it exists
+  if (_enPassant) {
+    _zKey.clearEnPassant();
+    _enPassant = ZERO;
+  }
 
   // Handle move depending on what type of move it is
+  unsigned int flags = move.getFlags();
   if (!flags) {
     // No flags set, not a special move
     _movePiece(_activePlayer, move.getPieceType(), move.getFrom(), move.getTo());
@@ -456,7 +465,9 @@ void Board::doMove(Move move) {
     _halfmoveClock++;
   }
 
-  _updateCastlingRightsForMove(move);
+  if (_castlingRights) {
+    _updateCastlingRightsForMove(move);
+  }
 
   _zKey.flipActivePlayer();
   _activePlayer = getInactivePlayer();
@@ -523,7 +534,6 @@ void Board::setToStartPos() {
 
 U64 Board::_getWhitePawnAttacksForSquare(int square) const {
   return Attacks::getNonSlidingAttacks(PAWN, square, WHITE);
-
 }
 
 U64 Board::_getBlackPawnAttacksForSquare(int square) const {

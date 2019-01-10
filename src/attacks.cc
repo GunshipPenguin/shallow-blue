@@ -2,7 +2,6 @@
 #include "bitutils.h"
 #include "rays.h"
 #include <cstring>
-#include <stdexcept>
 
 U64 Attacks::detail::_nonSlidingAttacks[2][6][64] = {{{0}}};
 
@@ -99,7 +98,7 @@ U64 Attacks::getSlidingAttacks(PieceType pieceType, int square, U64 blockers) {
     case QUEEN:
       return detail::_getBishopAttacks(square, blockers) |
           detail::_getRookAttacks(square, blockers);
-    default: throw std::logic_error("Not a sliding piece");
+    default: fatal("Not a sliding piece");
   }
 }
 

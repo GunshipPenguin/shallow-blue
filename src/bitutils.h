@@ -20,7 +20,7 @@ inline int _popLsb(U64 &board) {
 }
 
 /**
- * @brief Returns the number of set bits in the given value.
+ * @brief Returns the number of set bits in the given bitboard.
  *
  * @param  board Value to return number of set bits for
  * @return Number of set bits in value
@@ -30,7 +30,8 @@ inline int _popCount(U64 board) {
 }
 
 /**
- * @brief Returns the index of the LSB in the given bitboard. Returns -1 if the bitboard is empty.
+ * @brief Returns the index of the LSB in the given bitboard or -1 if
+ * the bitboard is empty.
  *
  * @param  board Bitboard to get LSB of
  * @return The index of the LSB in the given bitboard.
@@ -43,12 +44,16 @@ inline int _bitscanForward(U64 board) {
 }
 
 /**
- * @brief Returns the index of the MSB in the given bitboard.
+ * @brief Returns the index of the MSB in the given bitboard or -1 if
+ * the bitboard is empty.
  *
  * @param  board Bitboard to get MSB of
  * @return The index of the MSB in the given bitboard.
  */
 inline int _bitscanReverse(U64 board) {
+  if (board == ZERO) {
+    return -1;
+  }
   return 63 - __builtin_clzll(board);
 }
 

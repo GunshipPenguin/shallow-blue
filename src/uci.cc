@@ -95,6 +95,8 @@ void go(std::istringstream &is) {
 unsigned long long perft(const Board &board, int depth) {
   if (depth == 0) {
     return 1;
+  } else if (depth == 1) {
+    return MoveGen(board).getLegalMoves().size();
   }
 
   MoveGen movegen(board);
@@ -210,10 +212,10 @@ void loop() {
     else if (token == "printboard") {
       std::cout << std::endl << board.getStringRep() << std::endl;
     } else if (token == "printmoves") {
-      std::cout << std::endl << "Legal moves:" << std::endl;
       for (auto move : MoveGen(board).getLegalMoves()) {
-        std::cout << move.getNotation() << std::endl;
+        std::cout << move.getNotation() << " ";
       }
+      std::cout << std::endl;
     } else if (token == "perft") {
       int depth;
       is >> depth;

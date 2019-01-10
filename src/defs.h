@@ -9,6 +9,8 @@
 #define DEFS_H
 
 #include <limits>
+#include <iostream>
+#include <cstdlib>
 
 /**
  * An unsigned 64 bit integer (A bitboard).
@@ -89,11 +91,24 @@ enum PieceType {
 
 /**
  * @brief Returns the opposite of the given color
+ *
  * @param  color Color to get the opposite of
  * @return WHITE if color == BLACK, BLACK otherwise
  */
 inline Color getOppositeColor(Color color) {
   return color == WHITE ? BLACK : WHITE;
+}
+
+/**
+ * @brief Print the given message to stderr and exit with code 1. Should be used in
+ * unrecoverable situations.
+ *
+ * @param msg Message to print to stderr before exiting
+ */
+[[ noreturn ]]
+inline void fatal(std::string msg) {
+  std::cerr << msg << std::endl;
+  std::exit(1);
 }
 
 /**

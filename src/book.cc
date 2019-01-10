@@ -275,9 +275,9 @@ Move Book::getMove(const Board &board) const {
         return decodeMove(board, moveWeightPair.first);
       }
     }
-    throw std::logic_error("Error in calculating weighted average");
+    fatal("Error in calculating weighted average");
   } else {
-    throw std::logic_error("Position is not in book");
+    fatal("Position is not in book");
   }
 }
 
@@ -380,7 +380,7 @@ Move Book::decodeMove(const Board &board, unsigned short move) {
         break;
       case 4: decodedPromotionPiece = QUEEN;
         break;
-      default: throw std::logic_error("Invalid PolyGlot promotion piece");
+      default: fatal("Invalid PolyGlot promotion piece");
     }
 
     decodedMove.setFlag(Move::PROMOTION);

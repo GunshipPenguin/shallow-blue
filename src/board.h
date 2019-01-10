@@ -14,8 +14,8 @@ class Move;
  *
  * Chess boards are represented using bitboards (of U64 type). Internally, each
  * Board maintains 12 bitboards (one for each piece type and each color), as well
- * as bitboards containing the occupancy, inverse of the occupancy, en passant
- * target square and attackable pieces.
+ * as bitboards containing the occupancy, inverse of the occupancy and en passant
+ * target square.
  *
  */
 class Board {
@@ -262,19 +262,9 @@ class Board {
   U64 _allPieces[2];
 
   /**
-   * @brief Array indexed by [color] of bitboards containing all attackable pieces.
-   */
-  U64 _attackable[2];
-
-  /**
    * @brief Bitboard containing all occupied squares.
    */
   U64 _occupied;
-
-  /**
-   * @brief Bitboard containing all unoccupied squares.
-   */
-  U64 _notOccupied;
 
   /**
    * @brief Bitboard containing the en passant target square.
@@ -302,17 +292,16 @@ class Board {
   int _halfmoveClock;
 
   /**
-   * @name Castling rights
+   * @brief Castling rights
    *
    * Stored as 4 bits:
    * - Bit 0 - White kingside
    * - Bit 1 - White queenside
    * - Bit 2 - Black kingside
    * - Bit 3 - Black queenside
-   * @{
    */
   unsigned char _castlingRights;
-  /**@}*/
+
 
   /**
    * @brief Determines if the given square is under attack by the given color.
@@ -337,7 +326,7 @@ class Board {
   void _updateCastlingRightsForMove(Move);
 
   /**
-   * @brief Updates the _occupied, _notOccupied and _allPieces bitboards based on the _pieces bitboards.
+   * @brief Updates the _occupied and _allPieces bitboards based on the _pieces bitboards.
    */
   void _updateNonPieceBitBoards();
 
@@ -345,7 +334,8 @@ class Board {
    * @brief Moves a piece between the given squares.
    *
    * Moves the piece from the from square to the to square and updates the
-   * board state appropriately.
+   * board state appropriately. Note that this function is more efficient than
+   * calling _addPiece() and _removePiece() separately.
    *
    * @param color     Color of piece to move
    * @param pieceType Type of piece to move
