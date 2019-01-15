@@ -95,7 +95,7 @@ void go(std::istringstream &is) {
 }
 
 unsigned long long perft(const Board &board, int depth) {
-  if (depth == 0) {
+  if (depth <= 0) {
     return 1;
   } else if (depth == 1) {
     return MoveGen(board).getLegalMoves().size();
@@ -219,7 +219,7 @@ void loop() {
       }
       std::cout << std::endl;
     } else if (token == "perft") {
-      int depth;
+      int depth = 1;
       is >> depth;
       perftDivide(depth);
     } else {
