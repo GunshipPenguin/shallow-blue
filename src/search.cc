@@ -148,7 +148,7 @@ void Search::_rootMax(const Board &board, int depth) {
   _nodes = 0;
 
   // If no legal moves are available, just return, setting bestmove to a null move
-  if (legalMoves.size() == 0) {
+  if (legalMoves.empty()) {
     _bestMove = Move();
     _bestScore = -INF;
     return;
@@ -253,7 +253,7 @@ int Search::_negaMax(const Board &board, int depth, int alpha, int beta) {
   MoveList legalMoves = movegen.getLegalMoves();
 
   // Check for checkmate and stalemate
-  if (legalMoves.size() == 0) {
+  if (legalMoves.empty()) {
     int score = board.colorIsInCheck(board.getActivePlayer()) ? -INF : 0; // -INF = checkmate, 0 = stalemate (draw)
     return score;
   }
@@ -344,7 +344,7 @@ int Search::_qSearch(const Board &board, int alpha, int beta) {
   MoveList legalMoves = movegen.getLegalMoves();
 
   // Check for checkmate / stalemate
-  if (legalMoves.size() == 0) {
+  if (legalMoves.empty()) {
     if (board.colorIsInCheck(board.getActivePlayer())) { // Checkmate
       return -INF;
     } else { // Stalemate
