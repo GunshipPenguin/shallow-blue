@@ -126,10 +126,6 @@ Move Search::getBestMove() {
   return _bestMove;
 }
 
-int Search::getBestScore() {
-  return _bestScore;
-}
-
 bool Search::_checkLimits() {
   if (--_limitCheckCount > 0) {
     return false;

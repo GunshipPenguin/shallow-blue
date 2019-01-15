@@ -82,12 +82,6 @@ class Search {
   Move getBestMove();
 
   /**
-   * @brief Returns the best score obtained through the last search performed.
-   * @return The best score obtained through the last search performed.
-   */
-  int getBestScore();
-
-  /**
    * @brief Instructs this Search to stop as soon as possible.
    */
   void stop();
