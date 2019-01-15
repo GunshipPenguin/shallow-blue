@@ -4,7 +4,6 @@
 #include "defs.h"
 #include "movegen.h"
 #include "bitutils.h"
-#include <cmath>
 
 /**
  * @brief Namespace containing board evaluation functions
