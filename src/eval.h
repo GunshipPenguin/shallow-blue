@@ -71,10 +71,10 @@ const int MOBILITY_BONUS[2][6] = {
         [KING] = 0
     },
     [ENDGAME] = {
-        [PAWN] = 2,
+        [PAWN] = 1,
         [ROOK] = 1,
-        [KNIGHT] = 1,
-        [BISHOP] = 1,
+        [KNIGHT] = 6,
+        [BISHOP] = 2,
         [QUEEN] = 1,
         [KING] = 1
     }
@@ -110,22 +110,22 @@ const int ROOK_OPEN_FILE_BONUS[2] = {[OPENING] = 20, [ENDGAME] = 40};
 /**
  * @brief Bonuses given to a player for having a passed pawn (opening/endgame)
  */
-const int PASSED_PAWN_BONUS[2] = {[OPENING] = 20, [ENDGAME] = 60};
+const int PASSED_PAWN_BONUS[2] = {[OPENING] = 10, [ENDGAME] = 70};
 
 /**
  * @brief Penalties given to a player for having a doubled pawn (opening/endgame)
  */
-const int DOUBLED_PAWN_PENALTY[2] = {[OPENING] = -10, [ENDGAME] = -50};
+const int DOUBLED_PAWN_PENALTY[2] = {[OPENING] = -20, [ENDGAME] = -30};
 
 /**
  * @brief Penalties given to a player for having an isolated pawn (opening/endgame)
  */
-const int ISOLATED_PAWN_PENALTY[2] = {[OPENING] = -25, [ENDGAME] = -40};
+const int ISOLATED_PAWN_PENALTY[2] = {[OPENING] = -15, [ENDGAME] = -30};
 
 /**
  * @brief Bonuses given to a player for having bishops on black and white squares (opening/endgame)
  */
-const int BISHOP_PAIR_BONUS[2] = {[OPENING] = 40, [ENDGAME] = 60};
+const int BISHOP_PAIR_BONUS[2] = {[OPENING] = 45, [ENDGAME] = 55};
 
 /**
  * @brief Bonuses given to a player for each pawn shielding their king (opening/endgame)
