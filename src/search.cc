@@ -67,7 +67,7 @@ void Search::iterDeep() {
     if (_stop) break;
 
     if (_logUci) {
-      _logUciInfo(_getPv(currDepth), currDepth, _bestMove, _bestScore, _nodes, elapsed);
+      _logUciInfo(_getPv(currDepth), currDepth, _bestScore, _nodes, elapsed);
     }
 
     // If the last search has exceeded or hit 50% of the allocated time, stop searching
@@ -91,7 +91,7 @@ MoveList Search::_getPv(int length) {
   return pv;
 }
 
-void Search::_logUciInfo(const MoveList &pv, int depth, Move bestMove, int bestScore, int nodes, int elapsed) {
+void Search::_logUciInfo(const MoveList &pv, int depth, int bestScore, int nodes, int elapsed) {
   std::string pvString;
   for (auto move : pv) {
     pvString += move.getNotation() + " ";

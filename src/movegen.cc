@@ -291,7 +291,7 @@ void MoveGen::_genBlackPawnMoves(const Board &board) {
 }
 
 void MoveGen::_genWhiteKingMoves(const Board &board) {
-  _genKingMoves(board, board.getPieces(WHITE, KING), board.getAllPieces(WHITE), board.getAttackable(BLACK));
+  _genKingMoves(board, board.getPieces(WHITE, KING), board.getAttackable(BLACK));
 
   if (board.whiteCanCastleKs()) {
     _moves.push_back(Move(e1, g1, KING, Move::KSIDE_CASTLE));
@@ -302,7 +302,7 @@ void MoveGen::_genWhiteKingMoves(const Board &board) {
 }
 
 void MoveGen::_genBlackKingMoves(const Board &board) {
-  _genKingMoves(board, board.getPieces(BLACK, KING), board.getAllPieces(BLACK), board.getAttackable(WHITE));
+  _genKingMoves(board, board.getPieces(BLACK, KING), board.getAttackable(WHITE));
 
   if (board.blackCanCastleKs()) {
     _moves.push_back(Move(e8, g8, KING, Move::KSIDE_CASTLE));
@@ -312,7 +312,7 @@ void MoveGen::_genBlackKingMoves(const Board &board) {
   }
 }
 
-void MoveGen::_genKingMoves(const Board &board, U64 king, U64 own, U64 attackable) {
+void MoveGen::_genKingMoves(const Board &board, U64 king, U64 attackable) {
   if (king == 0) {
     return;
   }
@@ -325,14 +325,14 @@ void MoveGen::_genKingMoves(const Board &board, U64 king, U64 own, U64 attackabl
 }
 
 void MoveGen::_genWhiteKnightMoves(const Board &board) {
-  _genKnightMoves(board, board.getPieces(WHITE, KNIGHT), board.getAllPieces(WHITE), board.getAttackable(BLACK));
+  _genKnightMoves(board, board.getPieces(WHITE, KNIGHT), board.getAttackable(BLACK));
 }
 
 void MoveGen::_genBlackKnightMoves(const Board &board) {
-  _genKnightMoves(board, board.getPieces(BLACK, KNIGHT), board.getAllPieces(BLACK), board.getAttackable(WHITE));
+  _genKnightMoves(board, board.getPieces(BLACK, KNIGHT), board.getAttackable(WHITE));
 }
 
-void MoveGen::_genKnightMoves(const Board &board, U64 knights, U64 own, U64 attackable) {
+void MoveGen::_genKnightMoves(const Board &board, U64 knights, U64 attackable) {
   while (knights) {
     int from = _popLsb(knights);
 
@@ -343,14 +343,14 @@ void MoveGen::_genKnightMoves(const Board &board, U64 knights, U64 own, U64 atta
 }
 
 void MoveGen::_genWhiteBishopMoves(const Board &board) {
-  _genBishopMoves(board, board.getPieces(WHITE, BISHOP), board.getAllPieces(WHITE), board.getAttackable(BLACK));
+  _genBishopMoves(board, board.getPieces(WHITE, BISHOP), board.getAttackable(BLACK));
 }
 
 void MoveGen::_genBlackBishopMoves(const Board &board) {
-  _genBishopMoves(board, board.getPieces(BLACK, BISHOP), board.getAllPieces(BLACK), board.getAttackable(WHITE));
+  _genBishopMoves(board, board.getPieces(BLACK, BISHOP), board.getAttackable(WHITE));
 }
 
-void MoveGen::_genBishopMoves(const Board &board, U64 bishops, U64 own, U64 attackable) {
+void MoveGen::_genBishopMoves(const Board &board, U64 bishops, U64 attackable) {
   while (bishops) {
     int from = _popLsb(bishops);
 
@@ -361,14 +361,14 @@ void MoveGen::_genBishopMoves(const Board &board, U64 bishops, U64 own, U64 atta
 }
 
 void MoveGen::_genWhiteRookMoves(const Board &board) {
-  _genRookMoves(board, board.getPieces(WHITE, ROOK), board.getAllPieces(WHITE), board.getAttackable(BLACK));
+  _genRookMoves(board, board.getPieces(WHITE, ROOK), board.getAttackable(BLACK));
 }
 
 void MoveGen::_genBlackRookMoves(const Board &board) {
-  _genRookMoves(board, board.getPieces(BLACK, ROOK), board.getAllPieces(BLACK), board.getAttackable(WHITE));
+  _genRookMoves(board, board.getPieces(BLACK, ROOK), board.getAttackable(WHITE));
 }
 
-void MoveGen::_genRookMoves(const Board &board, U64 rooks, U64 own, U64 attackable) {
+void MoveGen::_genRookMoves(const Board &board, U64 rooks, U64 attackable) {
   while (rooks) {
     int from = _popLsb(rooks);
 
@@ -379,14 +379,14 @@ void MoveGen::_genRookMoves(const Board &board, U64 rooks, U64 own, U64 attackab
 }
 
 void MoveGen::_genWhiteQueenMoves(const Board &board) {
-  _genQueenMoves(board, board.getPieces(WHITE, QUEEN), board.getAllPieces(WHITE), board.getAttackable(BLACK));
+  _genQueenMoves(board, board.getPieces(WHITE, QUEEN), board.getAttackable(BLACK));
 }
 
 void MoveGen::_genBlackQueenMoves(const Board &board) {
-  _genQueenMoves(board, board.getPieces(BLACK, QUEEN), board.getAllPieces(BLACK), board.getAttackable(WHITE));
+  _genQueenMoves(board, board.getPieces(BLACK, QUEEN), board.getAttackable(WHITE));
 }
 
-void MoveGen::_genQueenMoves(const Board &board, U64 queens, U64 own, U64 attackable) {
+void MoveGen::_genQueenMoves(const Board &board, U64 queens, U64 attackable) {
   while (queens) {
     int from = _popLsb(queens);
 

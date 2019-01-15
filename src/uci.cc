@@ -63,7 +63,7 @@ void setPosition(std::istringstream &is) {
   }
 }
 
-void pickBestMove(Search::Limits limits) {
+void pickBestMove() {
   if (optionsMap["OwnBook"].getValue() == "true" && book.inBook(board)) {
     std::cout << "bestmove " << book.getMove(board).getNotation() << std::endl;
   } else {
@@ -88,7 +88,7 @@ void go(std::istringstream &is) {
 
   search = std::shared_ptr<Search>(new Search(board, limits, positionHistory));
 
-  std::thread searchThread(&pickBestMove, limits);
+  std::thread searchThread(&pickBestMove);
   searchThread.detach();
 }
 

@@ -162,15 +162,14 @@ class MoveGen {
    * @name Generalized pseudo-legal generation functions for all pieces execpt pawns
    *
    * Each of these functions take a board reference, a bitboard of pieces to
-   * generate moves for, a bitboard of friendly pieces and a bitboard of
-   * attackable pieces.
+   * generate moves for and a bitboard of attackable pieces.
    *
    */
-  void _genKingMoves(const Board &, U64, U64, U64);
-  void _genKnightMoves(const Board &, U64, U64, U64);
-  void _genBishopMoves(const Board &, U64, U64, U64);
-  void _genRookMoves(const Board &, U64, U64, U64);
-  void _genQueenMoves(const Board &, U64, U64, U64);
+  void _genKingMoves(const Board &board, U64 king, U64 attackable);
+  void _genKnightMoves(const Board &board, U64 knights, U64 attackable);
+  void _genBishopMoves(const Board &board, U64 bishops, U64 attackable);
+  void _genRookMoves(const Board &board, U64 rooks, U64 attackable);
+  void _genQueenMoves(const Board &board, U64 queens, U64 attackable);
   /**@}*/
 
   /**

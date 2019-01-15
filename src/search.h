@@ -243,12 +243,11 @@ class Search {
    *
    * @param pv        MoveList representing the Principal Variation (first moves at index 0)
    * @param depth     Depth of search
-   * @param bestMove  Best move obtained from search
    * @param bestScore Score corresponding to the best move
    * @param nodes     Number of nodes searched
    * @param elapsed   Time taken to complete the search in milliseconds
    */
-  void _logUciInfo(const MoveList &, int, Move, int, int, int);
+  void _logUciInfo(const MoveList &pv, int depth, int bestScore, int nodes, int elapsed);
 
   /**
    * @brief Returns the principal variation for the last performed search.
