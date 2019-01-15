@@ -9,7 +9,7 @@
 
 Search::Search(const Board &board, Limits limits, std::vector<ZKey> positionHistory, bool logUci) :
     _positionHistory(positionHistory),
-    _orderingInfo(OrderingInfo(const_cast<TranspTable *>(&_tt))),
+    _orderingInfo(OrderingInfo(&_tt)),
     _limits(limits),
     _initialBoard(board),
     _logUci(logUci),
@@ -159,7 +159,7 @@ void Search::_rootMax(const Board &board, int depth) {
   }
 
   GeneralMovePicker movePicker
-      (const_cast<OrderingInfo *>(&_orderingInfo), const_cast<Board *>(&board), const_cast<MoveList *>(&legalMoves));
+      (&_orderingInfo, const_cast<Board *>(&board), &legalMoves);
 
   int alpha = -INF;
   int beta = INF;
@@ -274,7 +274,7 @@ int Search::_negaMax(const Board &board, int depth, int alpha, int beta) {
   }
 
   GeneralMovePicker movePicker
-      (const_cast<OrderingInfo *>(&_orderingInfo), const_cast<Board *>(&board), const_cast<MoveList *>(&legalMoves));
+      (&_orderingInfo, const_cast<Board *>(&board), &legalMoves);
 
   Move bestMove;
   bool fullWindow = true;
@@ -359,7 +359,7 @@ int Search::_qSearch(const Board &board, int alpha, int beta) {
   int standPat = Eval::evaluate(board, board.getActivePlayer());
   _nodes++;
 
-  QSearchMovePicker movePicker(const_cast<MoveList *>(&legalMoves));
+  QSearchMovePicker movePicker(&legalMoves);
 
   // If node is quiet, just return eval
   if (!movePicker.hasNext()) {
