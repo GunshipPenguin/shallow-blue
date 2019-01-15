@@ -15,7 +15,7 @@ void TranspTable::clear() {
 }
 
 const TranspTableEntry *TranspTable::getEntry(const ZKey &key) const {
-  std::unordered_map<U64, TranspTableEntry>::const_iterator got = _table.find(key.getValue());
+  auto got = _table.find(key.getValue());
   if (got != _table.end()) {
     return &_table.at(key.getValue());
   } else {

@@ -1,3 +1,5 @@
+#include <memory>
+
 #include "uci.h"
 #include "version.h"
 #include <iostream>
@@ -86,7 +88,7 @@ void go(std::istringstream &is) {
     else if (token == "movestogo") is >> limits.movesToGo;
   }
 
-  search = std::shared_ptr<Search>(new Search(board, limits, positionHistory));
+  search = std::make_shared<Search>(board, limits, positionHistory);
 
   std::thread searchThread(&pickBestMove);
   searchThread.detach();

@@ -151,9 +151,7 @@ void PSquareTable::init() {
   }), KING, ENDGAME);
 }
 
-PSquareTable::PSquareTable() {
-
-}
+PSquareTable::PSquareTable() = default;
 
 PSquareTable::PSquareTable(const Board &board) {
   for (auto pieceType : {PAWN, ROOK, KNIGHT, BISHOP, QUEEN, KING}) {

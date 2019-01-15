@@ -178,11 +178,6 @@ class Search {
   int _limitCheckCount;
 
   /**
-   * @brief Principal variation of the last search performed.
-   */
-  MoveList _pv;
-
-  /**
    * @brief Number of nodes searched in the last search.
    */
   int _nodes;

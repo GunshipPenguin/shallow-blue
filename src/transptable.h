@@ -28,7 +28,7 @@ class TranspTable {
   /**
    * @brief Constructs a new empty transposition table.
    */
-  TranspTable() {};
+  TranspTable() = default;;
 
   /**
    * @brief Creates a new entry in the transposition table.
