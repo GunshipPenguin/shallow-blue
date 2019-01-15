@@ -241,7 +241,7 @@ class Search {
    * @param nodes     Number of nodes searched
    * @param elapsed   Time taken to complete the search in milliseconds
    */
-  void _logUciInfo(const MoveList &pv, int depth, int bestScore, int nodes, int elapsed);
+  void _logUciInfo(const MoveList &, int, int, int, int);
 
   /**
    * @brief Returns the principal variation for the last performed search.
