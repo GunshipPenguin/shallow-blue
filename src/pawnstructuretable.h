@@ -25,7 +25,7 @@ struct PawnStructureEntry {
 };
 
 /**
- * Gets a pointer to the pawn structure table entry with the given ZKey, or
+ * @brief Gets a pointer to the pawn structure table entry with the given ZKey, or
  * nullptr if it does not exist
  *
  * @param key ZKey to search pawn structure table for

@@ -150,7 +150,7 @@ int evaluate(const Board &, Color);
  * @brief Returns a numeric representation of the given board's phase based
  * off remaining material
  *
- * The returned score will range from 0 - detail::MAX_PHASE.
+ * The returned score will range from 0 - Eval::MAX_PHASE.
  *
  * @return A numeric representation of the game phase
  */
@@ -220,7 +220,7 @@ bool hasBishopPair(const Board &, Color);
  * phase and color
  *
  * This method calculates all pseudo-legal moves for the given colors, and sums
- * the number of moves, weighting the sum as per Eval::MOBILITY_BONUS
+ * the number of moves, weighting the sum as per Eval::MOBILITY_BONUS.
  *
  * @param board Board to use when generating moves
  * @param phase GamePhase to evaluate board for
