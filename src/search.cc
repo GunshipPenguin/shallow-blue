@@ -23,6 +23,9 @@ Search::Search(const Board &board, Limits limits, std::vector<ZKey> positionHist
   } else if (_limits.depth != 0) { // Depth search
     _searchDepth = _limits.depth;
     _timeAllocated = INF;
+  } else if (_limits.moveTime != 0) {
+    _searchDepth = MAX_SEARCH_DEPTH;
+    _timeAllocated = _limits.moveTime;
   } else if (_limits.time[_initialBoard.getActivePlayer()] != 0) { // Time search
     int ourTime = _limits.time[_initialBoard.getActivePlayer()];
     int opponentTime = _limits.time[_initialBoard.getInactivePlayer()];

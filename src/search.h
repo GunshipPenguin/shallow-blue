@@ -25,7 +25,7 @@ class Search {
     /**
      * @brief Constructs a new Limits struct with all numerical limits set to 0.
      */
-    Limits() : depth(0), infinite(false), nodes(0), movesToGo(0), time{}, increment{} {};
+    Limits() : depth(0), infinite(false), nodes(0), movesToGo(0), moveTime(0), time{}, increment{} {};
 
     /**
      * @brief Maximum depth to search to
@@ -43,9 +43,14 @@ class Search {
     int nodes;
 
     /**
-     * @brief Moves left in the game.
+     * @brief Moves left to the next time control
      */
     int movesToGo;
+
+    /**
+     * @brief If nonzero, search exactly this number of milliseconds
+     */
+    int moveTime;
 
     /**
      * @brief Array indexed by [color] of time left on the clock for black and white.
