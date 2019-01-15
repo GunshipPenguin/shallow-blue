@@ -1,5 +1,4 @@
 #include <memory>
-
 #include "uci.h"
 #include "version.h"
 #include <iostream>
