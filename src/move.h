@@ -37,9 +37,7 @@ class Move {
     KSIDE_CASTLE = 1 << 3, /**< The move is a kingisde castle */
     QSIDE_CASTLE = 1 << 4, /**< The move is a queenside castle */
     EN_PASSANT = 1 << 5, /**< The move is an en passant capture (Do not set the CAPTURE flag additionally) */
-    PROMOTION = 1 << 6, /**< The move is a promotion (Promotion piece type must be set with setPromotionPieceType()) */
-    CHECK = 1 << 7,
-    CHECK_EVASION = 1 << 8
+    PROMOTION = 1 << 6 /**< The move is a promotion (Promotion piece type must be set with setPromotionPieceType()) */
   };
 
   /**
