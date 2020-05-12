@@ -6,7 +6,7 @@
 
 namespace {
 Book book;
-std::shared_ptr<Search> search;
+Search *search;
 Board board;
 std::vector<ZKey> positionHistory;
 
@@ -70,6 +70,8 @@ void pickBestMove() {
   } else {
     search->iterDeep();
   }
+  delete search;
+  search = nullptr;
 }
 
 void go(std::istringstream &is) {
@@ -88,7 +90,7 @@ void go(std::istringstream &is) {
     else if (token == "movestogo") is >> limits.movesToGo;
   }
 
-  search = std::make_shared<Search>(board, limits, positionHistory);
+  search = new Search(board, limits, positionHistory);
 
   std::thread searchThread(&pickBestMove);
   searchThread.detach();

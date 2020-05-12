@@ -28,7 +28,9 @@ class TranspTable {
   /**
    * @brief Constructs a new empty transposition table.
    */
-  TranspTable() = default;;
+  TranspTable();
+
+  ~TranspTable();
 
   /**
    * @brief Creates a new entry in the transposition table.
@@ -47,7 +49,7 @@ class TranspTable {
    * @param key ZKey to lookup entry for
    * @return The transposition table entry corresponding to the given ZKey, or nullptr if it does not exist
    */
-  const TranspTableEntry *getEntry(const ZKey &) const;
+  const TranspTableEntry *probe(const ZKey &key) const;
 
   /**
    * @brief Removes all entries from the transposition table.
@@ -60,7 +62,7 @@ class TranspTable {
    *
    * A map of ZKeys to a tuple of (score, depth, flag).
    */
-  std::unordered_map<U64, TranspTableEntry> _table;
+  TranspTableEntry *_table;
 };
 
 #endif

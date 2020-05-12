@@ -22,14 +22,14 @@ TEST_CASE("Transposition tables work as expected") {
     tt.set(key1, ttEntry1);
     tt.set(key2, ttEntry2);
 
-    const TranspTableEntry *storedEntry1 = tt.getEntry(key1);
+    const TranspTableEntry *storedEntry1 = tt.probe(key1);
     REQUIRE(storedEntry1 != nullptr);
     REQUIRE(storedEntry1->getScore() == 1);
     REQUIRE(storedEntry1->getDepth() == 2);
     REQUIRE(storedEntry1->getFlag() == TranspTable::EXACT);
     REQUIRE(storedEntry1->getBestMove() == move1);
 
-    const TranspTableEntry *storedEntry2 = tt.getEntry(key2);
+    const TranspTableEntry *storedEntry2 = tt.probe(key2);
     REQUIRE(storedEntry1 != nullptr);
     REQUIRE(storedEntry2->getScore() == 3);
     REQUIRE(storedEntry2->getDepth() == 4);
@@ -37,9 +37,9 @@ TEST_CASE("Transposition tables work as expected") {
     REQUIRE(storedEntry2->getBestMove() == move2);
   }
 
-  SECTION("Transposition tables return nullptr when getEntry is called for a key that does not exist") {
+  SECTION("Transposition tables return nullptr when probe is called for a key that does not exist") {
     ZKey key; // Not stored
-    REQUIRE(tt.getEntry(key) == nullptr);
+    REQUIRE(tt.probe(key) == nullptr);
   }
 
   SECTION("Transposition tables are cleared when clear() is called") {
@@ -49,8 +49,8 @@ TEST_CASE("Transposition tables work as expected") {
     TranspTableEntry ttEntry(5, 5, TranspTableEntry::EXACT, move);
     tt.set(board.getZKey(), ttEntry);
 
-    REQUIRE(tt.getEntry(board.getZKey()) != nullptr);
+    REQUIRE(tt.probe(board.getZKey()) != nullptr);
     tt.clear();
-    REQUIRE(tt.getEntry(board.getZKey()) == nullptr);
+    REQUIRE(tt.probe(board.getZKey()) == nullptr);
   }
 }

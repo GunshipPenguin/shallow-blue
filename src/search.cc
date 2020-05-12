@@ -86,7 +86,7 @@ MoveList Search::_getPv(int length) {
   const TranspTableEntry *currEntry;
   int currLength = 0;
 
-  while (currLength++ < length && (currEntry = _tt.getEntry(currBoard.getZKey()))) {
+  while (currLength++ < length && (currEntry = _tt.probe(currBoard.getZKey()))) {
     pv.push_back(currEntry->getBestMove());
     currBoard.doMove(currEntry->getBestMove());
   }
@@ -209,7 +209,7 @@ void Search::_rootMax(const Board &board, int depth) {
   }
 
   if (!_stop) {
-    TranspTableEntry ttEntry(alpha, depth, TranspTableEntry::EXACT, bestMove);
+    TranspTableEntry ttEntry(alpha, depth, TranspTableEntry::EXACT, bestMove, board.getZKey());
     _tt.set(board.getZKey(), ttEntry);
 
     _bestMove = bestMove;
@@ -235,7 +235,7 @@ int Search::_negaMax(const Board &board, int depth, int alpha, int beta) {
   }
 
   int alphaOrig = alpha;
-  const TranspTableEntry *ttEntry = _tt.getEntry(board.getZKey());
+  const TranspTableEntry *ttEntry = _tt.probe(board.getZKey());
   // Check transposition table cache
   if (ttEntry && (ttEntry->getDepth() >= depth)) {
     switch (ttEntry->getFlag()) {
@@ -302,7 +302,7 @@ int Search::_negaMax(const Board &board, int depth, int alpha, int beta) {
       }
 
       // Add a new tt entry for this node
-      TranspTableEntry newTTEntry(score, depth, TranspTableEntry::LOWER_BOUND, move);
+      TranspTableEntry newTTEntry(score, depth, TranspTableEntry::LOWER_BOUND, move, board.getZKey());
       _tt.set(board.getZKey(), newTTEntry);
       return beta;
     }
@@ -330,7 +330,7 @@ int Search::_negaMax(const Board &board, int depth, int alpha, int beta) {
   } else {
     flag = TranspTableEntry::EXACT;
   }
-  TranspTableEntry newTTEntry(alpha, depth, flag, bestMove);
+  TranspTableEntry newTTEntry(alpha, depth, flag, bestMove, board.getZKey());
   _tt.set(board.getZKey(), newTTEntry);
 
   return alpha;

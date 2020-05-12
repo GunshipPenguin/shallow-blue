@@ -36,10 +36,10 @@ TEST_CASE("OrderingInfo class works correctly") {
 
     OrderingInfo orderingInfo(ttPointer);
 
-    REQUIRE(orderingInfo.getTt()->getEntry(zkey)->getScore() == 1);
-    REQUIRE(orderingInfo.getTt()->getEntry(zkey)->getDepth() == 2);
-    REQUIRE(orderingInfo.getTt()->getEntry(zkey)->getFlag() == TranspTable::UPPER_BOUND);
-    REQUIRE(orderingInfo.getTt()->getEntry(zkey)->getBestMove() == bestMove);
+    REQUIRE(orderingInfo.getTt()->probe(zkey)->getScore() == 1);
+    REQUIRE(orderingInfo.getTt()->probe(zkey)->getDepth() == 2);
+    REQUIRE(orderingInfo.getTt()->probe(zkey)->getFlag() == TranspTable::UPPER_BOUND);
+    REQUIRE(orderingInfo.getTt()->probe(zkey)->getBestMove() == bestMove);
   }
 
   SECTION("OrderingInfo stores killer moves correctly") {

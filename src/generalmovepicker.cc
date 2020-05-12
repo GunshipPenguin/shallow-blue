@@ -12,7 +12,7 @@ GeneralMovePicker::GeneralMovePicker(const OrderingInfo *orderingInfo, const Boa
 }
 
 void GeneralMovePicker::_scoreMoves() {
-  const TranspTableEntry *ttEntry = _orderingInfo->getTt()->getEntry(_board->getZKey());
+  const TranspTableEntry *ttEntry = _orderingInfo->getTt()->probe(_board->getZKey());
   Move pvMove;
   if (ttEntry) {
     pvMove = ttEntry->getBestMove();

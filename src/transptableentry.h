@@ -29,8 +29,8 @@ class TranspTableEntry {
    * @param flag Type flag for this entry
    * @param bestMove Best move found at this node
    */
-  TranspTableEntry(int score, int depth, Flag flag, Move bestMove)
-      : _score(score), _depth(depth), _flag(flag), _bestMove(bestMove) {}
+  TranspTableEntry(int score, int depth, Flag flag, Move bestMove, ZKey key)
+      : _score(score), _depth(depth), _flag(flag), _bestMove(bestMove), _key(key) {}
 
   /**
    * @brief Get the score stored in this transposition table entry.
@@ -60,8 +60,9 @@ class TranspTableEntry {
    */
   Move getBestMove() const { return _bestMove; }
 
- private:
+  ZKey getKey() const { return _key; }
 
+ private:
   /** @brief Score of this transposition table entry */
   int _score;
 
@@ -73,6 +74,8 @@ class TranspTableEntry {
 
   /** @brief Best move of this transposition table entry */
   Move _bestMove;
+
+  ZKey _key;
 };
 
 #endif
