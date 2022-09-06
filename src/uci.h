@@ -9,6 +9,8 @@
 #include <sstream>
 #include <fstream>
 #include <memory>
+#include <thread>
+
 
 /**
  * @brief Class for handling UCI input/output.
