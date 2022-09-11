@@ -2,6 +2,7 @@
 #define OPTIONMANAGER_H
 
 #include <map>
+#include <string>
 
 /**
  * @brief Type of callback function for when an option is changed

@@ -4,7 +4,7 @@
 
 export CC_FLAGS="-Wall -std=c++11 -O3 -flto -pthread -mtune=generic -fno-exceptions -static"
 export LD_FLAGS="-pthread -flto -static"
-export CXX=x86_64-w64-mingw32-g++-posix
+export CXX=i686-w64-mingw32-g++-posix
 make clean
 make -j4
 mv shallowblue shallowblue_x86-64.exe

@@ -10,6 +10,7 @@
 #include <fstream>
 #include <memory>
 
+
 /**
  * @brief Class for handling UCI input/output.
  */
